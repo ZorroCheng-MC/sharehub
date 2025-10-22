@@ -1,3 +1,6 @@
+---
+---
+
 # Test Document
 
 This file intentionally has NO front matter to test the GitHub Action (v2).
