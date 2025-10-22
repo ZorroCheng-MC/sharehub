@@ -61,6 +61,16 @@ jobs:
               echo "✅ Front matter exists: $file"
             fi
 
+            # Fix image paths for Jekyll (convert relative to absolute)
+            if grep -q '!\[.*\](\.*/images/' "$file"; then
+              echo "🖼️  Fixing image paths in: $file"
+
+              # Convert ./images/ to /sharehub/images/
+              sed -i.bak 's|!\[\([^]]*\)\](\.*/images/\([^)]*\))|![\1](/sharehub/images/\2)|g' "$file"
+              rm -f "$file.bak"
+              file_modified=true
+            fi
+
             # Track this file if modified
             if [ "$file_modified" = true ]; then
               modified_files+=("$file")
@@ -80,7 +90,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           git add documents/
-          git commit -m "🤖 Auto-add front matter"
+          git commit -m "🤖 Auto-add front matter and fix image paths"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
