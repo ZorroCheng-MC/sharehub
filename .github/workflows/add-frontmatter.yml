@@ -34,9 +34,19 @@ jobs:
             if ! head -1 "$file" | grep -q "^---$"; then
               echo "📝 Adding front matter to: $file"
 
+              # Extract title from first # heading
+              title=$(grep -m 1 "^# " "$file" | sed 's/^# //' | sed 's/[[:space:]]*$//')
+
+              # If no title found, use filename
+              if [ -z "$title" ]; then
+                # Get filename without extension and convert - and _ to spaces
+                title=$(basename "$file" .md | sed 's/[-_]/ /g' | sed 's/\b\(.\)/\u\1/g')
+              fi
+
               # Create temp file with front matter + original content
               {
                 echo "---"
+                echo "title: \"$title\""
                 echo "---"
                 echo ""
                 cat "$file"
