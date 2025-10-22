@@ -1,0 +1,72 @@
+name: Auto-Add Front Matter
+
+on:
+  push:
+    paths:
+      - 'documents/**/*.md'
+  pull_request:
+    paths:
+      - 'documents/**/*.md'
+
+jobs:
+  add-frontmatter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Check and add front matter
+        run: |
+          #!/bin/bash
+
+          echo "Checking markdown files for front matter..."
+          modified=0
+
+          # Find all .md files in documents/
+          find documents -name "*.md" -type f | while read -r file; do
+            # Check if file starts with front matter delimiter
+            if ! head -1 "$file" | grep -q "^---$"; then
+              echo "📝 Adding front matter to: $file"
+
+              # Create temp file with front matter + original content
+              {
+                echo "---"
+                echo "---"
+                echo ""
+                cat "$file"
+              } > "$file.tmp"
+
+              # Replace original file
+              mv "$file.tmp" "$file"
+
+              modified=$((modified + 1))
+            else
+              echo "✅ Front matter exists: $file"
+            fi
+          done
+
+          echo "modified=$modified" >> $GITHUB_ENV
+
+      - name: Commit and push if changes were made
+        if: env.modified != '0'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add documents/
+          git commit -m "🤖 Auto-add front matter to markdown files"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          if [ "${{ env.modified }}" -eq "0" ]; then
+            echo "✅ All markdown files already have front matter!"
+          else
+            echo "✅ Added front matter to ${{ env.modified }} file(s)"
+          fi
