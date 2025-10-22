@@ -1,4 +1,5 @@
 ---
+title: "Test Auto Frontmatter"
 ---
 
 # Test Document
