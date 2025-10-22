@@ -1,4 +1,14 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "mcp__MCP_DOCKER__firecrawl_scrape",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
+    ]
+  },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "hk_weather",
@@ -13,12 +23,5 @@
     "postgres",
     "puppeteer",
     "gdrive"
-  ],
-  "permissions": {
-    "allow": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)"
-    ]
-  }
+  ]
 }
