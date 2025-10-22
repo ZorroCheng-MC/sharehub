@@ -6,7 +6,14 @@
       "Bash(git push:*)",
       "mcp__MCP_DOCKER__firecrawl_scrape",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(mkdir:*)",
+      "Bash(git fetch:*)",
+      "mcp__fetch__fetch",
+      "Bash(cat:*)",
+      "mcp__puppeteer__puppeteer_navigate",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "WebFetch(domain:zorrocheng-mc.github.io)"
     ]
   },
   "enableAllProjectMcpServers": true,
