@@ -1,3 +1,7 @@
+---
+title: "How to Setup an AI-Powered Knowledge Base with Obsidian and Claude Code"
+---
+
 # How to Setup an AI-Powered Knowledge Base with Obsidian and Claude Code
 
 A comprehensive guide to building an intelligent, automated knowledge management system that captures, analyzes, and publishes content to GitHub Pages.
