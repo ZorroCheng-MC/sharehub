@@ -61,16 +61,6 @@ jobs:
               echo "✅ Front matter exists: $file"
             fi
 
-            # Make images responsive by converting markdown images to HTML with styling
-            if grep -q '!\[.*\](.*\.jpg\|.*\.png\|.*\.gif\|.*\.jpeg)' "$file"; then
-              echo "🖼️  Making images responsive in: $file"
-
-              # Convert ![alt](src) to <img src="src" alt="alt" style="max-width: 100%; height: auto; display: block;">
-              sed -i.bak -E 's|!\[([^]]*)\]\(([^)]+\.(jpg\|png\|gif\|jpeg))\)|<img src="\2" alt="\1" style="max-width: 100%; height: auto; display: block;">|g' "$file"
-              rm -f "$file.bak"
-              file_modified=true
-            fi
-
             # Track this file if modified
             if [ "$file_modified" = true ]; then
               modified_files+=("$file")
@@ -90,7 +80,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           git add documents/
-          git commit -m "🤖 Auto-add front matter and responsive image styling"
+          git commit -m "🤖 Auto-add front matter"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

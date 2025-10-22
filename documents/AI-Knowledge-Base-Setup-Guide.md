@@ -516,7 +516,7 @@ Once you have the system set up, here's how you actually use it day-to-day.
 
 The recommended setup uses **two side-by-side windows**:
 
-<img src="/sharehub/images/workspace-setup.jpg" alt="Workspace Setup - Obsidian and Claude Code" style="max-width: 100%; height: auto; display: block;">
+![Workspace Setup - Obsidian and Claude Code](/sharehub/images/workspace-setup.jpg)
 
 **The ideal layout**:
 - **Obsidian (left)** - Browse your notes, see the knowledge graph, organize files
