@@ -1,3 +1,7 @@
+---
+title: "Workflow Test Document"
+---
+
 # Workflow Test Document
 
 This document tests the enhanced GitHub Action that automatically extracts titles from headings.
