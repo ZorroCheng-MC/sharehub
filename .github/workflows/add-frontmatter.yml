@@ -24,10 +24,12 @@ jobs:
           #!/bin/bash
 
           echo "Checking markdown files for front matter..."
-          modified=0
+
+          # Track modified files
+          modified_files=()
 
           # Find all .md files in documents/
-          find documents -name "*.md" -type f | while read -r file; do
+          while IFS= read -r -d '' file; do
             # Check if file starts with front matter delimiter
             if ! head -1 "$file" | grep -q "^---$"; then
               echo "📝 Adding front matter to: $file"
@@ -43,13 +45,18 @@ jobs:
               # Replace original file
               mv "$file.tmp" "$file"
 
-              modified=$((modified + 1))
+              # Track this file
+              modified_files+=("$file")
             else
               echo "✅ Front matter exists: $file"
             fi
-          done
+          done < <(find documents -name "*.md" -type f -print0)
 
-          echo "modified=$modified" >> $GITHUB_ENV
+          # Set environment variable
+          echo "modified=${#modified_files[@]}" >> $GITHUB_ENV
+
+          # Output summary
+          echo "Modified ${#modified_files[@]} file(s)"
 
       - name: Commit and push if changes were made
         if: env.modified != '0'
