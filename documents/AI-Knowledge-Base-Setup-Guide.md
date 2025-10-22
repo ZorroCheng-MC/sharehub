@@ -508,6 +508,245 @@ Want to understand every component? See the [Technical Setup Guide](#technical-s
 
 ---
 
+## Daily Usage: Your Workflow
+
+Once you have the system set up, here's how you actually use it day-to-day.
+
+### Your Workspace Setup
+
+The recommended setup uses **two side-by-side windows**:
+
+```
+┌─────────────────────────────────────────────────┐
+│  Obsidian (Left)  │  Terminal + Claude (Right) │
+│                   │                             │
+│  📁 File Explorer │  > claude                   │
+│  📝 Your Notes    │  > /capture [content]       │
+│  🔍 Search        │  > /youtube-note [url]      │
+│  📊 Graph View    │  > /semantic-search [query] │
+└─────────────────────────────────────────────────┘
+```
+
+**Why this layout works**:
+- **Obsidian (left)** - Browse your notes, see the knowledge graph, organize files
+- **Terminal (right)** - Run Claude Code commands to capture and process content
+
+### Step 1: Open Your Vault in Obsidian
+
+```bash
+# Open Obsidian and select your vault
+# OR use command line:
+open -a Obsidian ~/path/to/your-vault
+```
+
+Your Obsidian interface shows:
+- **File explorer** (left sidebar) - All your notes and folders
+- **Editor** (center) - View and edit notes
+- **Graph view** (icon) - Visualize connections between notes
+
+### Step 2: Start Claude Code in Terminal
+
+Open a terminal and navigate to your vault:
+
+```bash
+cd ~/path/to/your-vault
+claude
+```
+
+You'll see the Claude Code prompt:
+
+```
+Terminal: 📚 Knowledge Management System
+>
+```
+
+**Pro Tip**: Use Obsidian's Terminal plugin to run Claude directly inside Obsidian! This gives you a true single-window experience.
+
+### Step 3: Capture Content with Commands
+
+Now you can use any capture command. Just type them at the Claude prompt:
+
+#### Capture a Random Idea
+
+```bash
+> /capture "AI could help students by creating personalized study plans"
+```
+
+**What happens**:
+1. Claude processes your idea
+2. Creates a formatted note with tags
+3. Saves it to your vault
+4. You see it appear in Obsidian immediately!
+
+#### Capture a YouTube Video
+
+```bash
+> /capture https://youtube.com/watch?v=dQw4w9WgXcQ
+```
+
+**What happens**:
+1. Claude fetches the video transcript
+2. Analyzes the content
+3. Creates a structured note with:
+   - Title and description
+   - Learning objectives
+   - Key takeaways
+   - Thumbnail image
+4. Saves to your vault
+
+#### Create a Study Guide
+
+```bash
+> /study-guide https://example.com/article
+```
+
+**What happens**:
+1. Claude fetches the article content
+2. Analyzes the structure and complexity
+3. Creates a comprehensive study guide
+4. Saves with learning objectives and self-assessment
+
+#### Search Your Knowledge Base
+
+```bash
+> /semantic-search "How do I improve my learning workflow?"
+```
+
+**What happens**:
+1. Claude searches using semantic meaning (not just keywords)
+2. Finds related notes across your entire vault
+3. Shows you connections you might have missed
+
+### Step 4: Review and Organize in Obsidian
+
+After capturing content, switch to Obsidian to:
+
+1. **Read the generated notes** - Claude has structured everything for you
+2. **Add your own thoughts** - Append personal insights and reflections
+3. **Create links** - Connect related notes manually if desired
+4. **Use graph view** - Visualize how your knowledge is connecting
+5. **Tag and categorize** - Add additional tags if needed (AI already added some!)
+
+### Step 5: Publish When Ready
+
+When you have a note you want to share publicly:
+
+#### Method 1: Using Claude (Easiest)
+
+```bash
+> Please move my-article.md to the documents folder and publish it
+```
+
+Claude will:
+1. Move the file to the `documents/` folder
+2. Commit to git
+3. Push to GitHub
+4. Your article goes live in ~60 seconds!
+
+#### Method 2: Manual Commands
+
+```bash
+# In terminal (not Claude):
+mv my-article.md documents/
+git add documents/my-article.md
+git commit -m "Publish article about AI learning"
+git push origin main
+```
+
+GitHub Actions automatically:
+1. Adds front matter (if missing)
+2. Builds with Jekyll
+3. Deploys to GitHub Pages
+
+**Your article is live at**: `https://yourusername.github.io/sharehub/documents/my-article`
+
+### Common Workflows
+
+#### Morning Routine (5 minutes)
+
+```bash
+cd ~/knowledge-vault
+claude
+
+# Capture overnight thoughts
+> /capture "Idea: Use AI for automated meeting summaries"
+
+# Capture yesterday's video
+> /capture https://youtube.com/watch?v=example
+
+# Quick search to refresh memory
+> /semantic-search "productivity techniques"
+```
+
+#### Deep Work Session (30 minutes)
+
+```bash
+# Create study guide from course material
+> /study-guide lecture-notes.md
+
+# Work through the material in Obsidian
+# Add your own notes and highlights
+
+# Search for related concepts
+> /semantic-search "related to [current topic]"
+
+# Link related notes in Obsidian
+```
+
+#### Publishing Routine (2 minutes)
+
+```bash
+# Polish an article in Obsidian
+# Then in Claude:
+> Move article-name.md to documents/ and publish it
+
+# Or manually:
+# mv article-name.md documents/
+# git add . && git commit -m "New article" && git push
+```
+
+### Tips for Power Users
+
+1. **Keep Claude running** - Leave the terminal open all day for instant capture
+2. **Use aliases** - Create shell aliases for common commands
+3. **Keyboard shortcuts** - Set up Obsidian hotkeys to switch between windows
+4. **Template notes** - Create templates in Obsidian for different note types
+5. **Regular reviews** - Weekly review in Obsidian to organize and link notes
+
+### Troubleshooting Common Issues
+
+**Q: Claude command not found?**
+```bash
+# Make sure Claude Code is installed:
+npm install -g @anthropic-ai/claude-code
+# Or reinstall if needed
+```
+
+**Q: Commands not working?**
+```bash
+# Check you're in your vault directory:
+pwd
+# Should show your vault path
+
+# Check .claude/commands/ folder exists:
+ls .claude/commands/
+```
+
+**Q: Notes not appearing in Obsidian?**
+- Obsidian auto-refreshes, but you can force it: View → Force Reload
+- Check the file was created: `ls -la` in your vault
+
+**Q: How do I see what was published?**
+```bash
+# Visit your GitHub Pages site:
+https://yourusername.github.io/sharehub/
+
+# Or check GitHub Actions status:
+gh run list --limit 5
+```
+
+---
+
 ## Who Is This For?
 
 This system is perfect if you:
