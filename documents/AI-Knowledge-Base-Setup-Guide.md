@@ -516,20 +516,17 @@ Once you have the system set up, here's how you actually use it day-to-day.
 
 The recommended setup uses **two side-by-side windows**:
 
-```
-┌─────────────────────────────────────────────────┐
-│  Obsidian (Left)  │  Terminal + Claude (Right) │
-│                   │                             │
-│  📁 File Explorer │  > claude                   │
-│  📝 Your Notes    │  > /capture [content]       │
-│  🔍 Search        │  > /youtube-note [url]      │
-│  📊 Graph View    │  > /semantic-search [query] │
-└─────────────────────────────────────────────────┘
-```
+![Workspace Setup - Obsidian and Claude Code](../images/workspace-setup.png)
 
-**Why this layout works**:
+**The ideal layout**:
 - **Obsidian (left)** - Browse your notes, see the knowledge graph, organize files
 - **Terminal (right)** - Run Claude Code commands to capture and process content
+
+**Why this layout works**:
+- You can see notes appear in real-time as Claude creates them
+- Easy to switch between capturing (Terminal) and organizing (Obsidian)
+- Visual feedback loop helps you understand what the system is doing
+- Graph view shows connections as your knowledge base grows
 
 ### Step 1: Open Your Vault in Obsidian
 
