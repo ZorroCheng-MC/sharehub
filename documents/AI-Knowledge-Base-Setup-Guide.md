@@ -1,7 +1,7 @@
 ---
 title: "AI-Powered Knowledge Base: Capture, Organize, and Share Your Ideas"
 tags: [guide, AI, knowledge-management, tools, obsidian, evergreen, tutorial, actionable]
-date: 2025-09-11
+date: 2025-10-23
 type: guide
 status: evergreen
 ---
@@ -793,7 +793,7 @@ Once you have the system set up, here's how you actually use it day-to-day.
 
 The recommended setup uses **two side-by-side windows**:
 
-![Workspace Setup - Obsidian and Claude Code](/sharehub/images/workspace-setup.jpg)
+![Workspace Setup - Obsidian and Claude Code](./images/workspace-setup.jpg)
 
 **The ideal layout**:
 - **Obsidian (left)** - Browse your notes, see the knowledge graph, organize files
