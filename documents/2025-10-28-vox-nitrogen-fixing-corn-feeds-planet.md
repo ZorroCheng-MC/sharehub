@@ -24,7 +24,7 @@ channel: Vox
 
 # The Giant Corn That Could Feed the Planet
 
-![Video Thumbnail](https://i.ytimg.com/vi/CFyd-kC6IUw/maxresdefault.jpg)
+[![Watch on YouTube](https://i.ytimg.com/vi/CFyd-kC6IUw/maxresdefault.jpg)](https://youtu.be/CFyd-kC6IUw)
 
 ## 📖 Description
 
@@ -33,8 +33,6 @@ An extraordinary documentary about olaton, a rare giant corn variety from Oaxaca
 **Channel**: Vox
 **URL**: https://youtu.be/CFyd-kC6IUw
 
-![Nitrogen-Fixing Corn Aerial Roots](/sharehub/images/nitrogen-fixing-corn-aerial-roots.jpg)
-*The distinctive aerial roots of olaton corn, covered in nitrogen-fixing mucus*
 
 ## 🎯 Learning Objectives
 
