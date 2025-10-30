@@ -1,3 +1,7 @@
+---
+title: "Docker cagent vs Claude Subagents - Updated Comparison"
+---
+
 # Docker cagent vs Claude Subagents - Updated Comparison
 
 **Created**: 2025-10-30
