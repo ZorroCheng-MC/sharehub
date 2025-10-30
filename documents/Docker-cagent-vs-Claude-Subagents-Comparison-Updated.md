@@ -1,14 +1,13 @@
 ---
 title: "Docker cagent vs Claude Subagents - Updated Comparison"
+tags: [reference, AI, development, tools, automation, agents, evergreen, deep-dive, technical, comparison]
+date: 2025-10-30
+type: reference
+status: evergreen
+priority: high
 ---
 
 # Docker cagent vs Claude Subagents - Updated Comparison
-
-**Created**: 2025-10-30
-**Type**: Technical Comparison
-**Status**: Updated Analysis
-
----
 
 ## Executive Summary
 
@@ -198,18 +197,14 @@ All agents share the same process space and coordinate through the cagent runtim
 
 ---
 
-## Tags for Bases Filtering
+## 🏷️ Bases Filtering
 
-**Type**: `reference`, `technical`
-**Topics**: `AI`, `development`, `tools`, `automation`, `agents`
-**Status**: `evergreen`
-**Metadata**: `deep-dive`, `technical`, `actionable`, `comparison`
-
-**Suggested Bases Queries**:
+**Suggested Queries**:
 ```
 tags contains "AI" AND tags contains "agents"
 type = reference AND tags contains "technical"
 tags contains "deep-dive" AND status = "evergreen"
+tags contains "comparison" AND tags contains "tools"
 ```
 
 ---
