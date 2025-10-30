@@ -201,6 +201,20 @@ Result: 1000+ notes, fully organized, instantly findable
 └─────────────────────────────────────────────────────────────┘
 ```
 
+### Visual Architecture Overview
+
+Here's how MyMatrix works from input to output:
+
+![MyMatrix Workflow Architecture](/sharehub/images/mymatrix-workflow-architecture.jpg)
+
+**Key Workflow:**
+1. **Capture Layer (Blue)** - Desktop and mobile inputs processed by Claude AI
+2. **Organization Layer (Purple)** - Obsidian acts as your knowledge base with AI-powered automatic organization
+3. **Discovery Layer (Orange)** - Semantic search via vector database enables natural language queries
+4. **Sharing Layer (Green)** - Secure sharing through GitLab with access control
+
+**The Core Principle**: AI performs the heavy lifting of organization, tagging, and connection-building—so you don't have to.
+
 ---
 
 ## 📱 Mobile Capture: Your Ideas, Anywhere
