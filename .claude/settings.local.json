@@ -13,7 +13,11 @@
       "Bash(cat:*)",
       "mcp__puppeteer__puppeteer_navigate",
       "mcp__puppeteer__puppeteer_screenshot",
-      "WebFetch(domain:zorrocheng-mc.github.io)"
+      "WebFetch(domain:zorrocheng-mc.github.io)",
+      "mcp__git__git_status",
+      "Bash(curl:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "fed71902784e5a9f",
+        "id": "447227f485babf1b",
         "type": "tabs",
         "children": [
           {
-            "id": "c8ed06301fb2f699",
+            "id": "986646c83ec52d81",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "documents/How-to-Setup-AI-Powered-Knowledge-Base-with-Obsidian-and-Claude-Code.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "How-to-Setup-AI-Powered-Knowledge-Base-with-Obsidian-and-Claude-Code"
+              "title": "New tab"
             }
           }
         ]
@@ -166,6 +162,17 @@
       "bases:Create new base": false
     }
   },
-  "active": "c8ed06301fb2f699",
-  "lastOpenFiles": []
+  "active": "986646c83ec52d81",
+  "lastOpenFiles": [
+    "documents/AI-Knowledge-Base-Setup-Guide.md.tmp.54225.1761128791562",
+    "documents/AI-Knowledge-Base-Setup-Guide.md.tmp.54225.1761128183811",
+    "documents/AI-Knowledge-Base-Setup-Guide.md.tmp.54225.1761127567482",
+    "images/workspace-setup.jpg",
+    "documents/AI-Knowledge-Base-Setup-Guide.md.tmp.54225.1761126744824",
+    "images/workspace-setup.png.jpg",
+    "images/workspace-setup.png",
+    "images",
+    "documents/How-to-Setup-AI-Powered-Knowledge-Base-with-Obsidian-and-Claude-Code.md",
+    "documents/AI-Knowledge-Base-Setup-Guide.md"
+  ]
 }
