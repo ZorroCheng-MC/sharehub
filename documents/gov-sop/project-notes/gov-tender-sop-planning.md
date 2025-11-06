@@ -1,3 +1,7 @@
+---
+title: "Gov Tender SOP Planning Discussion"
+---
+
 # Gov Tender SOP Planning Discussion
 
 **Date:** 2025-11-06
