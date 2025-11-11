@@ -3,11 +3,138 @@
 
 # Share Hub - Tag-Based Document Sharing Portal
 
-## Overview
-Share Hub is a Jekyll-based document sharing portal...
+> **Jekyll-based publishing platform for KnowledgeFactory**
+>
+> This repository serves as your public/team publishing platform, separate from your private Obsidian vault.
 
+---
 
-## Overview
+## 🚀 Quick Start for KnowledgeFactory Users
+
+### What is Sharehub?
+
+Sharehub is your **publishing platform** for the KnowledgeFactory three-tier sensitivity model:
+
+- **Tier 1 (Private)**: Notes stay in your Obsidian vault - never published
+- **Tier 2 (Trusted Circle)**: Published to sharehub with `access: private` - password required
+- **Tier 3 (Public)**: Published to sharehub without password - anyone can read
+
+### Initial Setup (5 minutes)
+
+**Step 1: Clone this template repository**
+
+```bash
+cd ~/Documents
+git clone https://github.com/ZorroCheng-MC/sharehub.git
+cd sharehub
+
+# Remove template's git history
+rm -rf .git
+git init
+git add .
+git commit -m "Initial commit: My KnowledgeFactory sharehub"
+```
+
+**Step 2: Create your GitHub repository**
+
+```bash
+# Using GitHub CLI (recommended)
+gh repo create my-sharehub --public --source=. --push
+
+# Or manually at github.com/new, then:
+# git remote add origin https://github.com/YOUR_USERNAME/my-sharehub.git
+# git push -u origin main
+```
+
+**Step 3: Enable GitHub Pages**
+
+```bash
+# Using GitHub CLI
+gh repo edit --enable-pages --pages-branch main
+
+# Or manually: Settings → Pages → Source: "main" branch → Save
+```
+
+**Step 4: Configure Jekyll baseurl**
+
+Edit `_config.yml` and change baseurl to match your repository name:
+
+```yaml
+baseurl: "/my-sharehub"  # IMPORTANT: Change to YOUR repo name
+```
+
+Commit and push:
+
+```bash
+git add _config.yml
+git commit -m "Configure Jekyll baseurl"
+git push
+```
+
+**Step 5: Verify deployment**
+
+1. Go to: `https://github.com/YOUR_USERNAME/my-sharehub/actions`
+2. Wait for "Deploy Jekyll site to Pages" workflow to complete (green checkmark)
+3. Visit: `https://YOUR_USERNAME.github.io/my-sharehub`
+
+**✅ Setup complete!** Your sharehub is ready to receive published notes.
+
+### Connect to KnowledgeFactory `/publish` Command
+
+After setting up sharehub, configure KnowledgeFactory:
+
+```bash
+cd ~/Documents/Obsidian/YourVault
+claude
+/setup
+```
+
+When prompted, provide:
+- **Vault path**: Your Obsidian vault location (auto-detected)
+- **Sharehub path**: `~/Documents/sharehub` (from Step 1 above)
+- **Sharehub repo**: `YOUR_USERNAME/my-sharehub`
+- **GitHub Pages URL**: `https://YOUR_USERNAME.github.io/my-sharehub`
+
+The setup wizard creates `.claude/config.sh` which the `/publish` command uses.
+
+### Publishing Notes
+
+Once configured, publish notes with one command:
+
+```bash
+/publish my-article.md
+```
+
+The `/publish` command automatically:
+1. Reads note from your private vault
+2. Copies images: `vault/images/` → `sharehub/images/`
+3. Converts image paths for web
+4. Writes to: `sharehub/documents/my-article.md`
+5. Commits and pushes
+6. GitHub Actions deploys in ~1 minute
+
+**Access control via frontmatter:**
+
+```yaml
+# Public note (Tier 3)
+---
+title: "My Public Article"
+---
+
+# Password-protected note (Tier 2)
+---
+title: "Internal Team Document"
+access: private
+---
+# Requires password "maco"
+```
+
+---
+
+## 📖 Complete Documentation
+
+### Overview
+
 Share Hub is a Jekyll-based document sharing portal with tag-based access control. Documents can be public or private based on tags in their front matter, not their folder location. All documents are stored in a single `documents/` folder for better organization.
 
 ## 🆕 Tag-Based Protection System
