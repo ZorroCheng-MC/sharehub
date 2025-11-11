@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'documents/**/*.md'
+      - 'documents/**/*.html'
   pull_request:
     paths:
       - 'documents/**/*.md'
+      - 'documents/**/*.html'
 
 jobs:
   add-frontmatter:
@@ -23,12 +25,12 @@ jobs:
         run: |
           #!/bin/bash
 
-          echo "Checking markdown files for front matter..."
+          echo "Checking markdown and HTML files for front matter..."
 
           # Track modified files
           modified_files=()
 
-          # Find all .md files in documents/
+          # Process all .md and .html files in documents/
           while IFS= read -r -d '' file; do
             file_modified=false
 
@@ -36,19 +38,42 @@ jobs:
             if ! head -1 "$file" | grep -q "^---$"; then
               echo "📝 Adding front matter to: $file"
 
-              # Extract title from first # heading
-              title=$(grep -m 1 "^# " "$file" | sed 's/^# //' | sed 's/[[:space:]]*$//')
+              # Get file extension
+              extension="${file##*.}"
+
+              # Extract title from first # heading (for MD) or <title> tag (for HTML)
+              if [ "$extension" = "md" ]; then
+                title=$(grep -m 1 "^# " "$file" | sed 's/^# //' | sed 's/[[:space:]]*$//')
+              elif [ "$extension" = "html" ]; then
+                title=$(grep -m 1 "<title>" "$file" | sed 's/.*<title>\(.*\)<\/title>.*/\1/' | sed 's/[[:space:]]*$//')
+              fi
 
               # If no title found, use filename
               if [ -z "$title" ]; then
                 # Get filename without extension and convert - and _ to spaces
-                title=$(basename "$file" .md | sed 's/[-_]/ /g' | sed 's/\b\(.\)/\u\1/g')
+                title=$(basename "$file" .$extension | sed 's/[-_]/ /g' | sed 's/\b\(.\)/\u\1/g')
               fi
+
+              # Get the first commit date for this file (creation date from Git)
+              # Use --diff-filter=A to get only the "Added" commit
+              commit_date=$(git log --diff-filter=A --follow --format=%aI --reverse -- "$file" | head -1)
+
+              # If no commit date found (new file not yet committed), use current date
+              if [ -z "$commit_date" ]; then
+                commit_date=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
+                echo "⚠️  No Git history found for $file, using current date: $commit_date"
+              else
+                echo "📅 Found creation date for $file: $commit_date"
+              fi
+
+              # Extract just the date part (YYYY-MM-DD)
+              date_only=$(echo "$commit_date" | cut -d'T' -f1)
 
               # Create temp file with front matter + original content
               {
                 echo "---"
                 echo "title: \"$title\""
+                echo "date: $date_only"
                 echo "---"
                 echo ""
                 cat "$file"
@@ -59,10 +84,30 @@ jobs:
               file_modified=true
             else
               echo "✅ Front matter exists: $file"
+
+              # Check if existing front matter has a date field
+              if ! head -10 "$file" | grep -q "^date:"; then
+                echo "📅 Adding date to existing front matter: $file"
+
+                # Get the first commit date for this file
+                commit_date=$(git log --diff-filter=A --follow --format=%aI --reverse -- "$file" | head -1)
+
+                if [ -z "$commit_date" ]; then
+                  commit_date=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
+                fi
+
+                date_only=$(echo "$commit_date" | cut -d'T' -f1)
+
+                # Insert date after the first line of front matter (after ---)
+                sed -i.bak "1 a\\
+date: $date_only" "$file"
+                rm -f "$file.bak"
+                file_modified=true
+              fi
             fi
 
-            # Fix image paths for Jekyll (convert relative to absolute)
-            if grep -q '!\[.*\](\.*/images/' "$file"; then
+            # Fix image paths for Jekyll (convert relative to absolute) - only for MD files
+            if [ "$extension" = "md" ] && grep -q '!\[.*\](\.*/images/' "$file"; then
               echo "🖼️  Fixing image paths in: $file"
 
               # Convert ./images/ to /sharehub/images/
@@ -75,7 +120,7 @@ jobs:
             if [ "$file_modified" = true ]; then
               modified_files+=("$file")
             fi
-          done < <(find documents -name "*.md" -type f -print0)
+          done < <(find documents \( -name "*.md" -o -name "*.html" \) -type f -print0)
 
           # Set environment variable
           echo "modified=${#modified_files[@]}" >> $GITHUB_ENV
@@ -90,7 +135,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           git add documents/
-          git commit -m "🤖 Auto-add front matter and fix image paths"
+          git commit -m "🤖 Auto-add front matter with Git creation dates and fix image paths"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
