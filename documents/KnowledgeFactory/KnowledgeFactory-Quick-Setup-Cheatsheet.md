@@ -15,9 +15,9 @@ type: reference
 
 ## Prerequisites
 
-- ✅ Claude Pro/Max subscription ($20-50/mo)
-- ✅ macOS/Linux/Windows with CLI access
-- ✅ GitHub account
+- [ ] Claude Pro/Max subscription ($20-50/mo) - [Sign up](https://claude.ai/upgrade)
+- [ ] macOS/Linux/Windows with CLI access
+- [ ] GitHub account - [Create account](https://github.com/signup)
 
 **Time: ~20 minutes for experienced users**
 
@@ -25,183 +25,126 @@ type: reference
 
 ## 1. Foundation Install
 
-```bash
-# System dependencies
-brew install git jq  # macOS
-# sudo apt install git jq  # Linux
-# choco install git jq  # Windows
+### System Dependencies
 
-# Verify
+- [ ] Install system dependencies:
+```bash
+# macOS
+brew install git jq
+
+# Linux
+sudo apt install git jq
+
+# Windows
+choco install git jq
+```
+
+- [ ] Verify installations:
+```bash
 git --version && jq --version
 ```
 
-**Desktop Apps:**
-1. Docker Desktop → [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
-2. Obsidian → [obsidian.md](https://obsidian.md/)
-3. Claude Code → [claude.ai/code](https://claude.ai/code)
+### Desktop Applications
+
+- [ ] Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+  - [ ] Start Docker Desktop application
+  - [ ] Verify Docker is running: `docker --version`
+
+- [ ] Download and install [Obsidian](https://obsidian.md/download)
+  - [ ] Launch Obsidian once
+  - [ ] Close after initial launch
+
+- [ ] Download and install [Claude Code](https://claude.ai/code)
+  - [ ] Sign in with Claude Pro/Max account
 
 ---
 
 ## 2. Obsidian Setup
 
-```bash
-# 1. Create vault
-#    Obsidian → File → New vault → Name: "KnowledgeFactory"
-#    Location: ~/Documents/Obsidian/KnowledgeFactory
-```
+### Create Vault
+
+- [ ] **Create new vault**: Obsidian → File → New vault
+  - Name: `KnowledgeFactory`
+  - Location: `~/Documents/Obsidian/KnowledgeFactory`
 
 ### Install Required Plugins
 
-**Settings → Community plugins → Turn off Safe Mode → Browse**
+Open **Settings → Community plugins** → Turn off Safe Mode → Browse (search in catalog)
 
-**Required:**
-1. **MCP Tools** - Core MCP integration
-   - Install + Enable
-   - Click "Install Server" button (installs MCP Server v0.2.27+)
-   - This installs Local REST API server
-   - Required for MCP Obsidian server to work
+**Required (5):**
+- [ ] **MCP Tools** - Core MCP integration (click "Install Server" button after enabling)
+- [ ] **Local REST API** - Auto-installed by MCP Tools, verify it's enabled
+- [ ] **Terminal** - Integrated terminal in Obsidian (by polyipseity), run Claude Code in side panel
+- [ ] **Smart Connections** - Semantic search (required for `/semantic-search` command)
+- [ ] **Templater** - Advanced templates (required for advanced `/capture` templates)
 
-**Dependencies (installed automatically or manually):**
-2. **Local REST API** - REST API for vault operations
-   - Auto-installed by MCP Tools
-   - Verify: MCP Tools settings shows "Local REST API is installed"
-
-**Recommended (enhances functionality):**
-3. **Smart Connections** - Semantic search and AI linking
-   - Required for `/semantic-search` command
-   - Enables AI-powered note connections
-
-4. **Templater** - Advanced template system
-   - Required for advanced `/capture` templates
-   - Enables dynamic note generation
-
-5. **Terminal** - Integrated terminal in Obsidian (by polyipseity)
-   - Run Claude Code in side panel
-   - Creates unified workspace (edit notes + run AI commands)
-   - No context switching between apps
-   - Configuration: Set shell path in plugin settings, then run `claude` in terminal
-
-**Verification Checklist:**
-```bash
-# Settings → Community plugins → Installed plugins
-# Should see:
-✅ MCP Tools (enabled)
-✅ Local REST API (enabled)
-✅ Smart Connections (enabled) - recommended
-✅ Templater (enabled) - recommended
-✅ Terminal (enabled) - recommended for integrated UI
-```
-
-### Configure Image Folder (REQUIRED)
-
-**Settings → Files & Links**
-```bash
-# Default location for new attachments: "In the folder specified below"
-# Attachment folder path: images
-
-# Alternative (CLI):
-mkdir -p "$VAULT_PATH/images"
-jq '.attachmentFolderPath = "images"' "$VAULT_PATH/.obsidian/app.json" > "$VAULT_PATH/.obsidian/app.json.tmp" && mv "$VAULT_PATH/.obsidian/app.json.tmp" "$VAULT_PATH/.obsidian/app.json"
-
-# Verify:
-cat "$VAULT_PATH/.obsidian/app.json" | jq '.attachmentFolderPath'
-# Should output: "images"
-```
-
-**Why:** Ensures images are organized and `/publish` command works correctly.
-
----
-
-## 3. Retrieve Local REST API Key (CRITICAL)
+### Retrieve Local REST API Key (CRITICAL)
 
 **IMPORTANT**: Get this API key BEFORE installing Docker MCP servers. The Obsidian MCP server requires this key for configuration.
 
-**Method 1: Via Obsidian UI**
-```bash
-# Settings → Community plugins → Local REST API → Copy API Key
-# Example: 0de5ba07c38bd3250722a4978d463ab886dd507607482628794be7f8ee2bd66a
-```
+- [ ] **Copy Obsidian API key**: Settings → Community plugins → Local REST API → Copy API Key
+  - Save this key somewhere secure (you'll need it in Step 4)
+  - Example format: `0de5ba07c38bd3250722a4978d463ab886dd507607482628794be7f8ee2bd66a`
 
-**Method 2: Via Command Line**
-```bash
-VAULT_PATH="$HOME/Documents/Obsidian/KnowledgeFactory"
-cat "$VAULT_PATH/.obsidian/plugins/obsidian-local-rest-api/data.json" | jq -r '.apiKey'
-```
+### Configure Image Folder (REQUIRED)
 
-**Save this key** - you'll use it in Step 4 to configure the Docker MCP Obsidian server.
+- [ ] **Set image folder**: Settings → Files & Links → Attachment folder path: `images`
+  - Under "Default location for new attachments": Select "In the folder specified below"
 
 ---
 
-## 4. MCP Infrastructure
+## 3. Docker MCP Tool Setup
 
 **Now that you have the Obsidian Local REST API key**, install and configure MCP servers.
 
-### Install MCP Servers (Docker Desktop)
-**Docker Desktop → MCP Toolkit → Catalog**
+Open **Docker Desktop → MCP Toolkit → Catalog** (search for each server and install)
 
-```
-Required (4):
-├── GitHub Official      [API key required]
-├── YouTube Transcripts  [no key]
-├── Firecrawl           [API key required]
-└── Obsidian            [Requires API key from Step 3]
+### Install MCP Servers
 
-Recommended (2):
-├── Context7            [no key]
-└── Fetch (Reference)   [no key]
+**Required (3):**
+- [ ] **GitHub Official** (needs API key)
+- [ ] **YouTube Transcripts** 
+- [ ] **Obsidian** (needs API key from Step 2)
 
-Optional (2):
-├── Memory (Reference)  [no key]
-└── Perplexity         [API key required]
-```
+**Recommended (3):**
+- [ ] **Firecrawl** (needs API key)
+- [ ] **Context7** 
+- [ ] **Fetch (Reference)** 
+
+**Optional (2):**
+- [ ] **Memory (Reference)** 
+- [ ] **Perplexity** (needs API key)
 
 ### Configure API Keys
 
-**GitHub:**
-```bash
-# Generate: github.com/settings/tokens
-# Scopes: repo, public_repo
-# Docker Desktop → MCP Toolkit → My servers → GitHub Official → Paste token
-```
+For each server that requires an API key:
 
-**Firecrawl:**
-```bash
-# Get key: firecrawl.dev (1000 free/month)
-# Docker Desktop → MCP Toolkit → My servers → Firecrawl → Paste key
-```
-
-**Obsidian (Use API key from Step 3):**
-```bash
-# Docker Desktop → MCP Toolkit → My servers → Obsidian
-# Add environment variable:
-#   Key: OBSIDIAN_LOCAL_REST_API_KEY
-#   Value: [paste API key from Step 3]
-# Click Save → Restart server
-```
-
-**Perplexity (Optional):**
-```bash
-# Get key: perplexity.ai/settings/api
-# Docker Desktop → MCP Toolkit → My servers → Perplexity → Paste key
-```
+- [ ] **GitHub**: Generate token at [github.com/settings/tokens](https://github.com/settings/tokens) (scopes: `repo`, `public_repo`)
+  - MCP Toolkit → My servers → GitHub Official → Paste token
+- [ ] **Obsidian**: MCP Toolkit → My servers → Obsidian → Add environment variable:
+  - Key: `OBSIDIAN_LOCAL_REST_API_KEY`
+  - Value: [API key from Step 2]
+  - Save and restart server
+- [ ] **Firecrawl** (recommended): Get key at [firecrawl.dev](https://firecrawl.dev) (1000 free/month)
+  - MCP Toolkit → My servers → Firecrawl → Paste key
+- [ ] **Perplexity** (optional): Get key at [perplexity.ai/settings/api](https://perplexity.ai/settings/api)
+  - MCP Toolkit → My servers → Perplexity → Paste key
 
 ### Connect Claude Code
-```bash
-# Docker Desktop → MCP Toolkit → Clients → Claude Code → Connect
-# Verify: All servers show green status
-```
+
+- [ ] **Connect to Claude Code**: MCP Toolkit → Clients → Claude Code → Connect
+  - Verify all servers show green status
 
 ---
 
-## 5. Two-Repository Architecture
+## 4. Document Vault GitHub Setup
 
 ### Private Vault (TIER 1)
 
+- [ ] **Setup private vault git**:
 ```bash
 cd ~/Documents/Obsidian/KnowledgeFactory
-
 git init
-
 cat > .gitignore << 'EOF'
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
@@ -209,203 +152,121 @@ cat > .gitignore << 'EOF'
 .DS_Store
 *.tmp
 EOF
-
 git add .
 git commit -m "Initial commit: Private knowledge vault"
-
 # Optional: Push to private GitHub repo
 gh repo create my-knowledge-vault --private --source=. --push
 ```
 
 ### Public Sharehub (TIER 2 & 3)
 
+- [ ] **Setup public sharehub**:
 ```bash
 cd ~/Documents
 git clone https://github.com/ZorroCheng-MC/sharehub.git
 cd sharehub
-
 rm -rf .git
 git init
 git add .
 git commit -m "Initial commit: My document portal"
-
-# Create your public GitHub repo
 gh repo create my-sharehub --public --source=. --push
-
-# Enable GitHub Pages
 gh repo edit --enable-pages --pages-branch main
-
-# Configure Jekyll baseurl
-# Edit _config.yml: baseurl: "/my-sharehub"
+# Edit _config.yml: Set baseurl: "/my-sharehub"
 git add _config.yml
 git commit -m "Configure Jekyll baseurl"
 git push
 ```
 
-**Verify deployment:**
-```bash
-# Wait ~60 seconds, then visit:
-# https://YOUR_USERNAME.github.io/my-sharehub
-```
+- [ ] **Verify deployment**: Wait ~60 seconds, visit `https://YOUR_USERNAME.github.io/my-sharehub`
 
 ---
 
-## 6. Install obsidian-vault-manager Plugin
+## 5. Install obsidian-vault-manager Plugin
 
-```bash
-# Clone plugin repository
-cd ~/.claude/skills
-git clone https://github.com/ZorroCheng-MC/obsidian-vault-manager-plugin.git obsidian-vault-manager
-
-# Verify installation
-ls -la ~/.claude/skills/obsidian-vault-manager
-```
-
----
-
-## 7. Run Setup Wizard
-
+- [ ] **Add plugin marketplace**:
 ```bash
 cd ~/Documents/Obsidian/KnowledgeFactory
 claude
 
 # In Claude Code CLI:
-/setup
+/plugin marketplace add ZorroCheng-MC/obsidian-vault-manager-plugin
 ```
 
-**Provide when prompted:**
-```
-Vault path:       ~/Documents/Obsidian/KnowledgeFactory (auto-detected)
-Sharehub path:    ~/Documents/sharehub
-Sharehub repo:    YOUR_USERNAME/my-sharehub
-GitHub Pages URL: https://YOUR_USERNAME.github.io/my-sharehub
+- [ ] **Install the plugin**:
+```bash
+# Browse available plugins
+/plugin
+
+# Or install directly
+/plugin install obsidian-vault-manager@ZorroCheng-MC/obsidian-vault-manager-plugin
 ```
 
-**Creates:**
-- `.claude/config.sh` - Path configuration
-- `.claude/settings.local.json` - Claude Code settings
+The plugin will be available immediately with slash commands like `/capture`, `/publish`, etc.
 
 ---
 
-## 8. Verification
+## 6. Run Setup Wizard
 
-### Test Commands
-
+- [ ] **Launch Claude Code and run setup**:
 ```bash
-# Capture quick note
+cd ~/Documents/Obsidian/KnowledgeFactory
+claude
+# In Claude Code CLI, run:
+/setup
+```
+  - Provide: Vault path (auto-detected), Sharehub path, Sharehub repo, GitHub Pages URL
+  - Creates: `.claude/config.sh` and `.claude/settings.local.json`
+
+---
+
+## 7. Verification
+
+- [ ] **Test all commands**:
+```bash
 /capture Build a Chrome extension that auto-captures to Obsidian
-
-# Create idea with AI tagging
 /idea Knowledge graph visualization for Obsidian
-
-# Get YouTube transcript
 /youtube-note https://youtube.com/watch?v=VIDEO_ID
-
-# Semantic search vault
 /semantic-search "machine learning workflows"
-
-# Analyze git repository
 /gitingest https://github.com/user/repo
-
-# Publish note to sharehub
 /publish my-first-note.md
 ```
 
-### Verify MCP Servers
+- [ ] **Verify MCP servers**: Check that `mcp__github__*`, `mcp__obsidian-mcp-tools__*`, `mcp__fetch__fetch`, `mcp__gitingest__*` commands are available
 
-```bash
-# In Claude Code, all MCP tools should be available:
-mcp__github__*
-mcp__obsidian-mcp-tools__*
-mcp__fetch__fetch
-mcp__gitingest__*
-```
-
-### Check Paths
-
-```bash
-cat ~/.claude/skills/obsidian-vault-manager/.claude/config.sh
-```
-
-Should show:
-```bash
-VAULT_PATH="/Users/YOU/Documents/Obsidian/KnowledgeFactory"
-SHAREHUB_PATH="/Users/YOU/Documents/sharehub"
-SHAREHUB_REPO="YOUR_USERNAME/my-sharehub"
-GITHUB_PAGES_URL="https://YOUR_USERNAME.github.io/my-sharehub"
-```
+- [ ] **Check config paths**: View `~/.claude/skills/obsidian-vault-manager/.claude/config.sh` and verify paths are correct
 
 ---
 
-## 9. Three-Tier Publishing
+## 8. Three-Tier Publishing
 
-### TIER 1: Private (Never Publish)
-```bash
-# Simply don't run /publish command
-# Note stays in vault forever
-```
+**TIER 1: Private** - Don't run `/publish`, note stays in vault
 
-### TIER 2: Trusted Circle (Password Protected)
-```yaml
----
-title: "Internal Team Strategy"
-access: private
----
-Your content here...
-```
-```bash
-/publish internal-strategy.md
-# Requires password "maco" to view
-```
+**TIER 2: Trusted Circle** - Add `access: private` to frontmatter, run `/publish`, requires password "maco"
 
-### TIER 3: Public (No Password)
-```yaml
----
-title: "How to Build a Knowledge Base"
----
-Your content here...
-```
-```bash
-/publish knowledge-base-guide.md
-# Anyone can read
-```
+**TIER 3: Public** - Run `/publish` without `access: private`, anyone can read
 
 ---
 
 ## Troubleshooting
 
-### MCP Servers Not Working
-```bash
-# Docker Desktop → MCP Toolkit → My servers
-# Check all servers show green status
-# Restart Docker Desktop if needed
-```
+**MCP Servers Not Working:**
+- Check Docker Desktop → MCP Toolkit → My servers (all should be green)
+- Verify API keys configured, restart server, or restart Docker Desktop
 
-### `/publish` Command Fails
-```bash
-# Verify config exists
-cat ~/.claude/skills/obsidian-vault-manager/.claude/config.sh
+**`/publish` Command Fails:**
+- Verify config exists: `cat ~/.claude/skills/obsidian-vault-manager/.claude/config.sh`
+- Check sharehub is git repo: `cd ~/Documents/sharehub && git status`
+- Verify remote: `git remote -v`
 
-# Check sharehub is git repository
-cd ~/Documents/sharehub && git status
+**Obsidian MCP Tools Not Working:**
+- Settings → Community plugins → MCP Tools
+- Verify "Install Server" was clicked, Local REST API enabled
+- Restart Obsidian if needed
 
-# Verify GitHub remote
-git remote -v
-```
-
-### Obsidian MCP Tools Not Working
-```bash
-# Settings → Community plugins → MCP Tools
-# Verify "Install Server" was clicked
-# Check Local REST API is running
-```
-
-### API Rate Limits
-```bash
-# GitHub: 5000 requests/hour (authenticated)
-# Firecrawl: 1000 requests/month (free tier)
-# Perplexity: Depends on plan
-```
+**API Rate Limits:**
+- GitHub: 5000 requests/hour (authenticated)
+- Firecrawl: 1000 requests/month (free tier)
+- Perplexity: Depends on your plan
 
 ---
 
@@ -473,12 +334,13 @@ Two-Repository Model:
 ## Quick Reference URLs
 
 - **Claude Code**: [claude.ai/code](https://claude.ai/code)
-- **Obsidian**: [obsidian.md](https://obsidian.md/)
-- **Docker Desktop**: [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+- **Obsidian**: [obsidian.md](https://obsidian.md)
+- **Docker Desktop**: [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 - **GitHub Tokens**: [github.com/settings/tokens](https://github.com/settings/tokens)
-- **Firecrawl API**: [firecrawl.dev](https://www.firecrawl.dev/)
+- **Firecrawl API**: [firecrawl.dev](https://firecrawl.dev)
+- **Perplexity API**: [perplexity.ai/settings/api](https://perplexity.ai/settings/api)
 - **Sharehub Template**: [github.com/ZorroCheng-MC/sharehub](https://github.com/ZorroCheng-MC/sharehub)
-- **Plugin Repo**: [github.com/ZorroCheng-MC/obsidian-vault-manager-plugin](https://github.com/ZorroCheng-MC/obsidian-vault-manager-plugin)
+- **Vault Manager Plugin**: [github.com/ZorroCheng-MC/obsidian-vault-manager-plugin](https://github.com/ZorroCheng-MC/obsidian-vault-manager-plugin)
 
 ---
 
@@ -486,12 +348,11 @@ Two-Repository Model:
 
 | Item | Cost | Required? |
 |------|------|-----------|
-| Claude Pro | $20/mo | ✅ Yes (or Max) |
-| Claude Max | $50/mo | Alternative |
-| Docker Desktop | Free | ✅ Yes |
-| Obsidian | Free | ✅ Yes |
-| GitHub | Free | ✅ Yes (free tier) |
-| Firecrawl | Free | ✅ Yes (1000/mo) |
+| Claude Pro/Max | $20-50/mo | ✅ Required |
+| Docker Desktop | Free | ✅ Required |
+| Obsidian | Free | ✅ Required |
+| GitHub | Free | ✅ Required |
+| Firecrawl | Free (1000/mo) | ⭐ Recommended |
 | Perplexity | Varies | ❌ Optional |
 
 **Total minimum: $20/mo (Claude Pro only)**
