@@ -1,5 +1,6 @@
 ---
 title: "KnowledgeFactory - Quick Setup Cheatsheet"
+layout: default
 tags: [product, setup, cheatsheet, reference, advanced]
 date: 2025-11-11
 type: reference
