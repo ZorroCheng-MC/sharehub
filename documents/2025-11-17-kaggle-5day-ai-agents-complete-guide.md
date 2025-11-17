@@ -2,7 +2,7 @@
 title: "Kaggle x Google 5-Day AI Agents Intensive Course - Complete Guide"
 tags: [video, AI, learning, development, agents, knowledge-management, data-science, tools, automation, productivity, inbox, tutorial, technical, deep-dive]
 url: https://rsvp.withgoogle.com/events/google-ai-agents-intensive_2025
-date: 2025-11-11
+date: 2025-11-17
 type: comprehensive-guide
 status: inbox
 priority: high
