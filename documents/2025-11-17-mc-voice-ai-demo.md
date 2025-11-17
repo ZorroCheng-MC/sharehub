@@ -216,30 +216,31 @@ layout: none
     <div class="container">
         <div class="logo">🎙️</div>
 
-        <h1>MC Voice AI Agent</h1>
-        <p class="subtitle">Solution Day Demo</p>
+        <h1>HK Solution Day 2026</h1>
+        <p class="subtitle">Speaker Guideline Assistant</p>
 
         <p class="description">
-            Experience the power of conversational AI. Our voice agent demonstrates
-            natural language understanding and intelligent responses in real-time.
+            Ask me anything about the Hong Kong Solution Day 2026 speaker guidelines.
+            I'm here to help you prepare your presentation and understand the event format.
         </p>
 
-        <a href="#" class="cta">Start Chat - Bottom Right Corner</a>
+        <a href="#" class="cta">Start Voice Chat - Bottom Right Corner</a>
 
         <div class="info-box">
-            <h3>Demo Capabilities</h3>
+            <h3>What I Can Help With</h3>
             <ul>
-                <li>Natural voice conversation</li>
-                <li>Real-time AI responses</li>
-                <li>Context-aware dialogue</li>
-                <li>Professional customer support simulation</li>
-                <li>Multi-language support</li>
+                <li>Event theme: "AI & U: Your Growth Fuels Ours"</li>
+                <li>Co-presentation format (MC + Partner)</li>
+                <li>Session timing and structure (20 min)</li>
+                <li>Slide requirements and templates</li>
+                <li>Submission deadlines and rehearsal process</li>
+                <li>Content guidelines (do's and don'ts)</li>
             </ul>
         </div>
 
         <div class="footer">
-            <strong>MasterConcept</strong> | Solution Day 2025<br>
-            Powered by ElevenLabs Conversational AI
+            <strong>MasterConcept</strong> | Hong Kong Solution Day 2026<br>
+            Theme: AI & U - Where empowered people drive enterprise success
         </div>
     </div>
 
