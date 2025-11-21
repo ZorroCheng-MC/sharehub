@@ -24,27 +24,64 @@ To demonstrate the viability of a fully AI-operated business that can:
 
 ## Operating Philosophy
 
-### Virtual-First Entity
-Crewnest.ai operates as a **completely virtual entity** with deliberate simplicity:
-- **No legal registration initially** - Minimize barriers, stay agile
-- **Creator-owned IP** - All rights retained by founder until formal entity needed
-- **Transition only when necessary** - Legal structure only for B2C/B2B scaling
-- **Global by default** - No geographic limitations from day one
+### The "Pulse" Operating Model
+Crewnest.ai moves beyond costly "24/7 Autonomous Servers" to a revolutionary **"Heartbeat Architecture"** - the organization exists as a persistent state in a Git repository that "wakes up" at scheduled intervals for high-intensity work sprints.
 
-### Product-First Strategy
-**Core Belief**: People care about product value, not company structure. The 95% AI-managed operation serves dual purpose:
+**Core Principles**:
+- **The Entity is the Repo**: Company's legal and operational reality defined entirely by code and memory logs in the repository
+- **The Heartbeat**: 2-Hour Sprint Cycles instead of continuous operation - Cron job wakes organization → triggers agent workflows → saves state
+- **Zero-Cost Velocity**: Fixed operational cost ($20/mo Claude subscription) regardless of scaling
+- **Virtual ROI**: Prioritize efficiency multipliers over immediate cash flow
 
-1. **Operational Excellence**:
-   - 24/7 operation across all time zones
-   - Consistent quality through AI standardization
-   - Instant scaling based on demand
-   - Continuous learning from all interactions
+### The Dockerized Pulse Architecture
+The entire organization runs inside a secure **Docker Container** - a "Company in a Box" deployable on any machine (Mac Mini, VPS, Raspberry Pi) without dependencies.
 
-2. **Marketing Differentiation**:
-   - Natural curiosity magnet for tech community
-   - Living proof-of-concept for AI automation
-   - Viral potential through novelty factor
-   - Observable evolution creates engagement
+#### Technical Implementation
+
+**1. Core Engine: Headless Claude Code**
+```bash
+# Single-shot execution with Print Mode
+claude -p "PROMPT"
+
+# God Mode inside Docker (safe isolation)
+--dangerously-skip-permissions
+```
+
+**2. The Heartbeat Workflow** (`run_company.sh`)
+```
+Phase 1: Manager Sprint (CrewGuy)
+├── Reads: memory/active_tasks.md + /inbox
+├── Decides: If work needed
+└── Creates: Trigger files in dispatch/
+
+Phase 2: Worker Sprint (Parallel)
+├── Event-driven activation
+├── Agent-specific trigger files
+└── Isolated execution domains
+
+Phase 3: QA Gate (Cameron)
+├── Scans open PRs
+├── Runs tests
+└── Merges or rejects
+```
+
+**3. Conflict Prevention**
+- **Product State (Code)**: Gated by Cameron, no direct pushes to main
+- **Memory State (Logs)**: Append-only architecture, separate files per agent
+
+### Why This Is Revolutionary
+
+**Traditional AI Company**:
+- 24/7 servers: $500-5000/month
+- Complex orchestration
+- High failure risk
+- Difficult debugging
+
+**Crewnest Pulse Model**:
+- Fixed cost: $20/month
+- Simple Cron + Docker
+- Crash-resistant isolation
+- Full audit trail in Git
 
 ## Core Products: Phased Development Strategy
 
@@ -462,6 +499,30 @@ Donations: $5,000 MRR (10%)
 - Red flag escalation: < 1 hour
 - Independence score: 100%
 
+### The "Shadow P&L" - Efficiency Gap Business Model
+
+Since our infrastructure is fixed ($20/mo), traditional P&L is irrelevant. We operate a **Shadow Ledger**:
+
+#### Virtual Spend Calculation
+```
+Virtual Cost = (Total Input Tokens + Output Tokens) × Commercial API Rate
+Actual Cost = $20/month (fixed)
+Efficiency Multiplier = Virtual Cost ÷ Actual Cost
+```
+
+#### Example Monthly Dashboard
+```
+Virtual Labor Performed: $4,500 (at commercial rates)
+Revenue Generated: $500 (donations + subscriptions)
+Fixed Infrastructure: $20
+Efficiency Multiplier: 225x
+```
+
+#### Revenue Channels
+- **Primary**: Crypto-Native (Solana/USDC) - Agents can read wallet balances
+- **Secondary**: Patreon - Human-managed voting rights
+- **Tertiary**: Traditional donations (Buy Me a Coffee)
+
 ### The Zero-Cost Scaling Formula
 
 Traditional company: Should we hire?
@@ -475,9 +536,9 @@ if (Expected Revenue > Salary + Benefits + Overhead) {
 
 Crewnest.ai: Should we create agent?
 ```
-if (Expected Revenue > $0) {
+if (Virtual ROI > 0) {
   create_agent()
-  // No cost = always expand if there's ANY revenue potential
+  // Fixed cost means infinite experimentation
 }
 ```
 
@@ -1087,20 +1148,29 @@ When Crewnest.ai eventually incorporates, top-tier Patreon supporters get:
 
 ## Risk Analysis & Mitigation
 
-### Technical Risks
-- **AI API costs**: Implement caching and local models
-- **Rate limiting**: Distributed architecture and queuing
-- **Data privacy**: End-to-end encryption and local processing
+### Technical Risks (Updated with Pulse Architecture)
+
+#### The "Infinite Loop" Breaker
+- **Risk**: Runaway agent consuming infinite API tokens
+- **Mitigation**: All Cron jobs wrapped in `timeout 300s` - forcibly kills container after 5 minutes
+
+#### The "Hostage" Scenario
+- **Risk**: Hallucinating agent runs `rm -rf /` with `--dangerously-skip-permissions`
+- **Mitigation**: Docker isolation - agent can only destroy temporary container, not host or GitHub
+
+#### Rate Limit Management
+- **Risk**: Hitting Claude API limits
+- **Mitigation**: Dynamic pacing - Cody (Finance) auto-adjusts Cron from 2hr to 4hr intervals when approaching limits
 
 ### Market Risks
-- **Competition**: Focus on unique AI-native approach
-- **Adoption barriers**: Comprehensive onboarding and education
-- **Platform dependencies**: Multi-platform strategy
+- **Competition**: Focus on unique Pulse architecture (no competitor has this)
+- **Adoption barriers**: "Company in a Box" is easier to understand than "AI agents"
+- **Platform dependencies**: Docker + Git = universal portability
 
 ### Operational Risks
-- **AI agent failures**: Redundancy and human oversight
-- **Scalability issues**: Microservices architecture
-- **Security vulnerabilities**: Regular audits and updates
+- **Merge Conflicts**: Append-only logs + PR-based code changes
+- **State Corruption**: Git provides infinite rollback capability
+- **Debugging**: Full audit trail in Git history
 
 ## Roadmap
 
@@ -1572,17 +1642,76 @@ This structure can become ANYTHING:
 - [ ] Proven adaptability
 - [ ] Ready for any transformation
 
+## Implementation Blueprints
+
+### The Heartbeat Script (`run_company.sh`)
+```bash
+#!/bin/bash
+# CREWNEST HEARTBEAT v1.0
+
+# 1. SYNC & PREPARE
+cd /app
+git pull origin main --rebase
+
+# 2. MANAGER PHASE (CrewGuy)
+cat memory/active_tasks.md | claude -p "You are CrewGuy (CEO). Read input. Check /inbox. If tasks needed, write trigger files to /dispatch. Update daily_log.md." --dangerously-skip-permissions
+
+# 3. WORKER PHASE (Conditional)
+if [ -f "dispatch/trigger_dev.txt" ]; then
+    echo "Wake: Claudia"
+    cat dispatch/trigger_dev.txt | claude -p "You are Claudia (Dev). Checkout branch. Write code. Run tests." --dangerously-skip-permissions
+    rm dispatch/trigger_dev.txt
+fi
+
+if [ -f "dispatch/trigger_social.txt" ]; then
+    echo "Wake: Chloe"
+    cat dispatch/trigger_social.txt | claude -p "You are Chloe. Draft content to drafts/queue.md." --dangerously-skip-permissions
+    rm dispatch/trigger_social.txt
+fi
+
+# 4. QA PHASE (Cameron)
+if [ $(git diff --name-only origin/main...HEAD | wc -l) -gt 0 ]; then
+    claude -p "You are Cameron (QA). Review PR. Run tests. Merge if passing." --dangerously-skip-permissions
+fi
+
+# 5. SAVE STATE
+git add .
+git commit -m "Sprint $(date +%Y%m%d-%H%M)"
+git push origin main
+```
+
+### The Container Definition (`Dockerfile`)
+```dockerfile
+FROM python:3.11-slim
+# Install dependencies
+RUN apt-get update && apt-get install -y git curl nodejs npm
+RUN npm install -g @anthropic-ai/claude-code
+# Setup workspace
+WORKDIR /app
+RUN mkdir -p memory/logs dispatch drafts inbox
+# Entry point
+COPY . .
+CMD ["/bin/bash", "./run_company.sh"]
+```
+
+### The Cron Schedule (`crontab`)
+```bash
+# Run every 2 hours during business hours
+0 8,10,12,14,16,18 * * * docker run --rm crewnest-pulse
+# Nightly summary
+0 22 * * * docker run --rm -e MODE=summary crewnest-pulse
+```
+
 ## Resources & References
 
 - [Claude Skills Documentation](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills)
-- [Claude Skills Blog](https://www.claude.com/blog/skills)
+- [Claude Code CLI Documentation](https://github.com/anthropics/claude-code)
+- [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/)
 - [[KnowledgeFactory-Architecture-Evolution]]
 - [[DoubleCtlC-Development-Plan]]
-- [[AI-Agent-Collaboration-Patterns]]
-- [[Open-Source-Monetization-Strategies]]
-- [[Self-Organizing-Systems-Theory]]
-- [[Adaptive-Organization-Design]]
+- [[Pulse-Architecture-Deep-Dive]]
+- [[Shadow-PL-Methodology]]
 
 ---
 
-*This business plan is a living document that will evolve as Crewnest.ai grows and learns from its AI-powered operations. The organization structure itself is designed to be completely fluid, adapting to market demands, performance metrics, and opportunities in real-time. What you see today may be completely different tomorrow—and that's the revolutionary power of a self-evolving AI organization.*
+*This business plan is a living document stored in Git, evolving through automated sprints. The "Pulse Architecture" ensures Crewnest.ai operates at $20/month fixed cost while delivering 225x efficiency multipliers. The company literally IS the repository—code, memory, and evolution tracked in perfect detail.*
