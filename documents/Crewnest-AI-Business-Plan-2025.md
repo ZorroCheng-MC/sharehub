@@ -46,42 +46,227 @@ Crewnest.ai operates as a **completely virtual entity** with deliberate simplici
    - Viral potential through novelty factor
    - Observable evolution creates engagement
 
-## Core Products
+## Core Products: Phased Development Strategy
 
-### 1. Knowledge Factory
+### Phase 1: Knowledge Factory (Months 1-6)
+**Target Audience**: Technical Early Adopters
 **Status**: Active Development
-**Documentation**: 
-- [[KnowledgeFactory-Your-AI-Powered-2nd-Brain]]
-- [[KnowledgeFactory-Commercialization-Plan]]
 
-**Value Proposition**:
-- AI-powered second brain for knowledge workers
-- Automated knowledge capture and organization
-- Intelligent retrieval and synthesis
-- Cross-platform integration (Obsidian, GitHub, Reddit)
+#### Primary User Profile
+**"The Tech-Savvy Knowledge Worker"**
+- Has: Mac, Claude Code subscription, GitHub PAT, Obsidian
+- Coming from: Notion (but frustrated with vendor lock-in)
+- Wants: Full control over their notes and AI capabilities
+- Comfort level: Happy with `brew install` and terminal commands
+- Pain points: Fear of vendor lock-in, data ownership concerns
 
-**Target Market**:
-- Phase 1: Developers and technical users
-- Phase 2: Knowledge workers and content creators
-- Phase 3: Enterprise teams and organizations
+#### Value Proposition for Geeks
+- **Data Sovereignty**: Your notes, your control, your servers
+- **No Vendor Lock-in**: Plain markdown files, portable everywhere
+- **AI-Enhanced**: Claude integration without sacrificing privacy
+- **GitHub-Native**: Version control and backup built-in
+- **Obsidian Power**: Full graph view, plugins, customization
 
-### 2. DoubleCopy.ai (DoubleCtlC & CmdOptionC)
-**Status**: Planning Phase
-**Documentation**:
-- [[DoubleCtlC-Development-Plan.md]]
-- [[CmdOptionC-Development-Plan]]
+#### Initial Feature Set
+```
+Core Features (Month 1-3):
+- Obsidian + GitHub sync
+- Claude Code integration
+- Smart capture from web/clipboard
+- AI-powered tagging
+- Local-first architecture
 
-**Value Proposition**:
-- Friction-free clipboard capture and enhancement
-- AI-powered content transformation
-- Cross-application intelligence layer
-- Context-aware content suggestions
+Advanced Features (Month 4-6):
+- Custom AI workflows
+- Multi-vault support
+- Team collaboration via Git
+- API for extensions
+```
 
-**Target Market**:
-- Power users and productivity enthusiasts
-- Content creators and writers
-- Software developers
-- Digital marketers
+#### Community Feedback Loop
+- **Week 1-2**: Launch to r/ObsidianMD and r/selfhosted
+- **Month 1**: Gather power user feedback
+- **Month 2**: Implement top 5 requested features
+- **Month 3**: Polish based on usage patterns
+
+### Phase 2: DoubleCopy.ai (Months 7-12)
+**Target Audience**: Mainstream Mac Users
+**Status**: Planning → Development
+
+#### Transition Strategy
+**"From Geeks to Everyone"**
+```
+Knowledge Factory Success (1,000+ power users)
+    ↓
+Extract core AI capabilities
+    ↓
+Simplify to one-click Mac app
+    ↓
+DoubleCopy.ai Launch
+```
+
+#### Primary User Profile
+**"The Productivity-Minded Mac User"**
+- Has: Mac, basic tech skills
+- Doesn't want: Terminal commands, GitHub setup
+- Wants: Simple DMG installer, immediate value
+- Pain point: Repetitive copy-paste tasks
+
+#### Key Differentiator
+- **One-Click Install**: Download DMG, drag to Applications, done
+- **No Dependencies**: No Obsidian, GitHub, or Claude Code required
+- **Instant Value**: Works with existing workflow immediately
+- **Progressive Complexity**: Simple start, advanced features discoverable
+
+#### Development Approach
+```
+Month 7-8: Core Development
+- Extract KF's AI engine
+- Build native Mac app (Swift/Electron)
+- Create installer package
+
+Month 9-10: Beta Testing
+- 100 non-technical testers
+- Simplify based on confusion points
+- Polish UI/UX
+
+Month 11-12: Public Launch
+- Mac App Store submission
+- ProductHunt launch
+- Mainstream tech blog coverage
+```
+
+### Phase 3: Platform Expansion (Year 2)
+**Based on Community Feedback**
+
+#### Potential Storage Backends
+Monitor KF community requests and implement top choices:
+
+**Option A: Obsidian Sync Integration**
+```
+If requested by > 30% of users:
+- Direct Obsidian Sync subscription
+- No GitHub required
+- Simpler for non-developers
+- Revenue share with Obsidian
+```
+
+**Option B: Google Drive Connector**
+```
+If requested by > 40% of users:
+- Local MD → Google Drive sync
+- Familiar to mainstream users
+- Cross-platform compatibility
+- Lower technical barrier
+```
+
+**Option C: iCloud Integration**
+```
+If Mac users > 80%:
+- Native iCloud Drive sync
+- Zero configuration
+- Apple ecosystem integration
+- Maximum simplicity
+```
+
+**Option D: Self-Hosted Options**
+```
+For privacy-focused users:
+- Nextcloud integration
+- Syncthing support
+- WebDAV compatibility
+- Docker package
+```
+
+### Community-Driven Development Process
+
+#### Feedback Collection Mechanism
+**Weekly Signals**:
+- GitHub issues and discussions
+- Reddit thread sentiment analysis
+- Discord feature requests
+- Support ticket patterns
+- Usage analytics (privacy-respecting)
+
+#### Decision Framework
+```
+Feature Request Evaluation:
+1. How many users requested? (threshold: 10%)
+2. Does it align with core vision?
+3. Implementation complexity?
+4. Revenue potential?
+5. Community volunteer contributors?
+
+If Score > 15/25 → Add to roadmap
+```
+
+#### Rapid Response Protocol
+**"Ship Fast, Listen Faster"**
+- Daily: Monitor acute pain points
+- Weekly: Ship minor improvements
+- Bi-weekly: Release feature updates
+- Monthly: Major version releases
+
+#### Community Participation Levels
+
+**Lurkers** (70%)
+- Use free version
+- Provide usage data
+- Occasional feedback
+
+**Contributors** (20%)
+- Submit bug reports
+- Suggest features
+- Help others in Discord
+
+**Champions** (9%)
+- Create tutorials
+- Build extensions
+- Evangelize product
+
+**Core** (1%)
+- Submit PRs
+- Build integrations
+- Shape roadmap
+
+### Success Metrics by Phase
+
+#### Knowledge Factory Success = DoubleCopy Launch Signal
+```
+KF Ready for DC When:
+- 1,000+ active users
+- 90% retention after 30 days
+- Core AI features stable
+- Community requesting "easier version"
+- Technical debt manageable
+```
+
+#### DoubleCopy Success = Mainstream Validation
+```
+DC Success Metrics:
+- 10,000 downloads in first month
+- 50% activation rate
+- 30% weekly active users
+- < 5 support tickets per 100 users
+- 4.5+ star Mac App Store rating
+```
+
+### The Evolution Path
+
+**Knowledge Factory** = Laboratory
+- Where we experiment with AI features
+- Technical users provide detailed feedback
+- Complex features tested safely
+
+**DoubleCopy** = Product
+- Proven features from KF
+- Simplified for mainstream
+- Focus on polish over features
+
+**Future Products** = Scale
+- Each product teaches us what works
+- Community guides development
+- Crewnest.ai agents learn and adapt
 
 ## Zero-Cost Scaling: The Ultimate HR Advantage
 
