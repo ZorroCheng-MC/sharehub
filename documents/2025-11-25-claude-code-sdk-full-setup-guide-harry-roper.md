@@ -45,7 +45,7 @@ This tutorial walks through building an AI agent orchestrator system using Anthr
 
 ### Architecture Diagram
 
-![[images/claude-sdk-orchestrator-architecture.png]]
+![Claude SDK Orchestrator Architecture](/sharehub/images/claude-sdk-orchestrator-architecture.png)
 
 *The orchestrator pattern illustrated above shows the central agent architecture. The **Orchestrator** sits at the core, connected to: (1) **Save and read Memory** for persistence across sessions, (2) **State Machine** enabling continuous loop operation, (3) **Tools** for direct capabilities, and (4) **Sub Agents** like Writer and Reviewer teams. Each sub-agent has specialized tools—the Writer can write files while the Reviewer can add to the database. This hierarchical design allows the orchestrator to delegate specialized tasks while maintaining overall control and memory state.*
 
