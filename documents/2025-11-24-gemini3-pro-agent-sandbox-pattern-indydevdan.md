@@ -5,6 +5,7 @@ source: youtube
 url: https://youtu.be/V5IhsHEHXOg
 channel: IndyDevDan
 duration: 29 minutes
+date: 2025-11-24
 date_published: 2025-11-24
 date_captured: 2025-11-24
 priority: high
