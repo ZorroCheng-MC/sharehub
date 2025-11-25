@@ -5,6 +5,7 @@ source: youtube
 url: https://youtu.be/dVfW6Xsx2H8
 channel: Harry Roper
 duration: 19 minutes
+date: 2025-11-25
 date_published: 2025-10-27
 date_captured: 2025-11-25
 priority: high
