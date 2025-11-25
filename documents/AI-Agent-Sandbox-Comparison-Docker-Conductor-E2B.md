@@ -1,6 +1,7 @@
 ---
 title: "AI Agent Sandbox Comparison: Docker vs Conductor vs E2B vs Claude Subagents"
 type: reference
+date: 2025-11-25
 date_created: 2025-11-25
 priority: high
 tags:
