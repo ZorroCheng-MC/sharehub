@@ -30,16 +30,17 @@ jobs:
           # Track modified files
           modified_files=()
 
+          # Get the list of files changed in this push (for date updates)
+          changed_files=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+
           # Process all .md and .html files in documents/
           while IFS= read -r -d '' file; do
             file_modified=false
+            extension="${file##*.}"
 
             # Check if file starts with front matter delimiter
             if ! head -1 "$file" | grep -q "^---$"; then
               echo "📝 Adding front matter to: $file"
-
-              # Get file extension
-              extension="${file##*.}"
 
               # Extract title from first # heading (for MD) or <title> tag (for HTML)
               if [ "$extension" = "md" ]; then
@@ -50,56 +51,74 @@ jobs:
 
               # If no title found, use filename
               if [ -z "$title" ]; then
-                # Get filename without extension and convert - and _ to spaces
                 title=$(basename "$file" .$extension | sed 's/[-_]/ /g' | sed 's/\b\(.\)/\u\1/g')
               fi
 
-              # Get the first commit date for this file (creation date from Git)
-              # Use --diff-filter=A to get only the "Added" commit
-              commit_date=$(git log --diff-filter=A --follow --format=%aI --reverse -- "$file" | head -1)
+              # Get the LAST (most recent) commit date for this file
+              commit_date=$(git log -1 --format=%aI -- "$file")
 
-              # If no commit date found (new file not yet committed), use current date
+              # If no commit date found (new file), use current date
               if [ -z "$commit_date" ]; then
                 commit_date=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
-                echo "⚠️  No Git history found for $file, using current date: $commit_date"
+                echo "⚠️  No Git history found for $file, using current date"
               else
-                echo "📅 Found creation date for $file: $commit_date"
+                echo "📅 Using last update date for $file: $commit_date"
               fi
 
-              # Extract just the date part (YYYY-MM-DD)
               date_only=$(echo "$commit_date" | cut -d'T' -f1)
 
               # Create temp file with front matter + original content
+              # HTML files get layout: null to prevent Jekyll wrapping
               {
                 echo "---"
                 echo "title: \"$title\""
                 echo "date: $date_only"
+                if [ "$extension" = "html" ]; then
+                  echo "layout: null"
+                fi
                 echo "---"
-                echo ""
                 cat "$file"
               } > "$file.tmp"
 
-              # Replace original file
               mv "$file.tmp" "$file"
               file_modified=true
             else
               echo "✅ Front matter exists: $file"
 
-              # Check if existing front matter has a date field
+              # Check if this file was changed in this push - update the date
+              if echo "$changed_files" | grep -q "$file"; then
+                echo "📅 Updating date for modified file: $file"
+
+                # Get current date
+                new_date=$(date -u +"%Y-%m-%d")
+
+                # Update the date field in front matter
+                if head -10 "$file" | grep -q "^date:"; then
+                  sed -i.bak "s/^date:.*$/date: $new_date/" "$file"
+                  rm -f "$file.bak"
+                  file_modified=true
+                fi
+              fi
+
+              # Check if existing front matter has a date field (for files without date)
               if ! head -10 "$file" | grep -q "^date:"; then
                 echo "📅 Adding date to existing front matter: $file"
 
-                # Get the first commit date for this file
-                commit_date=$(git log --diff-filter=A --follow --format=%aI --reverse -- "$file" | head -1)
-
+                commit_date=$(git log -1 --format=%aI -- "$file")
                 if [ -z "$commit_date" ]; then
                   commit_date=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
                 fi
-
                 date_only=$(echo "$commit_date" | cut -d'T' -f1)
 
-                # Insert date after the first line of front matter (after ---)
                 sed -i.bak "2i date: $date_only" "$file"
+                rm -f "$file.bak"
+                file_modified=true
+              fi
+
+              # Check if HTML file is missing layout: null
+              if [ "$extension" = "html" ] && ! head -10 "$file" | grep -q "^layout:"; then
+                echo "🔧 Adding layout: null to HTML file: $file"
+                sed -i.bak "2i layout: null" "$file"
                 rm -f "$file.bak"
                 file_modified=true
               fi
@@ -108,8 +127,6 @@ jobs:
             # Fix image paths for Jekyll (convert relative to absolute) - only for MD files
             if [ "$extension" = "md" ] && grep -q '!\[.*\](\.*/images/' "$file"; then
               echo "🖼️  Fixing image paths in: $file"
-
-              # Convert ./images/ to /sharehub/images/
               sed -i.bak 's|!\[\([^]]*\)\](\.*/images/\([^)]*\))|![\1](/sharehub/images/\2)|g' "$file"
               rm -f "$file.bak"
               file_modified=true
@@ -134,7 +151,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           git add documents/
-          git commit -m "🤖 Auto-add front matter with Git creation dates and fix image paths"
+          git commit -m "🤖 Auto-add front matter with last update dates"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
