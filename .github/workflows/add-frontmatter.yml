@@ -99,8 +99,7 @@ jobs:
                 date_only=$(echo "$commit_date" | cut -d'T' -f1)
 
                 # Insert date after the first line of front matter (after ---)
-                sed -i.bak "1 a\\
-date: $date_only" "$file"
+                sed -i.bak "2i date: $date_only" "$file"
                 rm -f "$file.bak"
                 file_modified=true
               fi
