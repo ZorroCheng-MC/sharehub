@@ -1,4 +1,5 @@
 ---
+date: 2025-10-30
 title: "Host Your Own JWT Authentication System with n8n"
 type: article
 source: https://n8n.io/workflows/9660-host-your-own-jwt-authentication-system-with-data-tables-and-token-management/

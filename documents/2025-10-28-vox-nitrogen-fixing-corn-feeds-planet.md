@@ -1,4 +1,5 @@
 ---
+date: 2025-11-21
 title: "The Giant Corn That Could Feed the Planet - Nitrogen-Fixing Maize"
 tags:
   - video

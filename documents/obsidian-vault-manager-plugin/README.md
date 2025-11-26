@@ -1,3 +1,7 @@
+---
+title: "Obsidian Vault Manager for Claude Code"
+date: 2025-11-12
+---
 # Obsidian Vault Manager for Claude Code
 
 > **AI-powered knowledge management plugin for Obsidian vaults using Claude Code**

@@ -1,4 +1,5 @@
 ---
+date: 2025-11-06
 title: "Gov Tender SOP Planning: Comprehensive Documentation & Automation Blueprint"
 tags:
   - project

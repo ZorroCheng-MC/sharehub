@@ -1,4 +1,5 @@
 ---
+date: 2025-11-21
 title: "Crewnest.ai - The Self-Evolving AI Company Business Plan"
 created: 2025-11-20
 updated: 2025-11-20

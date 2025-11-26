@@ -1,4 +1,5 @@
 ---
+date: 2025-11-10
 title: "Claude Dev Users: Multi-User Docker Development Environment"
 tags:
   - repository
