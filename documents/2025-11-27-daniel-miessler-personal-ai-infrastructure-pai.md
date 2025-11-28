@@ -35,7 +35,7 @@ tags:
 
 ## Executive Summary
 
-![Kai Architecture Overview](https://danielmiessler.com/images/kai-architecture-v3.png)
+![Kai Architecture Overview](/sharehub/images/pai-article/kai-architecture-v3.png)
 
 Daniel Miessler shares his comprehensive approach to building a **Personal AI Infrastructure (PAI)** - a unified system of agents, tools, and services designed to augment human capabilities. The system, named "Kai," represents a practical implementation of concepts from his 2016 book "The Real Internet of Things."
 
@@ -45,7 +45,7 @@ Daniel Miessler shares his comprehensive approach to building a **Personal AI In
 
 ### 1. System Over Intelligence
 
-![System Philosophy](https://danielmiessler.com/images/ai-system-philosophy.png)
+![System Philosophy](/sharehub/images/pai-article/ai-system-philosophy.png)
 
 > "The orchestration and scaffolding are far more important than model intelligence. A well-designed system with an average model beats a brilliant model with poor system design every time."
 
@@ -53,13 +53,13 @@ The core philosophy: **context management and system design** matter more than r
 
 ### 2. Text as Thought Primitives
 
-![Text as Thought Primitives](https://danielmiessler.com/images/text-thought-primitives.png)
+![Text as Thought Primitives](/sharehub/images/pai-article/text-thought-primitives.png)
 
 Text is the fundamental building block of thought. Markdown/text-based orchestration is powerful because it's "one tiny hop away from thought itself."
 
 ### 3. Filesystem-Based Context (UFC)
 
-![UFC Cloud Context System](https://danielmiessler.com/images/ufc-cloud-context-system.png)
+![UFC Cloud Context System](/sharehub/images/pai-article/ufc-cloud-context-system.png)
 
 **Universal File-based Context** - The file system becomes the context system:
 
@@ -89,7 +89,7 @@ Every problem solved once becomes a reusable module:
 
 ## Architecture Components
 
-![PAI Concentric Circles Architecture](https://danielmiessler.com/images/pai-concentric-circles.jpg)
+![PAI Concentric Circles Architecture](/sharehub/images/pai-article/pai-concentric-circles.jpg)
 
 ### Agents
 ```
@@ -122,7 +122,7 @@ Four-layer enforcement system to ensure AI actually reads context:
 
 ## Practical Applications
 
-![Custom Analytics Dashboard - Built in 18 minutes with Kai to replace Chartbeat](https://danielmiessler.com/images/kai-analytics-dashboard.png)
+![Custom Analytics Dashboard - Built in 18 minutes with Kai to replace Chartbeat](/sharehub/images/pai-article/kai-analytics-dashboard.png)
 *Real-time analytics dashboard showing live traffic, visitor countries, and currently viewed pages—self-built in 18 minutes*
 
 ### What Miessler Has Built
@@ -157,7 +157,7 @@ Four-layer enforcement system to ensure AI actually reads context:
 
 ## The Vision: Digital Assistants + APIs + AR
 
-![Real IoT Ecosystem](https://danielmiessler.com/images/real-iot-ecosystem-complete.png)
+![Real IoT Ecosystem](/sharehub/images/pai-article/real-iot-ecosystem-complete.png)
 
 The end goal combines:
 1. **AI-powered Digital Assistants** continuously working for us
