@@ -1,5 +1,5 @@
 ---
-date: 2025-11-27
+date: 2025-11-28
 title: "Building a Personal AI Infrastructure (PAI) - Daniel Miessler"
 author: "Daniel Miessler"
 source: "https://danielmiessler.com/blog/personal-ai-infrastructure"
