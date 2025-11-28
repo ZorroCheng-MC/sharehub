@@ -1,4 +1,5 @@
 ---
+date: 2025-11-28
 title: "KnowledgeFactory vs Personal AI Infrastructure (PAI) Comparison"
 tags:
   - comparison
