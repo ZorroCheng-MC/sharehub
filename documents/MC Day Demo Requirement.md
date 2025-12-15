@@ -40,15 +40,12 @@ Strategic planning document for MC Day workshops and demos. Focus on result-driv
 2. **Recap - Voice to Text** (video only) - Transcription showcase
 3. **[Persons of the Year](https://s.yimg.com/ny/api/res/1.2/qZ9ZNS5QXOWljXvdJVJejw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTEyODA7Y2Y9d2VicA--/https://d29szjachogqwa.cloudfront.net/images/user-uploaded/357c1217909ec65d5e2c5485e11b590e.png) Photo Booth** - Interactive photo experience
 
-### NotebookLM Practical Use Cases
-
-| # | Use Case | Notes |
-|---|----------|-------|
-| 1 | eProcurement with Tender Comparison | Harbour Plaza (Need comparison sample report) |
-| 2 | One-Click FAQs Chatbot | Sharing chat only |
-| 3 | HK Christmas Tourist Spot Interactive Infographic | Zero to Infographic Presentation slides |
-| 4 | One-Click PowerPoint Enhancer/Translator | Automated presentation improvement |
-| 5 | Research Report on the Web | Web-based research generation |
+- **NotebookLM Practical Use Cases**
+   1. eProcurement with Tender Comparison - Harbour Plaza (Need comparison sample report)
+   2. One-Click FAQs Chatbot - Sharing chat only
+   3. HK Christmas Tourist Spot Interactive Infographic - Zero to Infographic Presentation slides
+   4. One-Click PowerPoint Enhancer/Translator - Automated presentation improvement
+   5. Research Report on the Web - Web-based research generation
 
 ## 💡 Suggestions from Elvis
 
