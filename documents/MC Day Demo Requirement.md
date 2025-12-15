@@ -47,6 +47,50 @@ Strategic planning document for MC Day workshops and demos. Focus on result-driv
    4. One-Click PowerPoint Enhancer/Translator - Automated presentation improvement
    5. Research Report on the Web - Web-based research generation
 
+## 💼 NotebookLM Workshop Package Calculator
+
+> **License Pricing Reference**: [NotebookLM Enterprise Pricing Guide - Workshop Calculator](2025-12-12-notebooklm-enterprise-pricing-business-guide.md#workshop-license-calculator)
+
+### Table 1: Workshop Training Cost
+
+| Workshop Type | Duration | Base Cost (USD) | Notes |
+|---------------|----------|-----------------|-------|
+| Standard Workshop | 4 hours | $1,000 | Per session, up to 20 participants |
+| Half-Day Intensive | 4 hours | $1,000 | Hands-on project completion |
+| Full-Day Workshop | 8 hours | $1,800 | Extended with advanced topics |
+| 1-on-1 Coaching | 2 hours | $500 | Personalized training |
+
+### Table 2: Annual License Cost (from [Pricing Guide](2025-12-12-notebooklm-enterprise-pricing-business-guide.md#workshop-license-calculator))
+
+| Users | Enterprise | Workspace Standard | Workspace Plus |
+|-------|------------|-------------------|----------------|
+| 5     | N/A        | $840              | $1,320         |
+| 10    | N/A        | $1,680            | $2,640         |
+| 15    | $1,620     | $2,520            | $3,960         |
+| 20    | $2,160     | $3,360            | $5,280         |
+| 30    | $3,240     | $5,040            | $7,920         |
+
+### Table 3: Combined Package Estimates (Training + 1-Year License)
+
+| Package | Users | Training | License Option | License Cost | **Total Package** |
+|---------|-------|----------|----------------|--------------|-------------------|
+| **Starter** | 5 | 4-hr Workshop | Workspace Standard | $840 | **$1,840** |
+| **Team** | 10 | 4-hr Workshop | Workspace Standard | $1,680 | **$2,680** |
+| **Business** | 15 | 4-hr Workshop | Enterprise | $1,620 | **$2,620** |
+| **Business+** | 15 | 4-hr Workshop | Workspace Standard | $2,520 | **$3,520** |
+| **Corporate** | 20 | Full-Day | Enterprise | $2,160 | **$3,960** |
+| **Enterprise** | 30 | Full-Day | Enterprise | $3,240 | **$5,040** |
+
+### Quick Estimator Formula
+
+```
+Total Package = Training Cost + (Users × Monthly Rate × 12)
+
+Examples:
+- 15 users + 4hr workshop + Enterprise: $1,000 + ($9 × 15 × 12) = $2,620
+- 20 users + 4hr workshop + Workspace: $1,000 + ($14 × 20 × 12) = $4,360
+```
+
 ## 💡 Suggestions from Elvis
 
 | # | Suggestion | Details |
