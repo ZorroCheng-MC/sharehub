@@ -3,7 +3,7 @@ title: "Git Will Finally Make Sense After This"
 tags: [video, development, coding, tools, learning, inbox, tutorial, deep-dive, technical]
 url: https://www.youtube.com/watch?v=Ala6PHlYjmw
 cover: https://i.ytimg.com/vi/Ala6PHlYjmw/maxresdefault.jpg
-date: 2025-12-15
+date: 2025-12-16
 video_date: 2025-12-06
 type: video
 status: inbox
