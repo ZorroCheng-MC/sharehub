@@ -1,7 +1,7 @@
 ---
 title: "MC Day Demo Requirement"
 tags: [project, AI, business, marketing, workflow, product, inbox, actionable]
-date: 2025-12-16
+date: 2025-12-15
 type: project
 status: inbox
 priority: high
