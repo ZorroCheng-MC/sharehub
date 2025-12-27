@@ -2,7 +2,7 @@
 title: "[找數] 香港買賣Crypto 收費全面睇 - 平台費經手費佣金比較"
 author: 李奧
 source: https://youtu.be/HpSOUipEzAA
-date: 2025-01-10
+date: 2025-12-27
 captured: 2025-12-27
 duration: 11 minutes
 type: video
