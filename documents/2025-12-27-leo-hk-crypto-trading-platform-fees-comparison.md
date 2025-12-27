@@ -22,6 +22,8 @@ status: processing
 
 # [找數] 香港買賣Crypto 收費全面睇 - 平台費經手費佣金比較
 
+![Thumbnail](https://img.youtube.com/vi/HpSOUipEzAA/hqdefault.jpg)
+
 ## Video Information
 
 | Field | Value |
