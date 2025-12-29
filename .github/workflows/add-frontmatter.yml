@@ -151,8 +151,14 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           git add documents/
-          git commit -m "🤖 Auto-add front matter with last update dates"
-          git push
+
+          # Only commit if there are actual staged changes
+          if git diff --cached --quiet; then
+            echo "No actual changes to commit (files unchanged after processing)"
+          else
+            git commit -m "🤖 Auto-add front matter with last update dates"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
