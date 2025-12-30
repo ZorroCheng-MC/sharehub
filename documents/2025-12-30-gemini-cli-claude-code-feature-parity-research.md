@@ -163,5 +163,244 @@ gemini -p "What tools do you have access to?"
 
 ---
 
+## DoubleCopy Multi-Agent Testing Plan
+
+**Related**: [DoubleCopy Development Plan](DoubleCopy-Development-Plan.md) | [DoubleCopy Source Code](doublecopy/)
+
+DoubleCopy v1.0.34 currently uses Claude Code CLI exclusively. The roadmap includes multi-agent support for Gemini CLI, OpenAI Codex, and Qwen Code. This section documents the testing plan to validate Gemini CLI compatibility.
+
+### Current DoubleCopy Architecture
+
+```
+DoubleCopy.app
+    ↓
+capture.sh (generated)
+    ↓
+claude -p "/capture $CONTENT"    ← Agent-specific
+    ↓
+/capture command → MCP tools → Obsidian note
+```
+
+**Key Discovery**: DoubleCopy uses slash command invocation (`claude -p "/capture $CONTENT"`) which properly follows templates. For Gemini CLI to work, it needs:
+
+1. Non-interactive prompt mode (`gemini -p "..."` or equivalent)
+2. Access to same MCP tools (obsidian, youtube-transcript, etc.)
+3. Either slash command support OR direct prompt execution
+
+### Gemini CLI Compatibility Tests
+
+#### Test 1: Basic Non-Interactive Execution
+
+**Objective**: Verify Gemini CLI can execute prompts non-interactively
+
+```bash
+# Test 1a: Check if Gemini has non-interactive mode
+gemini --help | grep -i "prompt\|non-interactive\|-p"
+
+# Test 1b: Test simple non-interactive execution
+gemini -p "Hello, respond with just 'OK'" 2>&1
+
+# Test 1c: Test with longer prompt
+gemini -p "Create a simple markdown note with title 'Test' and one bullet point"
+```
+
+**Expected Result**: Gemini should execute and return output without interactive shell
+
+**Status**: ⬜ Not tested
+
+---
+
+#### Test 2: MCP Server Access
+
+**Objective**: Verify Gemini CLI can access Docker MCP servers
+
+```bash
+# Test 2a: Check if Gemini supports MCP
+gemini mcp list 2>&1 || echo "MCP not supported or different command"
+
+# Test 2b: List available tools
+gemini tools list 2>&1
+
+# Test 2c: Test MCP tool execution
+gemini -p "Use the obsidian tool to list files in the vault root directory"
+```
+
+**Key Tools Needed for DoubleCopy**:
+- `mcp__MCP_DOCKER__obsidian_append_content` - Create notes
+- `mcp__MCP_DOCKER__get_video_info` - YouTube metadata
+- `mcp__MCP_DOCKER__get_transcript` - YouTube transcript
+- `mcp__MCP_DOCKER__firecrawl_scrape` - Web article fetching
+
+**Status**: ⬜ Not tested
+
+---
+
+#### Test 3: Simple Capture Test (Idea Note)
+
+**Objective**: Test Gemini creating a simple Obsidian note
+
+```bash
+# Test 3a: Direct prompt capture (no slash command)
+CONTENT="Test idea for Gemini CLI integration"
+DATE=$(date "+%Y-%m-%d")
+
+gemini -p "Create a markdown note in Obsidian vault with:
+- Filename: ${DATE}-gemini-test-idea.md
+- Frontmatter with tags: idea, AI, testing
+- Title: 'Gemini CLI Test Idea'
+- Content: ${CONTENT}
+Use the obsidian_append_content MCP tool to create the file."
+
+# Test 3b: Verify note created
+ls -la ~/Documents/Obsidian/Claudecode/${DATE}-gemini-*.md
+```
+
+**Status**: ⬜ Not tested
+
+---
+
+#### Test 4: YouTube Capture Test
+
+**Objective**: Test Gemini capturing a YouTube video with transcript
+
+```bash
+# Test 4a: YouTube capture with MCP tools
+VIDEO_URL="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+gemini -p "Capture this YouTube video to Obsidian:
+URL: ${VIDEO_URL}
+
+1. Use get_video_info to get title, channel, duration
+2. Use get_transcript to get the transcript
+3. Create a structured note with:
+   - Thumbnail image
+   - Video metadata
+   - Key points from transcript
+4. Use obsidian_append_content to save the note"
+
+# Test 4b: Check if note was created with thumbnail
+grep -l "maxresdefault.jpg" ~/Documents/Obsidian/Claudecode/*.md | tail -1
+```
+
+**Status**: ⬜ Not tested
+
+---
+
+#### Test 5: capture.sh Modification for Multi-Agent
+
+**Objective**: Design capture.sh to support agent switching
+
+**Current capture.sh (Claude only)**:
+```bash
+claude -p "/capture $CONTENT"
+```
+
+**Proposed Multi-Agent capture.sh**:
+```bash
+#!/bin/bash
+CONTENT="$1"
+AGENT="${DOUBLECOPY_AGENT:-claude}"  # Default to claude
+
+case "$AGENT" in
+    claude)
+        # Slash command invocation (works with Claude)
+        claude -p "/capture $CONTENT"
+        ;;
+    gemini)
+        # Direct prompt (if Gemini doesn't support slash commands)
+        # Load capture prompt from template
+        PROMPT=$(cat ~/.doublecopy/prompts/capture-gemini.md)
+        PROMPT="${PROMPT//\$CONTENT/$CONTENT}"
+        gemini -p "$PROMPT"
+        ;;
+    *)
+        echo "Unknown agent: $AGENT"
+        exit 1
+        ;;
+esac
+```
+
+**Action Items**:
+- [ ] Create `~/.doublecopy/prompts/capture-gemini.md` template
+- [ ] Test agent switching via environment variable
+- [ ] Compare output quality between Claude and Gemini
+
+**Status**: ⬜ Not implemented
+
+---
+
+#### Test 6: DoubleCopy App Modification
+
+**Objective**: Add Gemini CLI support to DoubleCopy.app
+
+**Swift Changes Required** (in `main.swift`):
+
+```swift
+// 1. Add Gemini to CLIAgent enum
+enum CLIAgent: String, CaseIterable {
+    case claude = "Claude Code"
+    case gemini = "Gemini CLI"
+}
+
+// 2. Add Gemini check function
+func checkGeminiCLI() -> Bool {
+    let result = shell("which gemini || ls ~/.gemini/bin/gemini 2>/dev/null")
+    return !result.isEmpty
+}
+
+// 3. Modify capture.sh generation
+func installCaptureScript() {
+    let agent = selectedAgent // From preferences
+    let captureCommand: String
+
+    switch agent {
+    case .claude:
+        captureCommand = "claude -p \"/capture $CONTENT\""
+    case .gemini:
+        captureCommand = "gemini -p \"$(cat ~/.doublecopy/prompts/capture.md)\""
+    }
+    // ... rest of script generation
+}
+```
+
+**Status**: ⬜ Not implemented
+
+---
+
+### Testing Checklist Summary
+
+| Test | Description | Status |
+|------|-------------|--------|
+| 1 | Non-interactive execution | ⬜ |
+| 2 | MCP server access | ⬜ |
+| 3 | Simple idea capture | ⬜ |
+| 4 | YouTube capture with transcript | ⬜ |
+| 5 | Multi-agent capture.sh | ⬜ |
+| 6 | DoubleCopy app modification | ⬜ |
+
+### Success Criteria
+
+For Gemini CLI to be considered "DoubleCopy Compatible":
+
+1. ✅ Can execute prompts non-interactively
+2. ✅ Can access MCP Docker tools (obsidian, youtube, etc.)
+3. ✅ Can create properly formatted Obsidian notes
+4. ✅ Output quality comparable to Claude Code
+5. ✅ Response time acceptable (<30 seconds for simple capture)
+
+### Fallback Strategy
+
+If Gemini CLI lacks certain capabilities:
+
+| Missing Feature | Workaround |
+|-----------------|------------|
+| No MCP support | Use REST API calls directly in prompt |
+| No non-interactive mode | Use expect/pexpect wrapper |
+| No tool access | Fall back to basic text processing |
+| Poor output quality | Use Claude as primary, Gemini as backup |
+
+---
+
 *Captured: 2025-12-30*
 *Updated: 2025-12-30 - Added obsidian-vault-manager portability test plan*
+*Updated: 2025-12-30 - Added DoubleCopy multi-agent testing plan with Gemini CLI action items*
