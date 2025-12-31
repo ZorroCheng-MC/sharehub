@@ -1,7 +1,21 @@
 ---
-title: "剃亮希望 Shave for Hope"
+title: "剃亮希望 Shave for Hope - CCF AI 籌款活動專案"
+tags:
+  - project
+  - AI
+  - architecture
+  - product
+  - workflow
+  - web-development
+  - actionable
+  - high-priority
 date: 2025-12-31
+type: project
+status: processing
+priority: high
+client: CCF 兒童癌病基金
 ---
+
 # 剃亮希望 Shave for Hope
 ## CCF 兒童癌病基金 AI 籌款活動專案計劃書
 
@@ -33,7 +47,7 @@ date: 2025-12-31
 ## Demo 展示
 
 ### 首頁 - AI 光頭變身前後對比
-![[ccf-shave-for-hope-homepage.png]]
+![CCF Shave for Hope Homepage](/sharehub/images/ccf-shave-for-hope-homepage.png)
 
 ### 光頭變身頁面 - 照片上載介面
 ![CCF Shave for Hope Transform](/sharehub/images/ccf-shave-for-hope-transform.png)
