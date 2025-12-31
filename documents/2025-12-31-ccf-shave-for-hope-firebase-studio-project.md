@@ -1,3 +1,7 @@
+---
+title: "剃亮希望 Shave for Hope"
+date: 2025-12-31
+---
 # 剃亮希望 Shave for Hope
 ## CCF 兒童癌病基金 AI 籌款活動專案計劃書
 
