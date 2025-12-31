@@ -57,8 +57,8 @@ client: CCF 兒童癌病基金
 
 | 資源 | 連結 |
 |------|------|
-| **線上 Demo** | https://9000-firebase-studio-1767151534598.cluster-4khg5orimngp2stqyrumfwvpdi.cloudworkstations.dev |
-| **Demo 影片** | https://www.loom.com/share/fbc425b4df6e466884863fc035a6b501 |
+| **線上 Demo** | <https://9000-firebase-studio-1767151534598.cluster-4khg5orimngp2stqyrumfwvpdi.cloudworkstations.dev> |
+| **Demo 影片** | <https://www.loom.com/share/fbc425b4df6e466884863fc035a6b501> |
 
 ---
 
@@ -258,9 +258,9 @@ client: CCF 兒童癌病基金
 
 | 資源 | 連結 |
 |------|------|
-| Firebase Studio 專案 | https://studio.firebase.google.com/studio-3022188308 |
-| Prompt 生成對話 | https://claude.ai/share/16d6bbbf-ed5c-450b-9691-4b3214634fa7 |
-| CCF 官網 | https://ccf.org.hk |
+| Firebase Studio 專案 | <https://studio.firebase.google.com/studio-3022188308> |
+| Prompt 生成對話 | <https://claude.ai/share/16d6bbbf-ed5c-450b-9691-4b3214634fa7> |
+| CCF 官網 | <https://ccf.org.hk> |
 
 ---
 
