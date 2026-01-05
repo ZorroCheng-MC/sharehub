@@ -15,6 +15,8 @@ consolidated_from:
 
 # Ralph Loop: Complete Guide to Autonomous Claude Code
 
+![Ralph Loop - Autonomous Claude Code](https://img.youtube.com/vi/9Gv7eZemHrE/maxresdefault.jpg)
+
 > "Ralph is a Bash loop" — Geoffrey Huntley
 
 ## What is Ralph Loop?
