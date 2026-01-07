@@ -446,69 +446,103 @@ To find related notes, search for:
 
 ---
 
+## User Levels
+
+| Level | Name | Description | Key Actions |
+|-------|------|-------------|-------------|
+| 1 | **👀 Friend** | Sees friend's IG post | Search hashtag, visit CCF IG |
+| 2 | **🌐 Visitor** | Site visitor | Create AI image, download, share |
+| 3 | **👤 User** | Registered user | Make videos, track stats |
+| 4 | **💪 Brave the Shave** | Fundraiser | Set target, create fundraising page, commit to real shave |
+| 5 | **💝 Shave the Brave** | Donor | Support a Brave, donate to their campaign |
+
+---
+
 ## User Journey Flow (Mermaid)
 
 ```mermaid
 flowchart TB
-    subgraph Discovery["🔍 Phase 1: Discovery"]
-        A["👀 See friend's IG post"] --> B{"How to find campaign?"}
+    subgraph Friend["👀 Level 1: Friend"]
+        A["See friend's IG post"] --> B{"How to find?"}
         B --> C["Search #shaveforhopehk"]
-        B --> D["Click @childrenscancerfoundationhk"]
+        B --> D["Click @ccf IG"]
         B --> E["Visit ccf.org.hk"]
-        C --> F["Find CCF official IG"]
+        C --> F["Find CCF IG"]
         D --> F
-        E --> E2["See campaign banner"]
+        E --> E2["See banner"]
+        F --> F2["Click Linktree"]
+        F2 --> LT{"Linktree Options"}
+        LT --> G["🎗️ AI 變身體驗"]
+        LT --> DON["💰 立即捐款"]
+        LT --> EVT["📅 活動報名"]
         E2 --> G
-        F --> F2["Click 'Link in Bio'"]
-        F2 --> G["🌐 Land on project site"]
     end
 
-    subgraph Conversion["✨ Phase 2: Conversion"]
+    subgraph Visitor["🌐 Level 2: Visitor"]
         G --> H["📸 Upload selfie"]
-        H --> I["⏳ 幫緊你幫緊你！"]
-        I --> J{"好呀！/ 唔使喇"}
-        J --> |"好呀！"| K["📝 Inline form"]
-        J --> |"唔使喇"| L["Continue waiting"]
-        K --> M["🔐 OAuth / Email"]
-        M --> N["✅ 影片已解鎖"]
+        H --> I["⏳ AI Processing"]
+        I --> J{"Register?"}
+        J --> |"好呀！"| K["📝 Quick signup"]
+        J --> |"唔使喇"| L["Continue"]
+        K --> M["🔐 OAuth/Email"]
         L --> O["🎉 Image ready"]
-        N --> O
+        M --> O
+        O --> P["📥 Download"]
+        O --> Q["📤 Share to IG"]
     end
 
-    subgraph Engagement["🎬 Phase 3: Engagement"]
-        O --> P{"Registered?"}
-        P --> |"Yes"| Q["🎥 Generate video"]
-        P --> |"No"| R["📥 Download + CTA"]
-        Q --> S["⏳ 1-2min wait"]
-        S --> |"Video"| T["CCF impact story"]
-        S --> |"Card"| U["💰 Donation CTA"]
-        S --> |"GIF"| V["📱 IG tutorial"]
-        T & U & V --> X["✅ Video ready!"]
+    subgraph User["👤 Level 3: User"]
+        M --> U1["✅ Registered"]
+        U1 --> U2["🎬 Make video"]
+        U2 --> U3["⏳ 1-2min wait"]
+        U3 --> U4["✅ Video ready"]
+        U4 --> U5["📤 Share video"]
+        U1 --> U6{"Want to fundraise?"}
     end
 
-    subgraph Viral["🔄 Phase 4: Viral Loop"]
-        X --> Y["1-click: 分享到 Instagram"]
-        R --> Y2["1-click share image"]
-        Y --> Z["📱 Post to IG"]
-        Y2 --> Z
-        Z --> AA["Return to site"]
-        AA --> AB["Submit IG post URL"]
-        AB --> AC["Added to community wall"]
-        AC --> AD["👥 Friends see post"]
-        AD -.-> |"Viral Loop"| A
+    subgraph Brave["💪 Level 4: Brave the Shave"]
+        U6 --> |"Yes!"| B1["Set fundraising target"]
+        B1 --> B2["Create personal page"]
+        B2 --> B3["Share fundraising link"]
+        B3 --> B4["Track donations"]
+        B4 --> B5["🎯 Commit to real shave"]
+        B5 --> B6["📅 March 7 Head Shaving Day"]
     end
 
-    style Discovery fill:#e8f5e9,stroke:#4caf50
-    style Conversion fill:#fff3e0,stroke:#ff9800
-    style Engagement fill:#e3f2fd,stroke:#2196f3
-    style Viral fill:#fce4ec,stroke:#e91e63
+    subgraph Supporter["💝 Level 5: Shave the Brave"]
+        DON --> S1["Browse Braves"]
+        B3 --> S1
+        S1 --> S2["Choose a Brave to support"]
+        S2 --> S3["💰 Make donation"]
+        S3 --> S4["Leave encouragement"]
+        S4 --> S5["📤 Share support"]
+        S5 -.-> |"Viral"| A
+    end
+
+    Q -.-> |"Viral Loop"| A
+    U5 -.-> |"Viral Loop"| A
+
+    style Friend fill:#e8f5e9,stroke:#4caf50
+    style Visitor fill:#fff3e0,stroke:#ff9800
+    style User fill:#e3f2fd,stroke:#2196f3
+    style Brave fill:#fff9c4,stroke:#fbc02d
+    style Supporter fill:#fce4ec,stroke:#e91e63
 ```
 
-### Flow Summary
+### User Level Summary
 
-| Phase | Key Action | Upsell Opportunity | Content Format |
-|-------|------------|-------------------|----------------|
-| Discovery | Search hashtag → CCF IG/ccf.org.hk banner → Link | - | Banner on ccf.org.hk |
-| Conversion | Upload → 5-10s wait → Result | Register as Virtual Shaver | Rotating text cards |
-| Engagement | Video generation → 1-2min wait | Donation CTA | Video + GIF + Cards |
-| Viral Loop | 1-click share → Post to IG → Submit URL | Community wall inclusion | IG tutorial GIF |
+| Level | Entry Point | Key Action | Upsell To |
+|-------|-------------|------------|-----------|
+| 👀 Friend | IG post | Search/Click → Linktree | Visitor |
+| 🌐 Visitor | Project site | AI transform → Share | User |
+| 👤 User | Registration | Make video → Share | Brave the Shave |
+| 💪 Brave the Shave | Fundraising signup | Set target → Recruit donors | - |
+| 💝 Shave the Brave | Donation page | Donate → Share support | - |
+
+### Conversion Funnel
+
+```
+Friend (100%) → Visitor (50%) → User (20%) → Brave (5%)
+                                    ↓
+                            Shave the Brave (donors)
+```
