@@ -1,5 +1,4 @@
 ---
-date: 2026-01-06
 title: "剃亮希望 Shave for Hope - CCF AI 籌款活動專案"
 tags:
   - project
@@ -11,7 +10,7 @@ tags:
   - actionable
   - high-priority
 date: 2025-12-31
-last_updated: 2026-01-06
+last_updated: 2026-01-07
 type: project
 status: in-progress
 priority: high
@@ -82,7 +81,7 @@ technical_plan: "[[2026-01-06-ccf-shave-for-hope-technical-plan]]"
 
 | 資源 | 連結 |
 |------|------|
-| **線上 Demo** | <https://9000-firebase-studio-1767151534598.cluster-4khg5orimngp2stqyrumfwvpdi.cloudworkstations.dev> |
+| **線上 Demo** | <https://studio--studio-3022188308-abeaa.us-central1.hosted.app/> |
 | **Demo 影片** | <https://www.loom.com/share/fbc425b4df6e466884863fc035a6b501> |
 
 ---
@@ -239,6 +238,46 @@ flowchart LR
 
 ---
 
+## 社群分享功能 Community Gallery (6 Jan 2026)
+
+首頁新增「社群分享」區塊，展示 #shaveforhopehk Instagram 貼文，取代原有的排行榜功能。
+
+### 功能特色
+
+| 功能 | 說明 |
+|------|------|
+| **展示** | 8 張 Instagram 貼文圖片，網格排列 |
+| **互動** | 點擊圖片直接開啟 Instagram 原始貼文 |
+| **儲存** | 圖片儲存於 Firebase Storage，不依賴 Instagram CDN |
+| **管理** | 透過 API 管理示範貼文 (`/api/seed-demo-posts`) |
+
+### 技術實現
+
+```
+src/components/community-gallery.tsx    # 畫廊組件
+src/lib/firebase/instagramPostsServer.ts # 伺服器端資料獲取
+src/app/api/seed-demo-posts/route.ts     # 管理 API
+scripts/upload-ig-images.ts              # 圖片上傳腳本
+```
+
+### 資料結構 (Firestore: `instagramPosts`)
+
+```javascript
+{
+  postUrl: "https://instagram.com/p/ABC123/",
+  igUsername: "username",
+  mediaUrl: "firebase_storage_url",
+  mediaType: "image", // or "video"
+  caption: "貼文內容...",
+  postedAt: timestamp,
+  harvestedAt: timestamp,
+  matchedUserId: null, // 如配對到用戶則填入 userId
+  source: "manual" // or "scraper"
+}
+```
+
+---
+
 ## 成功指標 KPIs
 
 ### 第一階段目標 (首 3 個月)
@@ -263,7 +302,8 @@ flowchart LR
 | 階段 | 內容 | 狀態 | 目標日期 |
 |------|------|------|----------|
 | **Phase 1: MVP 開發** | UI 介面開發、AI 變身功能 | ✅ 完成 | - |
-| **Phase 2: 功能完善** | 登入系統、影片製作、社交分享 | 🔄 進行中 | 2月中 |
+| **Phase 1.5: 社群功能** | 社群分享畫廊、IG 貼文整合 | ✅ 完成 | 1月6日 |
+| **Phase 2: 功能完善** | 影片製作、雙語支援 | 🔄 進行中 | 2月中 |
 | **Phase 3: 品牌整合** | CCF 品牌元素、GCP 專案設定 | ⏳ 待開始 | 2月中 |
 | **Phase 4: 測試** | 內部測試、錯誤修復 | ⏳ 待開始 | 2月底 |
 | **Phase 5: 正式上線** | 公開發布、配合活動宣傳 | ⏳ 待開始 | 2月底 |
@@ -319,16 +359,23 @@ flowchart LR
 
 ### 開發團隊待辦事項
 
+**已完成 ✅**
+- [x] 實現用戶登入系統 (Google OAuth + Email)
+- [x] 實現社交分享功能 (IG, WhatsApp, FB)
+- [x] 社群分享畫廊 (Community Gallery) - 8 張 IG 貼文
+
+**進行中 🔄**
+- [ ] 開發影片製作功能 (Veo 3.1) - 等待 API 配額
+- [ ] 新增雙語支援
+- [ ] 新增等待畫面（顯示活動資訊）
+
+**待開始 ⏳**
 - [ ] 設定正式網域 (建議: shaveforhope.ccf.org.hk)
 - [ ] 整合 CCF 官方捐款系統
 - [ ] 設計 Instagram 分享圖片模板（加入 CCF 標誌）
 - [ ] 上線前安全審查
 - [ ] 設定 Google Analytics 追蹤
-- [ ] 實現用戶登入系統 (Google OAuth + Email)
-- [ ] 開發影片製作功能 (Veo 3.1)
-- [ ] 實現社交分享功能 (IG, WhatsApp, FB)
-- [ ] 新增雙語支援
-- [ ] 新增等待畫面（顯示活動資訊）
+- [ ] IG 貼文自動爬蟲 (每 4 小時執行)
 
 ---
 
@@ -399,8 +446,9 @@ flowchart LR
 | **光頭變身** | `/transform` | 上載照片、AI 處理、前後對比 |
 | **我的主頁** | `/dashboard` | 籌款進度、最近變身、製作影片 |
 | **我的籌款頁** | `/u/[slug]` | 公開頁面、捐款連結、支持者留言 |
-| **排行榜** | `/leaderboard` | 籌款英雄榜 |
 | **設定** | `/settings` | 編輯個人資料 |
+
+> **Note:** `/leaderboard` 已移除 - 由首頁「社群分享」取代，顯示 #shaveforhopehk Instagram 貼文
 
 ---
 
@@ -427,6 +475,6 @@ flowchart LR
 
 ---
 
-*文件版本: 2.0 | 建立日期: 2025-12-31 | 最後更新: 2026-01-06*
+*文件版本: 2.1 | 建立日期: 2025-12-31 | 最後更新: 2026-01-06 (Community Gallery 完成)*
 
 #project #ccf #firebase-studio #fundraising #charity #ai-image-generation
