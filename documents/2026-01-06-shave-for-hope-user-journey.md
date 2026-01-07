@@ -1,6 +1,6 @@
 ---
 title: 剃亮希望 User Journey Strategy
-date: 2026-01-06
+date: 2026-01-07
 type: idea
 status: inbox
 priority: high
