@@ -40,6 +40,60 @@
             max-width: 100%;
             height: auto;
         }
+
+        /* Section highlighting for annotations */
+        .annotatable-section {
+            position: relative;
+            padding: 0.5rem;
+            margin: -0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .annotatable-section:hover {
+            background-color: #f0f7ff;
+        }
+        .annotatable-section.has-annotation {
+            border-left: 3px solid #667eea;
+            padding-left: 1rem;
+        }
+        .annotatable-section:hover::after {
+            content: '💬 Click to comment';
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 0.7rem;
+            color: #667eea;
+            background: #f0f7ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        /* Inline annotations */
+        .inline-annotation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 0.5rem 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+        }
+        .inline-annotation .annotation-author {
+            font-size: 0.75rem;
+            color: #856404;
+            font-weight: 500;
+        }
+        .inline-annotation .annotation-text {
+            color: #333;
+            margin-top: 0.25rem;
+        }
+        .inline-annotation img {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 0.5rem;
+            border-radius: 5px;
+        }
+
         .annotation {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
@@ -54,14 +108,6 @@
         }
         .annotation-text {
             color: #333;
-        }
-        .add-comment-btn {
-            opacity: 0;
-            transition: opacity 0.2s;
-            font-size: 0.8rem;
-        }
-        .content-section:hover .add-comment-btn {
-            opacity: 1;
         }
         .action-bar {
             position: sticky;
@@ -84,6 +130,7 @@
             background: #e9ecef;
             color: #6c757d;
         }
+
         /* Markdown content styles */
         .markdown-content h1, .markdown-content h2, .markdown-content h3 {
             margin-top: 1.5rem;
@@ -116,6 +163,73 @@
         .markdown-content th {
             background: #f8f9fa;
         }
+
+        /* Image preview in comment */
+        .image-preview {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .image-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .image-upload-area:hover {
+            border-color: #667eea;
+        }
+        .image-upload-area.drag-over {
+            border-color: #667eea;
+            background: #f0f7ff;
+        }
+
+        /* Merge mode styles */
+        .merge-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .url-input-area {
+            min-height: 150px;
+        }
+        .feedback-item {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .feedback-item .url-preview {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #6c757d;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+        .merged-section {
+            border-left: 3px solid #667eea;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        .merged-annotations {
+            margin-top: 0.5rem;
+        }
+        .annotation-count-badge {
+            background: #667eea;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -123,10 +237,15 @@
     <div class="share-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <h1><i class="bi bi-share"></i> Shared Content</h1>
-                <a href="/sharehub/" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-house"></i> ShareHub
-                </a>
+                <h1><i class="bi bi-share"></i> <span id="page-title">Shared Content</span></h1>
+                <div class="d-flex gap-2">
+                    <a href="#merge" class="btn btn-outline-light btn-sm" onclick="switchToMergeMode()">
+                        <i class="bi bi-layers"></i> Merge Feedback
+                    </a>
+                    <a href="/sharehub/" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-house"></i> ShareHub
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -139,7 +258,7 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content View -->
     <div class="container" id="main-content">
         <div class="content-card">
             <div id="content-area" class="markdown-content">
@@ -147,25 +266,65 @@
             </div>
         </div>
 
-        <!-- Annotations Section -->
+        <!-- All Annotations Section (collapsed view) -->
         <div id="annotations-section" class="content-card" style="display: none;">
-            <h5><i class="bi bi-chat-dots"></i> Comments</h5>
+            <h5><i class="bi bi-chat-dots"></i> All Comments <span id="comment-count" class="badge bg-secondary">0</span></h5>
             <div id="annotations-list"></div>
         </div>
     </div>
 
+    <!-- Merge Mode View -->
+    <div class="container merge-container" id="merge-content" style="display: none;">
+        <div class="content-card">
+            <h4><i class="bi bi-layers"></i> Merge Team Feedback</h4>
+            <p class="text-muted">Paste annotated URLs from your team members to merge all feedback into one view.</p>
+
+            <div class="mb-3">
+                <label class="form-label">Paste URLs (one per line)</label>
+                <textarea class="form-control url-input-area" id="merge-urls" placeholder="https://zorrocheng-mc.github.io/sharehub/share#eJxLTE...
+https://zorrocheng-mc.github.io/sharehub/share#eJyKSE...
+https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" onclick="mergeUrls()">
+                    <i class="bi bi-layers"></i> Merge & View
+                </button>
+                <button class="btn btn-outline-secondary" onclick="clearMerge()">
+                    <i class="bi bi-x-lg"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Merged Results -->
+        <div id="merged-results" class="content-card" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5><i class="bi bi-check-circle"></i> Merged Feedback</h5>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportMergedMarkdown()">
+                        <i class="bi bi-download"></i> Export MD
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="copyMergedUrl()">
+                        <i class="bi bi-link-45deg"></i> Copy Combined URL
+                    </button>
+                </div>
+            </div>
+            <div id="merged-content-area" class="markdown-content"></div>
+        </div>
+    </div>
+
     <!-- Action Bar -->
-    <div class="action-bar">
+    <div class="action-bar" id="action-bar">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div>
                     <span class="text-muted small">
-                        <i class="bi bi-info-circle"></i> Content is encoded in URL - no server storage
+                        <i class="bi bi-info-circle"></i> Click any section to add a comment
                     </span>
                 </div>
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-primary btn-sm" onclick="addComment()">
-                        <i class="bi bi-chat-plus"></i> Add Comment
+                        <i class="bi bi-chat-plus"></i> Add General Comment
                     </button>
                     <button class="btn btn-primary btn-sm" onclick="copyShareUrl()">
                         <i class="bi bi-link-45deg"></i> Copy Share URL
@@ -185,8 +344,29 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
+                        <label class="form-label">Commenting on:</label>
+                        <div id="comment-target-preview" class="p-2 bg-light rounded small text-muted">
+                            General comment
+                        </div>
+                        <input type="hidden" id="comment-section-id" value="general">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Your Comment</label>
                         <textarea class="form-control" id="comment-text" rows="3" placeholder="Enter your feedback..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Add Image (optional)</label>
+                        <div class="image-upload-area" id="image-upload-area" onclick="document.getElementById('image-input').click()">
+                            <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                            <p class="text-muted mb-0 small">Click to upload or paste image (Ctrl+V)</p>
+                        </div>
+                        <input type="file" id="image-input" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                        <div id="image-preview-container" style="display: none;">
+                            <img id="image-preview" class="image-preview" alt="Preview">
+                            <button type="button" class="btn btn-sm btn-outline-danger mt-1" onclick="removeImage()">
+                                <i class="bi bi-x"></i> Remove
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -203,7 +383,11 @@
     <script>
         // Global state
         let sharedData = { p: '', a: [] };
+        let mergedData = { p: '', a: [] };
         let sessionId = generateSessionId();
+        let currentImageData = null;
+        let currentMode = 'view'; // 'view' or 'merge'
+        let sectionMap = {}; // Maps section IDs to their text
 
         // Generate random session ID for this viewer
         function generateSessionId() {
@@ -217,9 +401,7 @@
 
         // Decode URL-safe Base64
         function urlSafeBase64Decode(str) {
-            // Convert URL-safe base64 to standard base64
             str = str.replace(/-/g, '+').replace(/_/g, '/');
-            // Add padding if needed
             while (str.length % 4) {
                 str += '=';
             }
@@ -229,24 +411,15 @@
         // Decode and decompress the hash data
         function decodeHashData(hash) {
             try {
-                // Remove leading # if present
                 if (hash.startsWith('#')) {
                     hash = hash.substring(1);
                 }
-
-                // Decode URL-safe base64
                 const binaryString = urlSafeBase64Decode(hash);
-
-                // Convert to Uint8Array
                 const bytes = new Uint8Array(binaryString.length);
                 for (let i = 0; i < binaryString.length; i++) {
                     bytes[i] = binaryString.charCodeAt(i);
                 }
-
-                // Decompress with pako
                 const decompressed = pako.inflate(bytes, { to: 'string' });
-
-                // Parse JSON
                 return JSON.parse(decompressed);
             } catch (e) {
                 console.error('Decode error:', e);
@@ -257,24 +430,14 @@
         // Encode data back to URL hash
         function encodeHashData(data) {
             try {
-                // Stringify JSON
                 const jsonStr = JSON.stringify(data);
-
-                // Compress with pako
                 const compressed = pako.deflate(jsonStr);
-
-                // Convert to binary string
                 let binaryString = '';
                 for (let i = 0; i < compressed.length; i++) {
                     binaryString += String.fromCharCode(compressed[i]);
                 }
-
-                // Base64 encode
                 let base64 = btoa(binaryString);
-
-                // Make URL-safe
                 base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
                 return base64;
             } catch (e) {
                 console.error('Encode error:', e);
@@ -282,71 +445,232 @@
             }
         }
 
-        // Render markdown content
-        function renderContent(markdown) {
-            document.getElementById('content-area').innerHTML = marked.parse(markdown);
+        // Generate section ID from text
+        function generateSectionId(text) {
+            return text.toLowerCase()
+                .replace(/[^a-z0-9\s]/g, '')
+                .replace(/\s+/g, '-')
+                .substring(0, 50);
         }
 
-        // Render annotations
+        // Render markdown content with annotatable sections
+        function renderContent(markdown) {
+            const html = marked.parse(markdown);
+            const container = document.getElementById('content-area');
+            container.innerHTML = html;
+
+            // Make sections annotatable
+            sectionMap = {};
+            let sectionIndex = 0;
+
+            // Wrap block elements with annotatable sections
+            const blockElements = container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table');
+
+            blockElements.forEach(el => {
+                const text = el.textContent.trim();
+                if (!text) return;
+
+                const sectionId = generateSectionId(text) || `section-${sectionIndex}`;
+                sectionMap[sectionId] = text.substring(0, 100);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'annotatable-section';
+                wrapper.setAttribute('data-section-id', sectionId);
+                wrapper.onclick = () => openCommentModal(sectionId, text.substring(0, 100));
+
+                el.parentNode.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+
+                // Add inline annotations for this section
+                const sectionAnnotations = sharedData.a.filter(ann => ann[1] === sectionId);
+                if (sectionAnnotations.length > 0) {
+                    wrapper.classList.add('has-annotation');
+                    sectionAnnotations.forEach(ann => {
+                        const annDiv = createInlineAnnotation(ann);
+                        wrapper.appendChild(annDiv);
+                    });
+                }
+
+                sectionIndex++;
+            });
+        }
+
+        // Create inline annotation element
+        function createInlineAnnotation(ann) {
+            const [type, target, text, author, imageData] = ann;
+            const div = document.createElement('div');
+            div.className = 'inline-annotation';
+
+            let html = `
+                <div class="annotation-author">
+                    <i class="bi bi-chat-left-text"></i> ${author || 'Anonymous'}
+                </div>
+                <div class="annotation-text">${escapeHtml(text)}</div>
+            `;
+
+            if (imageData) {
+                html += `<img src="${imageData}" alt="Attached image">`;
+            }
+
+            div.innerHTML = html;
+            return div;
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Render all annotations in sidebar
         function renderAnnotations(annotations) {
             const container = document.getElementById('annotations-list');
             const section = document.getElementById('annotations-section');
+            const countBadge = document.getElementById('comment-count');
 
             if (!annotations || annotations.length === 0) {
                 section.style.display = 'none';
+                countBadge.textContent = '0';
                 return;
             }
 
             section.style.display = 'block';
+            countBadge.textContent = annotations.length;
             container.innerHTML = '';
 
             annotations.forEach((ann, idx) => {
-                // Format: ["C", "section", "comment text", "session-id", null]
-                const type = ann[0];
-                const target = ann[1];
-                const text = ann[2];
-                const author = ann[3];
+                const [type, target, text, author, imageData] = ann;
+                const targetText = sectionMap[target] || target || 'General';
 
                 const div = document.createElement('div');
                 div.className = 'annotation';
-                div.innerHTML = `
+
+                let html = `
                     <div class="annotation-header">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="session-badge">${author || 'Anonymous'}</span>
-                        ${target ? `on <strong>${target}</strong>` : ''}
+                        on <strong>${escapeHtml(targetText.substring(0, 50))}${targetText.length > 50 ? '...' : ''}</strong>
                     </div>
-                    <div class="annotation-text">${text}</div>
+                    <div class="annotation-text">${escapeHtml(text)}</div>
                 `;
+
+                if (imageData) {
+                    html += `<img src="${imageData}" style="max-width: 100%; max-height: 150px; margin-top: 0.5rem; border-radius: 5px;" alt="Attached image">`;
+                }
+
+                div.innerHTML = html;
                 container.appendChild(div);
             });
         }
 
-        // Add a new comment
-        function addComment() {
-            const modal = new bootstrap.Modal(document.getElementById('commentModal'));
+        // Open comment modal for a specific section
+        function openCommentModal(sectionId, sectionText) {
+            document.getElementById('comment-section-id').value = sectionId;
+            document.getElementById('comment-target-preview').textContent = sectionText || 'General comment';
             document.getElementById('comment-text').value = '';
+            removeImage();
+
+            const modal = new bootstrap.Modal(document.getElementById('commentModal'));
             modal.show();
+        }
+
+        // Add a new general comment
+        function addComment() {
+            openCommentModal('general', 'General comment');
         }
 
         // Save the comment
         function saveComment() {
             const text = document.getElementById('comment-text').value.trim();
+            const sectionId = document.getElementById('comment-section-id').value || 'general';
+
             if (!text) {
                 alert('Please enter a comment');
                 return;
             }
 
-            // Add annotation: ["C", "general", "comment text", "session-id", null]
-            sharedData.a.push(['C', 'general', text, sessionId, null]);
+            // Add annotation: ["C", "section-id", "comment text", "session-id", imageData]
+            sharedData.a.push(['C', sectionId, text, sessionId, currentImageData]);
 
-            // Re-render annotations
+            // Re-render
+            renderContent(sharedData.p);
             renderAnnotations(sharedData.a);
 
             // Close modal
             bootstrap.Modal.getInstance(document.getElementById('commentModal')).hide();
+            currentImageData = null;
 
-            // Show success message
             showToast('Comment added! Click "Copy Share URL" to share with your comments.');
+        }
+
+        // Handle image selection
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                processImage(file);
+            }
+        }
+
+        // Process image file
+        function processImage(file) {
+            if (file.size > 500000) { // 500KB limit
+                alert('Image too large. Please use an image under 500KB to keep URL manageable.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageData = e.target.result;
+                document.getElementById('image-preview').src = currentImageData;
+                document.getElementById('image-preview-container').style.display = 'block';
+                document.getElementById('image-upload-area').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove image
+        function removeImage() {
+            currentImageData = null;
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-upload-area').style.display = 'block';
+            document.getElementById('image-input').value = '';
+        }
+
+        // Handle paste for images
+        document.addEventListener('paste', function(e) {
+            const modal = document.getElementById('commentModal');
+            if (!modal.classList.contains('show')) return;
+
+            const items = e.clipboardData.items;
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const file = item.getAsFile();
+                    processImage(file);
+                    e.preventDefault();
+                    break;
+                }
+            }
+        });
+
+        // Setup drag and drop for images
+        const uploadArea = document.getElementById('image-upload-area');
+        if (uploadArea) {
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    processImage(file);
+                }
+            });
         }
 
         // Copy the share URL with current state
@@ -358,12 +682,212 @@
                 navigator.clipboard.writeText(url).then(() => {
                     showToast('URL copied to clipboard!');
                 }).catch(() => {
-                    // Fallback
                     prompt('Copy this URL:', url);
                 });
             } catch (e) {
                 alert('Failed to generate URL: ' + e.message);
             }
+        }
+
+        // Switch to merge mode
+        function switchToMergeMode() {
+            currentMode = 'merge';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('merge-content').style.display = 'block';
+            document.getElementById('action-bar').style.display = 'none';
+            document.getElementById('page-title').textContent = 'Merge Feedback';
+            window.location.hash = 'merge';
+        }
+
+        // Switch to view mode
+        function switchToViewMode() {
+            currentMode = 'view';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('merge-content').style.display = 'none';
+            document.getElementById('action-bar').style.display = 'block';
+            document.getElementById('page-title').textContent = 'Shared Content';
+        }
+
+        // Merge multiple URLs
+        function mergeUrls() {
+            const urlsText = document.getElementById('merge-urls').value.trim();
+            if (!urlsText) {
+                alert('Please paste at least one URL');
+                return;
+            }
+
+            const urls = urlsText.split('\n').map(u => u.trim()).filter(u => u);
+            if (urls.length === 0) {
+                alert('No valid URLs found');
+                return;
+            }
+
+            try {
+                let baseContent = null;
+                let allAnnotations = [];
+                let urlCount = 0;
+
+                urls.forEach((url, idx) => {
+                    try {
+                        // Extract hash from URL
+                        const hashMatch = url.match(/#(.+)$/);
+                        if (!hashMatch) {
+                            console.warn(`URL ${idx + 1} has no hash fragment`);
+                            return;
+                        }
+
+                        const data = decodeHashData(hashMatch[1]);
+
+                        // Use first URL's content as base
+                        if (!baseContent && data.p) {
+                            baseContent = data.p;
+                        }
+
+                        // Collect all annotations
+                        if (data.a && data.a.length > 0) {
+                            allAnnotations = allAnnotations.concat(data.a);
+                        }
+
+                        urlCount++;
+                    } catch (e) {
+                        console.error(`Failed to decode URL ${idx + 1}:`, e);
+                    }
+                });
+
+                if (!baseContent) {
+                    alert('Could not extract content from any URL');
+                    return;
+                }
+
+                // Store merged data
+                mergedData = { p: baseContent, a: allAnnotations };
+
+                // Render merged view
+                renderMergedContent(baseContent, allAnnotations);
+                document.getElementById('merged-results').style.display = 'block';
+
+                showToast(`Merged ${urlCount} URLs with ${allAnnotations.length} total comments`);
+
+            } catch (e) {
+                alert('Error merging URLs: ' + e.message);
+            }
+        }
+
+        // Render merged content with all annotations
+        function renderMergedContent(markdown, annotations) {
+            const container = document.getElementById('merged-content-area');
+            const html = marked.parse(markdown);
+            container.innerHTML = html;
+
+            // Group annotations by section
+            const annotationsBySection = {};
+            annotations.forEach(ann => {
+                const sectionId = ann[1] || 'general';
+                if (!annotationsBySection[sectionId]) {
+                    annotationsBySection[sectionId] = [];
+                }
+                annotationsBySection[sectionId].push(ann);
+            });
+
+            // Add annotations to sections
+            const blockElements = container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table');
+
+            blockElements.forEach(el => {
+                const text = el.textContent.trim();
+                if (!text) return;
+
+                const sectionId = generateSectionId(text);
+                const sectionAnnotations = annotationsBySection[sectionId] || [];
+
+                if (sectionAnnotations.length > 0) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'merged-section';
+
+                    el.parentNode.insertBefore(wrapper, el);
+                    wrapper.appendChild(el);
+
+                    const annotationsDiv = document.createElement('div');
+                    annotationsDiv.className = 'merged-annotations';
+
+                    sectionAnnotations.forEach(ann => {
+                        const annEl = createInlineAnnotation(ann);
+                        annotationsDiv.appendChild(annEl);
+                    });
+
+                    wrapper.appendChild(annotationsDiv);
+
+                    // Remove from map so we can show general comments at end
+                    delete annotationsBySection[sectionId];
+                }
+            });
+
+            // Show general/unmatched comments at end
+            const generalAnnotations = annotationsBySection['general'] || [];
+            Object.keys(annotationsBySection).forEach(key => {
+                if (key !== 'general') {
+                    generalAnnotations.push(...annotationsBySection[key]);
+                }
+            });
+
+            if (generalAnnotations.length > 0) {
+                const generalSection = document.createElement('div');
+                generalSection.className = 'mt-4 pt-3 border-top';
+                generalSection.innerHTML = '<h5><i class="bi bi-chat-dots"></i> General Comments</h5>';
+
+                generalAnnotations.forEach(ann => {
+                    const annEl = createInlineAnnotation(ann);
+                    generalSection.appendChild(annEl);
+                });
+
+                container.appendChild(generalSection);
+            }
+        }
+
+        // Export merged content as markdown
+        function exportMergedMarkdown() {
+            let md = mergedData.p + '\n\n---\n\n## Feedback Summary\n\n';
+
+            mergedData.a.forEach(ann => {
+                const [type, target, text, author, imageData] = ann;
+                md += `### ${author || 'Anonymous'}\n`;
+                md += `**On:** ${target || 'General'}\n\n`;
+                md += `${text}\n\n`;
+                if (imageData) {
+                    md += `![Image](${imageData})\n\n`;
+                }
+            });
+
+            // Download as file
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'merged-feedback.md';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Copy merged URL
+        function copyMergedUrl() {
+            try {
+                const encoded = encodeHashData(mergedData);
+                const url = window.location.origin + window.location.pathname + '#' + encoded;
+
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Combined URL copied to clipboard!');
+                }).catch(() => {
+                    prompt('Copy this URL:', url);
+                });
+            } catch (e) {
+                alert('Failed to generate URL: ' + e.message);
+            }
+        }
+
+        // Clear merge inputs
+        function clearMerge() {
+            document.getElementById('merge-urls').value = '';
+            document.getElementById('merged-results').style.display = 'none';
+            mergedData = { p: '', a: [] };
         }
 
         // Show toast message
@@ -385,6 +909,7 @@
         // Show error
         function showError(message) {
             document.getElementById('main-content').style.display = 'none';
+            document.getElementById('action-bar').style.display = 'none';
             document.getElementById('error-display').style.display = 'block';
             document.getElementById('error-message').textContent = message;
         }
@@ -393,15 +918,23 @@
         document.addEventListener('DOMContentLoaded', function() {
             const hash = window.location.hash;
 
+            // Check for merge mode
+            if (hash === '#merge' || hash === '') {
+                if (hash === '#merge') {
+                    switchToMergeMode();
+                    return;
+                }
+            }
+
             if (!hash || hash.length < 2) {
-                showError('No content found. Please use a valid share link.');
+                // No hash - show merge mode by default
+                switchToMergeMode();
                 return;
             }
 
             try {
                 sharedData = decodeHashData(hash);
 
-                // Render content
                 if (sharedData.p) {
                     renderContent(sharedData.p);
                 } else {
@@ -409,13 +942,21 @@
                     return;
                 }
 
-                // Render annotations
                 if (sharedData.a && sharedData.a.length > 0) {
                     renderAnnotations(sharedData.a);
                 }
 
             } catch (e) {
                 showError('Failed to decode the shared content: ' + e.message);
+            }
+        });
+
+        // Handle hash changes
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash === '#merge') {
+                switchToMergeMode();
+            } else if (window.location.hash && window.location.hash.length > 5) {
+                location.reload();
             }
         });
     </script>
