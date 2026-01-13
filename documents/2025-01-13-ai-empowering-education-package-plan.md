@@ -20,6 +20,14 @@ created: 2025-01-13
 
 ---
 
+## 撥款計劃原文
+
+<iframe src="https://docs.google.com/document/d/1KeQFBtEy71yAtLcBTJXQYiTcs6KbSQ-WbnKlvmPO2T4/preview" width="100%" height="600" frameborder="0"></iframe>
+
+[📄 在 Google Docs 中開啟](https://docs.google.com/document/d/1KeQFBtEy71yAtLcBTJXQYiTcs6KbSQ-WbnKlvmPO2T4/edit?tab=t.0)
+
+---
+
 ## Tier 1：可申報資助項目
 
 | 項目 | 描述 | 三年總值 | 對應撥款用途 |
