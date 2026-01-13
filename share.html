@@ -492,6 +492,8 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
         function decodeHashData(hash) {
             try {
                 if (hash.startsWith('#')) hash = hash.substring(1);
+                // Handle d= parameter format
+                if (hash.startsWith('d=')) hash = hash.substring(2);
                 const binaryString = urlSafeBase64Decode(hash);
                 const bytes = new Uint8Array(binaryString.length);
                 for (let i = 0; i < binaryString.length; i++) {
