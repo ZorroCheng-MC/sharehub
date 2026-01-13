@@ -1,6 +1,6 @@
 ---
 title: Google ATP Outsourcing Agreement Summary
-date: 2023-01-11
+date: 2026-01-13
 type: reference
 tags:
   - business
