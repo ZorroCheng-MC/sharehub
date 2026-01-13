@@ -15,30 +15,143 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             background-color: #f8f9fa;
             min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
         .share-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 1rem 0;
-            margin-bottom: 2rem;
+            padding: 0.75rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
         .share-header h1 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
         }
+
+        /* Main layout */
+        .main-wrapper {
+            display: flex;
+            height: calc(100vh - 52px);
+            margin-top: 52px;
+        }
+
+        /* Content panel */
+        .content-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            transition: margin-right 0.3s ease;
+        }
+        .content-panel.panel-open {
+            margin-right: 0;
+        }
+
         .content-card {
             background: white;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 2rem;
-            margin-bottom: 2rem;
+            max-width: 900px;
+            margin: 0 auto 2rem;
         }
         .content-card img {
             max-width: 100%;
             height: auto;
+        }
+
+        /* Right comments panel */
+        .comments-panel {
+            width: 380px;
+            min-width: 380px;
+            background: white;
+            border-left: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            position: fixed;
+            right: 0;
+            top: 52px;
+            bottom: 0;
+            z-index: 100;
+        }
+        .comments-panel.open {
+            transform: translateX(0);
+        }
+
+        .comments-header {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .comments-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .comment-input-area {
+            border-top: 1px solid #dee2e6;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+
+        /* Comment items */
+        .comment-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .comment-item.highlight {
+            border-left: 3px solid #667eea;
+        }
+        .comment-target {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .comment-target i {
+            margin-right: 0.25rem;
+        }
+        .comment-author {
+            font-size: 0.7rem;
+            color: #667eea;
+            font-weight: 500;
+        }
+        .comment-text {
+            font-size: 0.875rem;
+            color: #333;
+            margin-top: 0.25rem;
+        }
+        .comment-item img {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 0.5rem;
+            border-radius: 5px;
         }
 
         /* Section highlighting for annotations */
@@ -57,78 +170,79 @@
             border-left: 3px solid #667eea;
             padding-left: 1rem;
         }
+        .annotatable-section.selected {
+            background-color: #e8f0fe;
+        }
         .annotatable-section:hover::after {
-            content: '💬 Click to comment';
+            content: '+';
             position: absolute;
-            right: 0;
-            top: 0;
-            font-size: 0.7rem;
-            color: #667eea;
-            background: #f0f7ff;
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        /* Inline annotations */
-        .inline-annotation {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 0.5rem 0.75rem;
-            margin: 0.5rem 0;
-            border-radius: 0 5px 5px 0;
-            font-size: 0.9rem;
+        /* Comment count indicator */
+        .annotation-indicator {
+            position: absolute;
+            right: 0.5rem;
+            top: 0.5rem;
+            background: #667eea;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
         }
-        .inline-annotation .annotation-author {
-            font-size: 0.75rem;
-            color: #856404;
-            font-weight: 500;
+
+        /* Toggle button */
+        .panel-toggle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 0.5rem;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            z-index: 101;
+            transition: right 0.3s ease;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
         }
-        .inline-annotation .annotation-text {
-            color: #333;
-            margin-top: 0.25rem;
+        .panel-toggle:hover {
+            background: #5a6fd6;
         }
-        .inline-annotation img {
+        .panel-toggle.panel-open {
+            right: 380px;
+        }
+        .panel-toggle .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            font-size: 0.65rem;
+        }
+
+        /* Image upload */
+        .image-preview-small {
             max-width: 100%;
-            max-height: 200px;
+            max-height: 80px;
             margin-top: 0.5rem;
             border-radius: 5px;
+            border: 1px solid #dee2e6;
         }
-
-        .annotation {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 0.75rem 1rem;
-            margin: 0.5rem 0;
-            border-radius: 0 5px 5px 0;
-        }
-        .annotation-header {
-            font-size: 0.8rem;
-            color: #856404;
-            margin-bottom: 0.25rem;
-        }
-        .annotation-text {
-            color: #333;
-        }
-        .action-bar {
-            position: sticky;
-            bottom: 0;
-            background: white;
-            border-top: 1px solid #dee2e6;
-            padding: 1rem;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-        .comment-modal .modal-body {
-            padding: 1.5rem;
-        }
-        #error-display {
-            display: none;
-        }
-        .session-badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            background: #e9ecef;
-            color: #6c757d;
+        .image-upload-btn {
+            cursor: pointer;
         }
 
         /* Markdown content styles */
@@ -164,31 +278,18 @@
             background: #f8f9fa;
         }
 
-        /* Image preview in comment */
-        .image-preview {
-            max-width: 100%;
-            max-height: 150px;
-            margin-top: 0.5rem;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
+        #error-display {
+            display: none;
         }
-        .image-upload-area {
-            border: 2px dashed #dee2e6;
-            border-radius: 5px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .image-upload-area:hover {
-            border-color: #667eea;
-        }
-        .image-upload-area.drag-over {
-            border-color: #667eea;
-            background: #f0f7ff;
+        .session-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            background: #e9ecef;
+            color: #6c757d;
         }
 
-        /* Merge mode styles */
+        /* Merge mode */
         .merge-container {
             max-width: 900px;
             margin: 0 auto;
@@ -196,54 +297,43 @@
         .url-input-area {
             min-height: 150px;
         }
-        .feedback-item {
-            background: #f8f9fa;
-            border-radius: 5px;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        /* Action bar at bottom of content */
+        .content-actions {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #dee2e6;
+            padding: 0.75rem 1rem;
+            margin: 0 -2rem -2rem;
+            border-radius: 0 0 10px 10px;
         }
-        .feedback-item .url-preview {
-            font-family: monospace;
-            font-size: 0.8rem;
+
+        /* Empty state */
+        .empty-comments {
+            text-align: center;
+            padding: 2rem;
             color: #6c757d;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 70%;
         }
-        .merged-section {
-            border-left: 3px solid #667eea;
-            padding-left: 1rem;
-            margin: 1rem 0;
-        }
-        .merged-annotations {
-            margin-top: 0.5rem;
-        }
-        .annotation-count-badge {
-            background: #667eea;
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.1rem 0.4rem;
-            border-radius: 10px;
-            margin-left: 0.5rem;
+        .empty-comments i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="share-header">
-        <div class="container">
+        <div class="container-fluid px-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h1><i class="bi bi-share"></i> <span id="page-title">Shared Content</span></h1>
                 <div class="d-flex gap-2">
                     <a href="#merge" class="btn btn-outline-light btn-sm" onclick="switchToMergeMode()">
-                        <i class="bi bi-layers"></i> Merge Feedback
+                        <i class="bi bi-layers"></i> Merge
                     </a>
                     <a href="/sharehub/" class="btn btn-outline-light btn-sm">
-                        <i class="bi bi-house"></i> ShareHub
+                        <i class="bi bi-house"></i> Home
                     </a>
                 </div>
             </div>
@@ -251,30 +341,86 @@
     </div>
 
     <!-- Error Display -->
-    <div class="container" id="error-display">
+    <div class="container mt-5 pt-4" id="error-display">
         <div class="alert alert-danger">
             <h4><i class="bi bi-exclamation-triangle"></i> Unable to Load Content</h4>
             <p id="error-message">The shared link appears to be invalid or corrupted.</p>
         </div>
     </div>
 
-    <!-- Main Content View -->
-    <div class="container" id="main-content">
-        <div class="content-card">
-            <div id="content-area" class="markdown-content">
-                <p class="text-muted">Loading content...</p>
+    <!-- Main Layout -->
+    <div class="main-wrapper" id="main-wrapper">
+        <!-- Content Panel -->
+        <div class="content-panel" id="content-panel">
+            <div class="content-card">
+                <div id="content-area" class="markdown-content">
+                    <p class="text-muted">Loading content...</p>
+                </div>
+                <div class="content-actions">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">
+                            <i class="bi bi-info-circle"></i> Click sections to add comments
+                        </span>
+                        <button class="btn btn-primary btn-sm" onclick="copyShareUrl()">
+                            <i class="bi bi-link-45deg"></i> Copy Share URL
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- All Annotations Section (collapsed view) -->
-        <div id="annotations-section" class="content-card" style="display: none;">
-            <h5><i class="bi bi-chat-dots"></i> All Comments <span id="comment-count" class="badge bg-secondary">0</span></h5>
-            <div id="annotations-list"></div>
+        <!-- Comments Panel Toggle -->
+        <button class="panel-toggle" id="panel-toggle" onclick="toggleCommentsPanel()">
+            <i class="bi bi-chat-dots"></i>
+            <span class="badge rounded-pill" id="comment-count-badge" style="display: none;">0</span>
+        </button>
+
+        <!-- Right Comments Panel -->
+        <div class="comments-panel" id="comments-panel">
+            <div class="comments-header">
+                <h5><i class="bi bi-chat-dots"></i> Comments <span class="badge bg-secondary" id="comment-count">0</span></h5>
+                <button class="btn btn-sm btn-outline-secondary" onclick="toggleCommentsPanel()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="comments-list" id="comments-list">
+                <div class="empty-comments" id="empty-comments">
+                    <i class="bi bi-chat-square-text"></i>
+                    <p>No comments yet</p>
+                    <small>Click on any section in the content to add a comment</small>
+                </div>
+            </div>
+
+            <div class="comment-input-area" id="comment-input-area">
+                <div class="mb-2">
+                    <small class="text-muted" id="comment-target-label">
+                        <i class="bi bi-cursor"></i> Select a section to comment on
+                    </small>
+                </div>
+                <input type="hidden" id="comment-section-id" value="">
+                <textarea class="form-control form-control-sm mb-2" id="comment-text" rows="2" placeholder="Type your comment..." disabled></textarea>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <label class="btn btn-sm btn-outline-secondary image-upload-btn" title="Attach image">
+                            <i class="bi bi-image"></i>
+                            <input type="file" id="image-input" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                        </label>
+                        <button class="btn btn-sm btn-outline-danger" id="remove-image-btn" style="display: none;" onclick="removeImage()">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-sm btn-primary" id="add-comment-btn" onclick="saveComment()" disabled>
+                        <i class="bi bi-send"></i> Add
+                    </button>
+                </div>
+                <img id="image-preview" class="image-preview-small" style="display: none;" alt="Preview">
+            </div>
         </div>
     </div>
 
     <!-- Merge Mode View -->
-    <div class="container merge-container" id="merge-content" style="display: none;">
+    <div class="container merge-container pt-5 mt-4" id="merge-content" style="display: none;">
         <div class="content-card">
             <h4><i class="bi bi-layers"></i> Merge Team Feedback</h4>
             <p class="text-muted">Paste annotated URLs from your team members to merge all feedback into one view.</p>
@@ -282,8 +428,7 @@
             <div class="mb-3">
                 <label class="form-label">Paste URLs (one per line)</label>
                 <textarea class="form-control url-input-area" id="merge-urls" placeholder="https://zorrocheng-mc.github.io/sharehub/share#eJxLTE...
-https://zorrocheng-mc.github.io/sharehub/share#eJyKSE...
-https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
+https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
             </div>
 
             <div class="d-flex gap-2">
@@ -296,7 +441,6 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             </div>
         </div>
 
-        <!-- Merged Results -->
         <div id="merged-results" class="content-card" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5><i class="bi bi-check-circle"></i> Merged Feedback</h5>
@@ -305,75 +449,11 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                         <i class="bi bi-download"></i> Export MD
                     </button>
                     <button class="btn btn-primary btn-sm" onclick="copyMergedUrl()">
-                        <i class="bi bi-link-45deg"></i> Copy Combined URL
+                        <i class="bi bi-link-45deg"></i> Copy URL
                     </button>
                 </div>
             </div>
             <div id="merged-content-area" class="markdown-content"></div>
-        </div>
-    </div>
-
-    <!-- Action Bar -->
-    <div class="action-bar" id="action-bar">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div>
-                    <span class="text-muted small">
-                        <i class="bi bi-info-circle"></i> Click any section to add a comment
-                    </span>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm" onclick="addComment()">
-                        <i class="bi bi-chat-plus"></i> Add General Comment
-                    </button>
-                    <button class="btn btn-primary btn-sm" onclick="copyShareUrl()">
-                        <i class="bi bi-link-45deg"></i> Copy Share URL
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Comment Modal -->
-    <div class="modal fade" id="commentModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-chat-plus"></i> Add Comment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Commenting on:</label>
-                        <div id="comment-target-preview" class="p-2 bg-light rounded small text-muted">
-                            General comment
-                        </div>
-                        <input type="hidden" id="comment-section-id" value="general">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Your Comment</label>
-                        <textarea class="form-control" id="comment-text" rows="3" placeholder="Enter your feedback..."></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Add Image (optional)</label>
-                        <div class="image-upload-area" id="image-upload-area" onclick="document.getElementById('image-input').click()">
-                            <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
-                            <p class="text-muted mb-0 small">Click to upload or paste image (Ctrl+V)</p>
-                        </div>
-                        <input type="file" id="image-input" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
-                        <div id="image-preview-container" style="display: none;">
-                            <img id="image-preview" class="image-preview" alt="Preview">
-                            <button type="button" class="btn btn-sm btn-outline-danger mt-1" onclick="removeImage()">
-                                <i class="bi bi-x"></i> Remove
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveComment()">Add Comment</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -386,10 +466,12 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
         let mergedData = { p: '', a: [] };
         let sessionId = generateSessionId();
         let currentImageData = null;
-        let currentMode = 'view'; // 'view' or 'merge'
-        let sectionMap = {}; // Maps section IDs to their text
+        let currentMode = 'view';
+        let sectionMap = {};
+        let selectedSectionId = null;
+        let panelOpen = false;
 
-        // Generate random session ID for this viewer
+        // Generate random session ID
         function generateSessionId() {
             const adjectives = ['quick', 'bright', 'calm', 'eager', 'fair', 'gentle', 'happy', 'keen', 'lively', 'merry'];
             const nouns = ['river', 'mountain', 'forest', 'ocean', 'meadow', 'canyon', 'valley', 'island', 'prairie', 'glacier'];
@@ -399,21 +481,17 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             return `${adj}-${noun}-${num}`;
         }
 
-        // Decode URL-safe Base64
+        // URL-safe Base64 decode
         function urlSafeBase64Decode(str) {
             str = str.replace(/-/g, '+').replace(/_/g, '/');
-            while (str.length % 4) {
-                str += '=';
-            }
+            while (str.length % 4) str += '=';
             return atob(str);
         }
 
-        // Decode and decompress the hash data
+        // Decode hash data
         function decodeHashData(hash) {
             try {
-                if (hash.startsWith('#')) {
-                    hash = hash.substring(1);
-                }
+                if (hash.startsWith('#')) hash = hash.substring(1);
                 const binaryString = urlSafeBase64Decode(hash);
                 const bytes = new Uint8Array(binaryString.length);
                 for (let i = 0; i < binaryString.length; i++) {
@@ -427,7 +505,7 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
         }
 
-        // Encode data back to URL hash
+        // Encode data to hash
         function encodeHashData(data) {
             try {
                 const jsonStr = JSON.stringify(data);
@@ -440,12 +518,19 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
                 return base64;
             } catch (e) {
-                console.error('Encode error:', e);
                 throw new Error('Failed to encode content: ' + e.message);
             }
         }
 
-        // Generate section ID from text
+        // Strip YAML frontmatter from markdown
+        function stripFrontmatter(markdown) {
+            if (!markdown) return '';
+            // Match frontmatter: starts with ---, ends with ---
+            const frontmatterRegex = /^---\s*\n[\s\S]*?\n---\s*\n?/;
+            return markdown.replace(frontmatterRegex, '').trim();
+        }
+
+        // Generate section ID
         function generateSectionId(text) {
             return text.toLowerCase()
                 .replace(/[^a-z0-9\s]/g, '')
@@ -453,17 +538,64 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 .substring(0, 50);
         }
 
-        // Render markdown content with annotatable sections
+        // Toggle comments panel
+        function toggleCommentsPanel() {
+            panelOpen = !panelOpen;
+            const panel = document.getElementById('comments-panel');
+            const toggle = document.getElementById('panel-toggle');
+            const contentPanel = document.getElementById('content-panel');
+
+            if (panelOpen) {
+                panel.classList.add('open');
+                toggle.classList.add('panel-open');
+                contentPanel.style.marginRight = '380px';
+            } else {
+                panel.classList.remove('open');
+                toggle.classList.remove('panel-open');
+                contentPanel.style.marginRight = '0';
+            }
+        }
+
+        // Open panel and select section
+        function selectSection(sectionId, sectionText) {
+            selectedSectionId = sectionId;
+
+            // Update UI
+            document.querySelectorAll('.annotatable-section').forEach(el => {
+                el.classList.remove('selected');
+                if (el.getAttribute('data-section-id') === sectionId) {
+                    el.classList.add('selected');
+                }
+            });
+
+            // Enable comment input
+            document.getElementById('comment-section-id').value = sectionId;
+            document.getElementById('comment-target-label').innerHTML =
+                `<i class="bi bi-bookmark"></i> <strong>${escapeHtml(sectionText.substring(0, 40))}${sectionText.length > 40 ? '...' : ''}</strong>`;
+            document.getElementById('comment-text').disabled = false;
+            document.getElementById('comment-text').placeholder = 'Type your comment...';
+            document.getElementById('add-comment-btn').disabled = false;
+
+            // Open panel if closed
+            if (!panelOpen) {
+                toggleCommentsPanel();
+            }
+
+            // Focus textarea
+            document.getElementById('comment-text').focus();
+        }
+
+        // Render content
         function renderContent(markdown) {
-            const html = marked.parse(markdown);
+            // Strip frontmatter before rendering
+            const cleanMarkdown = stripFrontmatter(markdown);
+            const html = marked.parse(cleanMarkdown);
             const container = document.getElementById('content-area');
             container.innerHTML = html;
 
-            // Make sections annotatable
             sectionMap = {};
             let sectionIndex = 0;
 
-            // Wrap block elements with annotatable sections
             const blockElements = container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table');
 
             blockElements.forEach(el => {
@@ -476,44 +608,28 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 const wrapper = document.createElement('div');
                 wrapper.className = 'annotatable-section';
                 wrapper.setAttribute('data-section-id', sectionId);
-                wrapper.onclick = () => openCommentModal(sectionId, text.substring(0, 100));
+                wrapper.onclick = (e) => {
+                    e.stopPropagation();
+                    selectSection(sectionId, text);
+                };
 
                 el.parentNode.insertBefore(wrapper, el);
                 wrapper.appendChild(el);
 
-                // Add inline annotations for this section
+                // Count annotations for this section
                 const sectionAnnotations = sharedData.a.filter(ann => ann[1] === sectionId);
                 if (sectionAnnotations.length > 0) {
                     wrapper.classList.add('has-annotation');
-                    sectionAnnotations.forEach(ann => {
-                        const annDiv = createInlineAnnotation(ann);
-                        wrapper.appendChild(annDiv);
-                    });
+                    const indicator = document.createElement('span');
+                    indicator.className = 'annotation-indicator';
+                    indicator.textContent = sectionAnnotations.length;
+                    wrapper.appendChild(indicator);
                 }
 
                 sectionIndex++;
             });
-        }
 
-        // Create inline annotation element
-        function createInlineAnnotation(ann) {
-            const [type, target, text, author, imageData] = ann;
-            const div = document.createElement('div');
-            div.className = 'inline-annotation';
-
-            let html = `
-                <div class="annotation-author">
-                    <i class="bi bi-chat-left-text"></i> ${author || 'Anonymous'}
-                </div>
-                <div class="annotation-text">${escapeHtml(text)}</div>
-            `;
-
-            if (imageData) {
-                html += `<img src="${imageData}" alt="Attached image">`;
-            }
-
-            div.innerHTML = html;
-            return div;
+            updateCommentCount();
         }
 
         // Escape HTML
@@ -523,64 +639,66 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             return div.innerHTML;
         }
 
-        // Render all annotations in sidebar
-        function renderAnnotations(annotations) {
-            const container = document.getElementById('annotations-list');
-            const section = document.getElementById('annotations-section');
-            const countBadge = document.getElementById('comment-count');
+        // Update comment count
+        function updateCommentCount() {
+            const count = sharedData.a ? sharedData.a.length : 0;
+            document.getElementById('comment-count').textContent = count;
+            const badge = document.getElementById('comment-count-badge');
+            if (count > 0) {
+                badge.style.display = 'block';
+                badge.textContent = count;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
 
-            if (!annotations || annotations.length === 0) {
-                section.style.display = 'none';
-                countBadge.textContent = '0';
+        // Render comments in panel
+        function renderComments() {
+            const container = document.getElementById('comments-list');
+            const emptyState = document.getElementById('empty-comments');
+
+            if (!sharedData.a || sharedData.a.length === 0) {
+                container.innerHTML = '';
+                container.appendChild(emptyState);
+                emptyState.style.display = 'block';
                 return;
             }
 
-            section.style.display = 'block';
-            countBadge.textContent = annotations.length;
+            emptyState.style.display = 'none';
             container.innerHTML = '';
 
-            annotations.forEach((ann, idx) => {
+            sharedData.a.forEach((ann, idx) => {
                 const [type, target, text, author, imageData] = ann;
                 const targetText = sectionMap[target] || target || 'General';
 
                 const div = document.createElement('div');
-                div.className = 'annotation';
+                div.className = 'comment-item';
+                if (target === selectedSectionId) {
+                    div.classList.add('highlight');
+                }
 
                 let html = `
-                    <div class="annotation-header">
-                        <i class="bi bi-chat-left-text"></i>
-                        <span class="session-badge">${author || 'Anonymous'}</span>
-                        on <strong>${escapeHtml(targetText.substring(0, 50))}${targetText.length > 50 ? '...' : ''}</strong>
+                    <div class="comment-target" title="${escapeHtml(targetText)}">
+                        <i class="bi bi-bookmark"></i> ${escapeHtml(targetText.substring(0, 50))}${targetText.length > 50 ? '...' : ''}
                     </div>
-                    <div class="annotation-text">${escapeHtml(text)}</div>
+                    <div class="comment-author">
+                        <span class="session-badge">${escapeHtml(author || 'Anonymous')}</span>
+                    </div>
+                    <div class="comment-text">${escapeHtml(text)}</div>
                 `;
 
                 if (imageData) {
-                    html += `<img src="${imageData}" style="max-width: 100%; max-height: 150px; margin-top: 0.5rem; border-radius: 5px;" alt="Attached image">`;
+                    html += `<img src="${imageData}" alt="Attached">`;
                 }
 
                 div.innerHTML = html;
                 container.appendChild(div);
             });
+
+            updateCommentCount();
         }
 
-        // Open comment modal for a specific section
-        function openCommentModal(sectionId, sectionText) {
-            document.getElementById('comment-section-id').value = sectionId;
-            document.getElementById('comment-target-preview').textContent = sectionText || 'General comment';
-            document.getElementById('comment-text').value = '';
-            removeImage();
-
-            const modal = new bootstrap.Modal(document.getElementById('commentModal'));
-            modal.show();
-        }
-
-        // Add a new general comment
-        function addComment() {
-            openCommentModal('general', 'General comment');
-        }
-
-        // Save the comment
+        // Save comment
         function saveComment() {
             const text = document.getElementById('comment-text').value.trim();
             const sectionId = document.getElementById('comment-section-id').value || 'general';
@@ -590,32 +708,28 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 return;
             }
 
-            // Add annotation: ["C", "section-id", "comment text", "session-id", imageData]
             sharedData.a.push(['C', sectionId, text, sessionId, currentImageData]);
 
             // Re-render
             renderContent(sharedData.p);
-            renderAnnotations(sharedData.a);
+            renderComments();
 
-            // Close modal
-            bootstrap.Modal.getInstance(document.getElementById('commentModal')).hide();
-            currentImageData = null;
+            // Clear input
+            document.getElementById('comment-text').value = '';
+            removeImage();
 
-            showToast('Comment added! Click "Copy Share URL" to share with your comments.');
+            showToast('Comment added!');
         }
 
         // Handle image selection
         function handleImageSelect(event) {
             const file = event.target.files[0];
-            if (file) {
-                processImage(file);
-            }
+            if (file) processImage(file);
         }
 
-        // Process image file
         function processImage(file) {
-            if (file.size > 500000) { // 500KB limit
-                alert('Image too large. Please use an image under 500KB to keep URL manageable.');
+            if (file.size > 500000) {
+                alert('Image too large. Please use an image under 500KB.');
                 return;
             }
 
@@ -623,25 +737,22 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             reader.onload = function(e) {
                 currentImageData = e.target.result;
                 document.getElementById('image-preview').src = currentImageData;
-                document.getElementById('image-preview-container').style.display = 'block';
-                document.getElementById('image-upload-area').style.display = 'none';
+                document.getElementById('image-preview').style.display = 'block';
+                document.getElementById('remove-image-btn').style.display = 'inline-block';
             };
             reader.readAsDataURL(file);
         }
 
-        // Remove image
         function removeImage() {
             currentImageData = null;
-            document.getElementById('image-preview-container').style.display = 'none';
-            document.getElementById('image-upload-area').style.display = 'block';
+            document.getElementById('image-preview').style.display = 'none';
+            document.getElementById('remove-image-btn').style.display = 'none';
             document.getElementById('image-input').value = '';
         }
 
-        // Handle paste for images
+        // Paste handler for images
         document.addEventListener('paste', function(e) {
-            const modal = document.getElementById('commentModal');
-            if (!modal.classList.contains('show')) return;
-
+            if (!panelOpen) return;
             const items = e.clipboardData.items;
             for (let item of items) {
                 if (item.type.indexOf('image') !== -1) {
@@ -653,27 +764,7 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
         });
 
-        // Setup drag and drop for images
-        const uploadArea = document.getElementById('image-upload-area');
-        if (uploadArea) {
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.classList.add('drag-over');
-            });
-            uploadArea.addEventListener('dragleave', function() {
-                this.classList.remove('drag-over');
-            });
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('drag-over');
-                const file = e.dataTransfer.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    processImage(file);
-                }
-            });
-        }
-
-        // Copy the share URL with current state
+        // Copy share URL
         function copyShareUrl() {
             try {
                 const encoded = encodeHashData(sharedData);
@@ -689,26 +780,25 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
         }
 
-        // Switch to merge mode
+        // Switch modes
         function switchToMergeMode() {
             currentMode = 'merge';
-            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('main-wrapper').style.display = 'none';
             document.getElementById('merge-content').style.display = 'block';
-            document.getElementById('action-bar').style.display = 'none';
+            document.getElementById('panel-toggle').style.display = 'none';
             document.getElementById('page-title').textContent = 'Merge Feedback';
             window.location.hash = 'merge';
         }
 
-        // Switch to view mode
         function switchToViewMode() {
             currentMode = 'view';
-            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('main-wrapper').style.display = 'flex';
             document.getElementById('merge-content').style.display = 'none';
-            document.getElementById('action-bar').style.display = 'block';
+            document.getElementById('panel-toggle').style.display = 'block';
             document.getElementById('page-title').textContent = 'Shared Content';
         }
 
-        // Merge multiple URLs
+        // Merge URLs
         function mergeUrls() {
             const urlsText = document.getElementById('merge-urls').value.trim();
             if (!urlsText) {
@@ -729,21 +819,15 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
 
                 urls.forEach((url, idx) => {
                     try {
-                        // Extract hash from URL
                         const hashMatch = url.match(/#(.+)$/);
-                        if (!hashMatch) {
-                            console.warn(`URL ${idx + 1} has no hash fragment`);
-                            return;
-                        }
+                        if (!hashMatch) return;
 
                         const data = decodeHashData(hashMatch[1]);
 
-                        // Use first URL's content as base
                         if (!baseContent && data.p) {
                             baseContent = data.p;
                         }
 
-                        // Collect all annotations
                         if (data.a && data.a.length > 0) {
                             allAnnotations = allAnnotations.concat(data.a);
                         }
@@ -759,27 +843,24 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                     return;
                 }
 
-                // Store merged data
                 mergedData = { p: baseContent, a: allAnnotations };
-
-                // Render merged view
                 renderMergedContent(baseContent, allAnnotations);
                 document.getElementById('merged-results').style.display = 'block';
 
-                showToast(`Merged ${urlCount} URLs with ${allAnnotations.length} total comments`);
+                showToast(`Merged ${urlCount} URLs with ${allAnnotations.length} comments`);
 
             } catch (e) {
                 alert('Error merging URLs: ' + e.message);
             }
         }
 
-        // Render merged content with all annotations
+        // Render merged content
         function renderMergedContent(markdown, annotations) {
+            const cleanMarkdown = stripFrontmatter(markdown);
             const container = document.getElementById('merged-content-area');
-            const html = marked.parse(markdown);
+            const html = marked.parse(cleanMarkdown);
             container.innerHTML = html;
 
-            // Group annotations by section
             const annotationsBySection = {};
             annotations.forEach(ann => {
                 const sectionId = ann[1] || 'general';
@@ -789,7 +870,6 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 annotationsBySection[sectionId].push(ann);
             });
 
-            // Add annotations to sections
             const blockElements = container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table');
 
             blockElements.forEach(el => {
@@ -800,64 +880,52 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
                 const sectionAnnotations = annotationsBySection[sectionId] || [];
 
                 if (sectionAnnotations.length > 0) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'merged-section';
-
-                    el.parentNode.insertBefore(wrapper, el);
-                    wrapper.appendChild(el);
-
-                    const annotationsDiv = document.createElement('div');
-                    annotationsDiv.className = 'merged-annotations';
+                    el.style.borderLeft = '3px solid #667eea';
+                    el.style.paddingLeft = '1rem';
 
                     sectionAnnotations.forEach(ann => {
-                        const annEl = createInlineAnnotation(ann);
-                        annotationsDiv.appendChild(annEl);
+                        const [type, target, text, author, imageData] = ann;
+                        const annDiv = document.createElement('div');
+                        annDiv.style.cssText = 'background:#fff3cd;border-left:4px solid #ffc107;padding:0.5rem;margin:0.5rem 0;border-radius:0 5px 5px 0;font-size:0.875rem;';
+                        annDiv.innerHTML = `<strong style="font-size:0.75rem;color:#856404;">${escapeHtml(author || 'Anonymous')}</strong><div>${escapeHtml(text)}</div>`;
+                        if (imageData) {
+                            annDiv.innerHTML += `<img src="${imageData}" style="max-width:100%;max-height:100px;margin-top:0.5rem;border-radius:5px;">`;
+                        }
+                        el.parentNode.insertBefore(annDiv, el.nextSibling);
                     });
 
-                    wrapper.appendChild(annotationsDiv);
-
-                    // Remove from map so we can show general comments at end
                     delete annotationsBySection[sectionId];
                 }
             });
 
-            // Show general/unmatched comments at end
+            // General comments
             const generalAnnotations = annotationsBySection['general'] || [];
             Object.keys(annotationsBySection).forEach(key => {
-                if (key !== 'general') {
-                    generalAnnotations.push(...annotationsBySection[key]);
-                }
+                if (key !== 'general') generalAnnotations.push(...annotationsBySection[key]);
             });
 
             if (generalAnnotations.length > 0) {
                 const generalSection = document.createElement('div');
                 generalSection.className = 'mt-4 pt-3 border-top';
                 generalSection.innerHTML = '<h5><i class="bi bi-chat-dots"></i> General Comments</h5>';
-
                 generalAnnotations.forEach(ann => {
-                    const annEl = createInlineAnnotation(ann);
-                    generalSection.appendChild(annEl);
+                    const [type, target, text, author, imageData] = ann;
+                    const annDiv = document.createElement('div');
+                    annDiv.style.cssText = 'background:#fff3cd;border-left:4px solid #ffc107;padding:0.5rem;margin:0.5rem 0;border-radius:0 5px 5px 0;';
+                    annDiv.innerHTML = `<strong style="font-size:0.75rem;color:#856404;">${escapeHtml(author || 'Anonymous')}</strong><div>${escapeHtml(text)}</div>`;
+                    generalSection.appendChild(annDiv);
                 });
-
                 container.appendChild(generalSection);
             }
         }
 
-        // Export merged content as markdown
         function exportMergedMarkdown() {
-            let md = mergedData.p + '\n\n---\n\n## Feedback Summary\n\n';
-
+            let md = stripFrontmatter(mergedData.p) + '\n\n---\n\n## Feedback Summary\n\n';
             mergedData.a.forEach(ann => {
-                const [type, target, text, author, imageData] = ann;
-                md += `### ${author || 'Anonymous'}\n`;
-                md += `**On:** ${target || 'General'}\n\n`;
-                md += `${text}\n\n`;
-                if (imageData) {
-                    md += `![Image](${imageData})\n\n`;
-                }
+                const [type, target, text, author] = ann;
+                md += `### ${author || 'Anonymous'}\n**On:** ${target || 'General'}\n\n${text}\n\n`;
             });
 
-            // Download as file
             const blob = new Blob([md], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -867,14 +935,12 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             URL.revokeObjectURL(url);
         }
 
-        // Copy merged URL
         function copyMergedUrl() {
             try {
                 const encoded = encodeHashData(mergedData);
                 const url = window.location.origin + window.location.pathname + '#' + encoded;
-
                 navigator.clipboard.writeText(url).then(() => {
-                    showToast('Combined URL copied to clipboard!');
+                    showToast('Combined URL copied!');
                 }).catch(() => {
                     prompt('Copy this URL:', url);
                 });
@@ -883,14 +949,12 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
         }
 
-        // Clear merge inputs
         function clearMerge() {
             document.getElementById('merge-urls').value = '';
             document.getElementById('merged-results').style.display = 'none';
             mergedData = { p: '', a: [] };
         }
 
-        // Show toast message
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'position-fixed bottom-0 end-0 p-3';
@@ -906,19 +970,17 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Show error
         function showError(message) {
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('action-bar').style.display = 'none';
+            document.getElementById('main-wrapper').style.display = 'none';
+            document.getElementById('panel-toggle').style.display = 'none';
             document.getElementById('error-display').style.display = 'block';
             document.getElementById('error-message').textContent = message;
         }
 
-        // Initialize on page load
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             const hash = window.location.hash;
 
-            // Check for merge mode
             if (hash === '#merge' || hash === '') {
                 if (hash === '#merge') {
                     switchToMergeMode();
@@ -927,7 +989,6 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
 
             if (!hash || hash.length < 2) {
-                // No hash - show merge mode by default
                 switchToMergeMode();
                 return;
             }
@@ -937,13 +998,10 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
 
                 if (sharedData.p) {
                     renderContent(sharedData.p);
+                    renderComments();
                 } else {
                     showError('No content found in the shared data.');
                     return;
-                }
-
-                if (sharedData.a && sharedData.a.length > 0) {
-                    renderAnnotations(sharedData.a);
                 }
 
             } catch (e) {
@@ -951,7 +1009,6 @@ https://zorrocheng-mc.github.io/sharehub/share#eJzMTE..."></textarea>
             }
         });
 
-        // Handle hash changes
         window.addEventListener('hashchange', function() {
             if (window.location.hash === '#merge') {
                 switchToMergeMode();
