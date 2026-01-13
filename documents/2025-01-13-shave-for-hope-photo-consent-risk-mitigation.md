@@ -25,6 +25,16 @@ Users could upload photos of other people without consent (celebrities, ex-partn
 
 **The real issue is consent verification, not input method.**
 
+## 🔄 Risk Perspective: Why Abuse May Be Limited
+
+| Factor | Rationale |
+|--------|-----------|
+| **Camera bypass is trivial** | Even with camera-only, users can point the camera at a celebrity photo on another screen or print. Technical restrictions don't prevent intent. |
+| **AI tools are ubiquitous** | Image transformation is easily done with many public AI tools (Midjourney, Stable Diffusion, etc.). Users with malicious intent would likely use those tools instead — no friction, no consent checkbox, no accountability. |
+| **IG sharing is voluntary** | The suggested sharing message is optional. Users may: (1) transform without sharing at all, (2) share without our message, (3) use other tools and voluntarily include our campaign. **There is no direct technical binding between our app and any Instagram post.** |
+
+**Implication**: Bad actors have easier, anonymous alternatives. Our tool's friction (login, consent, watermark) may actually make us a *less attractive* vector for abuse compared to open AI tools.
+
 ## ⚠️ Risk Scenarios
 
 | Scenario | Impact | Likelihood |
