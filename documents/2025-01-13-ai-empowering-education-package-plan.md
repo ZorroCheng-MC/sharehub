@@ -1,5 +1,4 @@
 ---
-date: 2026-01-13
 tags:
   - type/project
   - topic/AI
@@ -8,6 +7,7 @@ tags:
   - status/processing
   - meta/actionable
 created: 2025-01-13
+access: private
 ---
 
 # AI 賦能教學配套方案設計
