@@ -6,6 +6,10 @@ url: "" # Will be dynamically determined
 
 # Build settings
 markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
 # theme: minima  # Commented out - using custom layouts instead
 plugins:
   - jekyll-feed
