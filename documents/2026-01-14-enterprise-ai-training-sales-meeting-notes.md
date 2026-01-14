@@ -42,10 +42,15 @@ client: 製造業公司（沙田）
 
 ### 培訓套餐
 
-| 套餐 | 時數 | 內容 |
-|------|------|------|
-| 基本 | 4 小時 | NotebookLM + Gmail 基礎使用 |
-| 進階 | 8 小時 | 全面 AI 培訓 |
+<table>
+<thead>
+<tr><th>套餐</th><th>時數</th><th>內容</th></tr>
+</thead>
+<tbody>
+<tr><td>基本</td><td>4 小時</td><td>NotebookLM + Gmail 基礎使用</td></tr>
+<tr><td>進階</td><td>8 小時</td><td>全面 AI 培訓</td></tr>
+</tbody>
+</table>
 
 **授權結構**：
 - 每個 bundle 包含 15 個 license
@@ -91,12 +96,17 @@ client: 製造業公司（沙田）
 
 ### 目標時間表
 
-| 里程碑 | 日期 |
-|--------|------|
-| 交付報價單 | 本週內（1月3-10日） |
-| 客戶簽署 | 兩週內 |
-| 項目啟動 | 1月中 |
-| 首次培訓 | 農曆新年前（2月） |
+<table>
+<thead>
+<tr><th>里程碑</th><th>日期</th></tr>
+</thead>
+<tbody>
+<tr><td>交付報價單</td><td>本週內（1月3-10日）</td></tr>
+<tr><td>客戶簽署</td><td>兩週內</td></tr>
+<tr><td>項目啟動</td><td>1月中</td></tr>
+<tr><td>首次培訓</td><td>農曆新年前（2月）</td></tr>
+</tbody>
+</table>
 
 ### 行動項目
 
@@ -791,4 +801,3 @@ item,整理一下,然後將
 **記錄日期**：2026-01-14
 **來源**：會議逐字稿（Google Chrome capture）
 **跟進**：等待報價單，安排審批會議
-
