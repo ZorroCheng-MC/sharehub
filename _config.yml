@@ -10,11 +10,8 @@ kramdown:
   input: GFM
   hard_wrap: false
   syntax_highlighter: rouge
-  smart_quotes: ["apos", "apos", "quot", "quot"]
-  typographic_symbols:
-    hellip: "..."
-    mdash: "---"
-    ndash: "--"
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  typographic_symbols: {}
 # theme: minima  # Commented out - using custom layouts instead
 plugins:
   - jekyll-feed
