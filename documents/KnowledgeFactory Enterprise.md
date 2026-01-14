@@ -1,7 +1,7 @@
 ---
 title: "KnowledgeFactory Enterprise"
 tags: [product, AI, knowledge-management, projects, marketing, productivity, workflow, automation, lifecycle, enterprise]
-date: 2025-01-14
+date: 2026-01-14
 type: product
 status: active
 priority: high
