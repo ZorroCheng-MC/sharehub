@@ -3,7 +3,7 @@ title: "Auto Claude: Open-Source AI Project Management Platform"
 tags: [video, AI, Claude, tools, productivity, automation, coding, development, tutorial, deep-dive, project-management]
 url: https://github.com/AndyMik90/Auto-Claude
 cover: https://i.ytimg.com/vi/8suXIOy9vMk/maxresdefault.jpg
-date: 2026-01-05
+date: 2026-01-14
 type: reference
 status: inbox
 priority: high

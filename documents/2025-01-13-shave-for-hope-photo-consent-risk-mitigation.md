@@ -1,7 +1,7 @@
 ---
 title: "Shave for Hope - Photo Consent & PR Risk Mitigation"
 tags: [reference, development, web-development, business, actionable, high-priority]
-date: 2026-01-13
+date: 2026-01-14
 type: reference
 status: processing
 priority: high

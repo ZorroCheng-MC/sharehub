@@ -3,7 +3,7 @@ title: "Google A2UI: Agent-to-User Interface - Build AI Generated Apps EASILY! (
 tags: [video, AI, coding, web-development, automation, tools, tutorial, technical]
 url: https://www.youtube.com/watch?v=FTtmZQBX-fk
 cover: https://i.ytimg.com/vi/FTtmZQBX-fk/maxresdefault.jpg
-date: 2025-12-31
+date: 2026-01-14
 video_date: 2025-12-30
 type: video
 status: inbox

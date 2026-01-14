@@ -4,7 +4,7 @@ tags: [video, repository, AI, Claude, automation, coding, development, tools, ac
 type: study-guide
 status: evergreen
 priority: high
-date: 2026-01-05
+date: 2026-01-14
 author: Zorro (compiled)
 channel: Multiple Sources (Compiled)
 consolidated_from:

@@ -1,5 +1,5 @@
 ---
-date: 2026-01-07
+date: 2026-01-14
 title: "剃亮希望 Shave for Hope - CCF AI 籌款活動專案"
 tags:
   - project
@@ -10,7 +10,7 @@ tags:
   - web-development
   - actionable
   - high-priority
-date: 2026-01-07
+date: 2026-01-14
 last_updated: 2026-01-08
 type: project
 status: in-progress
