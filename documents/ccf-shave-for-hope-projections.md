@@ -1,3 +1,16 @@
+---
+title: "剃亮希望 Shave for Hope - 籌款預測與 GCP 成本預算"
+date: 2026-01-16
+tags:
+  - project
+  - reference
+  - finance
+  - business
+  - actionable
+  - high-priority
+status: evergreen
+---
+
 # 剃亮希望 Shave for Hope
 ## 籌款預測與 GCP 成本預算
 ### CCF 兒童癌病基金 | 2026-01-16
