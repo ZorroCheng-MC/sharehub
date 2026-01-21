@@ -1,3 +1,7 @@
+---
+title: "Product Development Plan"
+date: 2026-01-21
+---
 # Product Development Plan
 ## Macau University Library LLM Systems
 
