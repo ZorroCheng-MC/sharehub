@@ -1,9 +1,10 @@
 ---
-date: 2026-01-14
+date: 2026-01-06
 status: in-progress
 project: ccf-shave-for-hope
 type: technical-plan
 related: "[[2025-12-31-ccf-shave-for-hope-firebase-studio-project]]"
+access: private
 ---
 
 # 剃亮希望 技術開發計劃
@@ -28,15 +29,22 @@ related: "[[2025-12-31-ccf-shave-for-hope-firebase-studio-project]]"
 
 ## 目前狀態 Current State
 
+> 📅 更新日期: 2026-01-09
+
 | 組件 | 狀態 | 備註 |
 |------|------|------|
-| 8 個 UI 頁面 | ✅ 完成 | 使用模擬數據 |
+| 8 個 UI 頁面 | ✅ 完成 | 真實數據整合 |
 | AI 圖片變身 | ✅ 運作中 | Gemini 2.5 Flash |
-| Instagram 分享流程 | ✅ 運作中 | |
+| 社交分享 (IG/WA/FB) | ✅ 運作中 | OG 預覽已優化 |
 | shadcn/ui 組件 | ✅ 就緒 | 45+ 組件 |
-| Firebase 後端 | ❌ 未整合 | 待開發 |
-| 用戶認證 | ❌ 僅 UI | 待整合 Firebase Auth |
-| 影片製作 | ❌ 未開始 | Veo 3.1 |
+| Firebase 後端 | ✅ 已整合 | Auth, Firestore, Storage |
+| 用戶認證 | ✅ 運作中 | Google OAuth + Email |
+| 圖片優化 | ✅ 運作中 | 85% 檔案大小節省 |
+| Storage DLC | ✅ 已設定 | 7天歸檔, 90天刪除 |
+| 統計追蹤 | ✅ 運作中 | 用戶/圖片/分享 |
+| 手機相機支援 | ✅ 運作中 | 前後鏡頭切換 |
+| PayMe 捐款整合 | ❌ 未開始 | 影片解鎖門檻 ≥$50 |
+| 影片製作 | ❌ 未開始 | Veo 3.1 (需 PayMe 先完成) |
 | 雙語支援 | ❌ 僅中文 | 待開發 |
 
 ---
@@ -62,10 +70,14 @@ flowchart TD
         I --> K[WhatsApp<br/>wa.me 深層連結]
         I --> L[Facebook<br/>分享對話框]
 
-        J --> M{💡 CTA:<br/>'想製作影片?'<br/>註冊製作影片!}
-        K --> M
-        L --> M
-        H --> M
+        J --> X[🎉 感謝頁面<br/>支持剃亮希望！]
+        K --> X
+        L --> X
+        H --> X
+
+        X --> Y{💙 捐款支持?}
+        Y -->|是| Z[↗️ CCF 捐款頁面]
+        Y -->|否| M{💡 CTA:<br/>'想製作影片?'<br/>註冊製作影片!}
 
         M -->|是| N[前往 Flow B]
         M -->|否| O[結束 / 稍後回來]
@@ -73,7 +85,8 @@ flowchart TD
 
     style A fill:#FDF2C1
     style G fill:#90EE90
-    style M fill:#F5A623
+    style X fill:#F5A623
+    style Z fill:#4A90D9
 ```
 
 **分享模板:**
@@ -109,8 +122,15 @@ flowchart TD
         J -->|設定| M[編輯個人資料<br/>/settings]
     end
 
-    subgraph VIDEO["🎬 影片製作"]
-        L --> N[選擇語言<br/>廣東話 / English]
+    subgraph VIDEO["🎬 影片製作 (需捐款 ≥$50)"]
+        L --> L1{videoUnlocked?}
+        L1 -->|否| L2[💳 PayMe 捐款<br/>最低 HK$50]
+        L2 --> L3[⏳ 驗證中...]
+        L3 --> L4{Webhook<br/>驗證成功?}
+        L4 -->|是| N
+        L4 -->|否| L5[❌ 重試]
+        L5 --> L2
+        L1 -->|是| N[選擇語言<br/>廣東話 / English]
         N --> O[確認製作<br/>預覽前後照片<br/>預覽台詞]
         O --> P[⏳ 製作中...<br/>30秒 - 6分鐘]
 
@@ -134,9 +154,7 @@ flowchart TD
         V --> X
         W --> X
 
-        X --> Y{捐款?}
-        Y -->|是| Z[↗️ 跳轉至<br/>CCF 捐款頁面]
-        Y -->|否| AA[結束]
+        X --> AA[結束]
     end
 
     style H fill:#FDF2C1
@@ -185,6 +203,7 @@ flowchart LR
     subgraph ANONYMOUS["訪客"]
         B[首頁] --> C[變身]
         C --> D[分享圖片]
+        D --> X[感謝頁面]
     end
 
     subgraph REGISTERED["註冊用戶"]
@@ -203,12 +222,12 @@ flowchart LR
     A2 --> B
     A3 --> B
 
-    D -->|CTA| E
-    D --> J
+    X --> J
+    X -->|CTA| E
     I --> J
     I --> K
 
-    style D fill:#F5A623
+    style X fill:#F5A623
     style I fill:#F5A623
     style J fill:#4A90D9
     style K fill:#90EE90
@@ -338,7 +357,105 @@ src/components/
 
 ---
 
+### Phase 2.5: PayMe 捐款整合 (優先級: 高) ⭐ NEW
+
+> **目的:** 影片製作功能需用戶捐款 ≥HK$50 才能解鎖
+
+**整合方式:** PayMe for Business API + Webhook
+
+**核心原則:** Donation ID 連結模式
+```
+用戶登入 → 生成 donation_id → 建立 PayMe 訂單 (orderId = donation_id)
+→ 用戶付款 → Webhook 回傳 orderId → 匹配 donation_id → 解鎖影片
+```
+
+**新增檔案:**
+```
+src/lib/payme/
+├── config.ts              # PayMe API 設定
+├── createPayment.ts       # 建立付款請求
+├── verifyWebhook.ts       # 驗證 Webhook 簽名
+└── types.ts               # PayMe 類型定義
+
+src/app/api/
+├── payme/
+│   ├── create/route.ts    # POST: 建立 PayMe 訂單
+│   └── webhook/route.ts   # POST: 接收 PayMe 回調
+└── donations/
+    └── status/route.ts    # GET: 查詢捐款狀態
+
+src/components/
+├── donation-gate.tsx      # 捐款門檻組件
+├── payme-button.tsx       # PayMe 付款按鈕
+└── donation-status.tsx    # 捐款狀態顯示
+```
+
+**Firestore Schema 更新:**
+```
+users/{uid}
+├── ... (existing fields)
+├── donationStatus: 'none' | 'pending' | 'verified'
+├── totalDonated: number        # HKD 累計
+├── videoUnlocked: boolean      # ≥$50 時自動設為 true
+└── lastDonationAt: timestamp
+
+donations/{donationId}
+├── donationId: string          # 系統生成 (e.g., "D00059848")
+├── userId: string
+├── amount: number              # HKD
+├── paymentMethod: 'payme'
+├── paymeOrderId: string        # PayMe Transaction ID
+├── status: 'pending' | 'verified' | 'failed'
+├── walletIndicator: string     # PayMe 用戶 hash
+├── createdAt: timestamp
+└── verifiedAt: timestamp
+```
+
+**PayMe Webhook 處理流程:**
+```mermaid
+sequenceDiagram
+    participant U as 用戶
+    participant App as Shave for Hope
+    participant PM as PayMe API
+    participant FS as Firestore
+
+    U->>App: 點擊「製作影片」
+    App->>App: 檢查 videoUnlocked
+    alt 未解鎖
+        App->>App: 生成 donation_id
+        App->>FS: 建立 donations/{donation_id} (status: pending)
+        App->>PM: 建立訂單 (orderId = donation_id, amount ≥ 50)
+        PM-->>U: 顯示 PayMe 付款頁面
+        U->>PM: 完成付款
+        PM->>App: Webhook (orderId, amount, status)
+        App->>FS: 更新 donations/{donation_id} (status: verified)
+        App->>FS: 更新 users/{uid} (videoUnlocked: true, totalDonated += amount)
+        App-->>U: 解鎖成功，可製作影片
+    else 已解鎖
+        App-->>U: 直接進入影片製作
+    end
+```
+
+**環境變數 (新增):**
+```env
+# PayMe for Business
+PAYME_MERCHANT_ID=
+PAYME_API_KEY=
+PAYME_WEBHOOK_SECRET=
+PAYME_API_URL=https://api.payme.hsbc.com.hk/
+```
+
+**安全考慮:**
+- Webhook 需驗證 HMAC 簽名
+- 使用 HTTPS only
+- donation_id 使用 UUID v4
+- 金額驗證需在伺服器端 (≥$50)
+
+---
+
 ### Phase 3: 影片製作功能 (優先級: 中)
+
+> ⚠️ **前置條件:** 需完成 Phase 2.5 PayMe 整合，用戶需 videoUnlocked = true
 
 **技術:** Gemini Veo 3.1 圖片轉影片
 
@@ -435,10 +552,65 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 # Google AI
 GOOGLE_API_KEY=
 
+# ================================================================
+# PAYMENT GATEWAY CREDENTIALS (FROM CCF - CONFIDENTIAL)
+# ================================================================
+
+# PayMe for Business (HSBC)
+# Gateway: https://payme.hsbc.com.hk/zh-hk/business-api
+PAYME_CLIENT_ID=60e574f7-69f5-433f-957d-2b366fc38798
+PAYME_CLIENT_SECRET=[REDACTED]
+PAYME_SIGNING_KEY_ID=371adea3-9ab3-441f-bfa9-62247dd7edb6
+PAYME_SIGNING_KEY=[REDACTED]
+PAYME_API_URL=https://api.payme.hsbc.com.hk/
+
+# Alipay (AlipayPlus)
+# Gateway: https://docs.alipayplus.com/alipayplus/
+ALIPAY_PARTNER_ID=2088131201781639
+ALIPAY_MD5_KEY=[REDACTED]
+
+# ================================================================
+
 # App
 NEXT_PUBLIC_APP_URL=
-NEXT_PUBLIC_CCF_DONATION_URL=https://ccf.org.hk/zh-hant/support/donation/
+NEXT_PUBLIC_MIN_DONATION_AMOUNT=50
 ```
+
+---
+
+## 支付網關整合 Payment Gateway Integration
+
+> ⚠️ **機密資料** - 以下為 CCF 提供的正式 API 憑證
+
+### PayMe for Business (HSBC)
+
+| 項目 | 值 |
+|------|-----|
+| **Gateway** | https://payme.hsbc.com.hk/zh-hk/business-api |
+| **Client ID** | `60e574f7-69f5-433f-957d-2b366fc38798` |
+| **Client Secret** | `[REDACTED]` |
+| **Signing Key ID** | `371adea3-9ab3-441f-bfa9-62247dd7edb6` |
+| **Signing Key** | `[REDACTED]` |
+
+**API 文檔:** https://payme.hsbc.com.hk/zh-hk/business-api
+
+### Alipay (AlipayPlus)
+
+| 項目 | 值 |
+|------|-----|
+| **Gateway** | https://docs.alipayplus.com/alipayplus/ |
+| **Partner ID** | `2088131201781639` |
+| **MD5 Key** | `[REDACTED]` |
+
+**API 文檔:** https://docs.alipayplus.com/alipayplus/
+
+### 整合優先級
+
+| 優先級 | 支付方式 | 狀態 | 用途 |
+|--------|----------|------|------|
+| 🥇 P0 | PayMe | ⏳ 待開發 | 主要 - 影片解鎖門檻 |
+| 🥈 P1 | Alipay | ⏳ 待開發 | 次要 - 內地訪客覆蓋 |
+| 🥉 P2 | 信用卡 | ⏳ 待定 | 加分項 |
 
 ---
 
@@ -479,12 +651,14 @@ NEXT_PUBLIC_CCF_DONATION_URL=https://ccf.org.hk/zh-hant/support/donation/
 3. ✅ 社交分享 (WhatsApp + 複製連結 最低要求)
 4. ✅ 基本控制台配合真實數據
 5. ✅ 活動資訊組件
+6. ⏳ **PayMe 捐款整合** (影片解鎖門檻)
+7. ⏳ **影片製作** (需先完成 PayMe)
 
 **加分項 (上線後可補):**
-1. 影片製作 (如 Veo 3.1 就緒)
-2. 完整雙語切換
-3. 排行榜篩選功能
-4. 公開籌款頁面
+1. 完整雙語切換
+2. 排行榜篩選功能
+3. 公開籌款頁面
+4. 其他支付方式 (信用卡、FPS)
 
 ---
 
@@ -493,6 +667,195 @@ NEXT_PUBLIC_CCF_DONATION_URL=https://ccf.org.hk/zh-hant/support/donation/
 1. **CCF**: 品牌素材審批、捐款頁面 URL
 2. **GCP**: 新專案憑證
 3. **捐款頁面團隊**: 籌款目標頁面 (範圍外)
+
+---
+
+## 儲存架構 Storage Architecture
+
+> 📅 更新日期: 2026-01-09
+
+### Firebase Storage 路徑結構
+
+```
+Firebase Storage
+├── /transformations/{userId}/
+│   ├── original_{timestamp}.jpg      # 用戶原圖 (~500KB)
+│   └── transformed_{timestamp}.jpg   # 變身後圖片 (~300KB)
+│
+├── /anonymous/{visitorId}/
+│   ├── original_{timestamp}.jpg      # 訪客原圖 (~500KB)
+│   └── transformed_{timestamp}.jpg   # 訪客變身圖 (~300KB)
+│
+├── /public/shares/
+│   ├── {timestamp}_{randomId}.jpg    # 分享圖片 (~300KB)
+│   └── og_{timestamp}_{randomId}.jpg # OG 縮圖 (~150KB, 1200x630)
+│
+├── /videos/{userId}/
+│   └── video_{timestamp}.mp4         # 用戶影片 (~10-30MB)
+│
+├── /avatars/{userId}/
+│   └── avatar.jpg                    # 頭像 (~200KB)
+│
+└── /archive/                         # DLC 歸檔 (唯讀)
+    └── anonymous/{visitorId}/...     # 7天後自動移入
+```
+
+---
+
+### 圖片優化流程 Image Optimization Pipeline
+
+```mermaid
+flowchart LR
+    subgraph INPUT["📤 上載"]
+        A[用戶照片<br/>~5MB]
+    end
+
+    subgraph OPTIMIZE["⚡ 優化"]
+        B[Pre-Transform<br/>1500x1500<br/>JPEG 85%]
+        C[AI 處理<br/>Gemini 2.5]
+        D[Post-Transform<br/>1200x1600<br/>JPEG 80%]
+    end
+
+    subgraph OUTPUT["💾 儲存"]
+        E[原圖<br/>~500KB]
+        F[變身圖<br/>~300KB]
+        G[OG 縮圖<br/>~150KB]
+    end
+
+    A --> B --> C --> D
+    B --> E
+    D --> F
+    D --> G
+
+    style A fill:#ffcccc
+    style E fill:#ccffcc
+    style F fill:#ccffcc
+    style G fill:#ccffcc
+```
+
+**優化設定:**
+
+| 類型 | 最大尺寸 | 品質 | 格式 | 預估大小 |
+|------|----------|------|------|----------|
+| Pre-Transform | 1500x1500 | 85% | JPEG | ~500KB |
+| Post-Transform | 1200x1600 | 80% | JPEG | ~300KB |
+| OG Thumbnail | 1200x630 | 75% | JPEG | ~150KB |
+
+**成本效益:** 從 ~1.9MB 降至 ~300KB = **85% 節省**
+
+---
+
+### 數據生命週期 Data Lifecycle Configuration (DLC)
+
+```mermaid
+flowchart LR
+    subgraph ANONYMOUS["訪客圖片"]
+        A1[建立] --> A2[Standard<br/>7天]
+        A2 --> A3[Archive<br/>83天]
+        A3 --> A4[刪除]
+    end
+
+    subgraph PUBLIC["公開分享"]
+        B1[建立] --> B2[Standard<br/>30天]
+        B2 --> B3[Nearline]
+    end
+
+    subgraph REGISTERED["註冊用戶"]
+        C1[建立] --> C2[Standard<br/>永久保留]
+    end
+
+    style A4 fill:#ffcccc
+    style C2 fill:#ccffcc
+```
+
+**生命週期規則:**
+
+| 路徑 | Standard | Nearline | Archive | 刪除 |
+|------|----------|----------|---------|------|
+| `/anonymous/` | 0-7天 | - | 7-90天 | 90天後 |
+| `/public/shares/` | 0-30天 | 30天+ | - | 不刪除 |
+| `/transformations/` | 永久 | - | - | 不刪除 |
+| `/videos/` | 永久 | - | - | 不刪除 |
+
+---
+
+### Firestore Collections
+
+```
+Firestore
+├── /users/{uid}                      # 用戶資料
+│   ├── displayName, email, etc.
+│   └── createdAt, updatedAt
+│
+├── /transformations/{id}             # 註冊用戶的變身記錄
+│   ├── userId, originalImageUrl, transformedImageUrl
+│   ├── videoUrl?, videoStatus
+│   └── shareCount, isPublic, createdAt
+│
+├── /anonymousTransformations/{id}    # 訪客變身記錄 (7天保留)
+│   ├── visitorId, originalImageUrl, transformedImageUrl
+│   └── createdAt
+│
+├── /shares/{shareId}                 # 公開分享頁面
+│   ├── imageUrl, ogImageUrl          # 主圖 + OG縮圖
+│   ├── userId?, platform
+│   └── createdAt
+│
+├── /anonymousQuotas/{visitorId}      # 訪客配額 (每日限制)
+│   ├── dailyImageCount, lastImageDate
+│   └── dailyVideoCount, lastVideoDate
+│
+└── /statistics/{global}              # 全域統計
+    ├── totalUsers, totalImagesAnonymous, totalImagesLoggedIn
+    ├── totalVideos, totalShares
+    └── sharesByPlatform: {whatsapp, facebook, instagram, copy}
+```
+
+---
+
+### 儲存成本預估 Storage Cost Estimate
+
+**假設:** 每月 1000 次變身 (70% 訪客, 30% 註冊用戶)
+
+| 項目 | 數量 | 單位大小 | 總大小 | 保留期 |
+|------|------|----------|--------|--------|
+| 訪客原圖 | 700 | 500KB | 350MB | 90天 |
+| 訪客變身圖 | 700 | 300KB | 210MB | 90天 |
+| 註冊原圖 | 300 | 500KB | 150MB | 永久 |
+| 註冊變身圖 | 300 | 300KB | 90MB | 永久 |
+| 分享圖 | 500 | 300KB | 150MB | 永久 |
+| OG 縮圖 | 500 | 150KB | 75MB | 永久 |
+
+**每月新增:** ~1GB (其中 ~560MB 為訪客，90天後刪除)
+
+**Firebase Storage 定價 (asia-east1):**
+- Standard: $0.026/GB/月
+- Nearline: $0.01/GB/月
+- Archive: $0.0025/GB/月
+
+**預估月費:** < $1 USD (歸檔後)
+
+---
+
+### 社交分享 OG 標籤 Social Share OG Tags
+
+**分享頁面 URL:** `https://shaveforhope.ccf.org.hk/share/{shareId}`
+
+```html
+<!-- OG Tags (自動從 Firestore 讀取) -->
+<meta property="og:image" content="{ogImageUrl}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:title" content="我為希望剃頭！" />
+<meta property="og:description" content="支持兒童癌病基金 #shaveforhopehk" />
+```
+
+**WhatsApp 分享格式 (單一 URL 確保預覽):**
+```
+我為希望剃頭！🎗️ 支持兒童癌病基金 #shaveforhopehk #剃亮希望
+
+https://shaveforhope.ccf.org.hk/share/{shareId}
+```
 
 ---
 
@@ -536,4 +899,4 @@ npm run build
 
 ---
 
-*文件版本: 1.0 | 建立日期: 2026-01-06 | 最後更新: 2026-01-06*
+*文件版本: 1.2 | 建立日期: 2026-01-06 | 最後更新: 2026-01-21 (新增 Phase 2.5 PayMe 捐款整合)*
