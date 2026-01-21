@@ -55,32 +55,32 @@ access: private
 
 ```mermaid
 flowchart TD
-    subgraph ANONYMOUS["🌐 訪客用戶流程"]
-        A[🏠 首頁<br/>/] --> B[查看示範<br/>前後對比滑桿]
-        B --> C{點擊<br/>'開始變身'}
-        C --> D[📸 變身頁面<br/>/transform]
-        D --> E[上載照片<br/>拖放 / 相機]
-        E --> F[⏳ AI 處理中<br/>2-5 秒]
-        F --> G[✨ 查看結果<br/>光頭預覽]
+    subgraph ANONYMOUS["Anonymous User Flow"]
+        A["Home /"] --> B["View Demo"]
+        B --> C{"Click Start"}
+        C --> D["Transform /transform"]
+        D --> E["Upload Photo"]
+        E --> F["AI Processing"]
+        F --> G["View Result"]
 
-        G --> H[📥 下載圖片]
-        G --> I[📤 立即分享]
+        G --> H["Download"]
+        G --> I["Share"]
 
-        I --> J[Instagram<br/>下載 + 複製文案]
-        I --> K[WhatsApp<br/>wa.me 深層連結]
-        I --> L[Facebook<br/>分享對話框]
+        I --> J["Instagram"]
+        I --> K["WhatsApp"]
+        I --> L["Facebook"]
 
-        J --> X[🎉 感謝頁面<br/>支持剃亮希望！]
+        J --> X["Thank You Page"]
         K --> X
         L --> X
         H --> X
 
-        X --> Y{💙 捐款支持?}
-        Y -->|是| Z[↗️ CCF 捐款頁面]
-        Y -->|否| M{💡 CTA:<br/>'想製作影片?'<br/>註冊製作影片!}
+        X --> Y{"Donate?"}
+        Y -->|Yes| Z["CCF Donation"]
+        Y -->|No| M{"Make Video?"}
 
-        M -->|是| N[前往 Flow B]
-        M -->|否| O[結束 / 稍後回來]
+        M -->|Yes| N["Go to Flow B"]
+        M -->|No| O["End"]
     end
 
     style A fill:#FDF2C1
@@ -102,65 +102,57 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph SIGNUP["🔐 註冊流程"]
-        A[從 Flow A CTA<br/>或直接訪問] --> B[認證頁面<br/>/auth]
-        B --> C{選擇方式}
-        C -->|Google| D[🔵 Google OAuth<br/>一鍵登入]
-        C -->|Email| E[📧 電郵/密碼<br/>註冊]
-        D --> F[首次用戶?]
+    subgraph SIGNUP["Registration Flow"]
+        A["From Flow A or Direct"] --> B["Auth Page /auth"]
+        B --> C{"Choose Method"}
+        C -->|Google| D["Google OAuth"]
+        C -->|Email| E["Email/Password"]
+        D --> F{"First Time?"}
         E --> F
-        F -->|是| G[完成個人資料<br/>顯示名稱 必填<br/>IG 帳號 選填<br/>語言偏好]
-        F -->|否| H[控制台]
+        F -->|Yes| G["Complete Profile"]
+        F -->|No| H["Dashboard"]
         G --> H
     end
 
-    subgraph DASHBOARD["📊 控制台"]
-        H[控制台<br/>/dashboard] --> I[查看統計<br/>變身次數、分享數]
-        I --> J{操作}
-        J -->|新變身| K[前往 /transform]
-        J -->|製作影片| L[影片流程]
-        J -->|設定| M[編輯個人資料<br/>/settings]
+    subgraph DASHBOARD["Dashboard"]
+        H["Dashboard /dashboard"] --> I["View Stats"]
+        I --> J{"Action"}
+        J -->|Transform| K["Go to /transform"]
+        J -->|Video| L["Video Flow"]
+        J -->|Settings| M["Edit Profile"]
     end
 
-    subgraph VIDEO["🎬 影片製作 (需捐款 ≥$50)"]
-        L --> L1{videoUnlocked?}
-        L1 -->|否| L2[💳 PayMe 捐款<br/>最低 HK$50]
-        L2 --> L3[⏳ 驗證中...]
-        L3 --> L4{Webhook<br/>驗證成功?}
-        L4 -->|是| N
-        L4 -->|否| L5[❌ 重試]
+    subgraph VIDEO["Video Generation - Requires $50 Donation"]
+        L --> L1{"videoUnlocked?"}
+        L1 -->|No| L2["PayMe Donation HK$50+"]
+        L2 --> L3["Verifying..."]
+        L3 --> L4{"Webhook OK?"}
+        L4 -->|Yes| N
+        L4 -->|No| L5["Retry"]
         L5 --> L2
-        L1 -->|是| N[選擇語言<br/>廣東話 / English]
-        N --> O[確認製作<br/>預覽前後照片<br/>預覽台詞]
-        O --> P[⏳ 製作中...<br/>30秒 - 6分鐘]
+        L1 -->|Yes| N["Select Language"]
+        N --> O["Confirm & Preview"]
+        O --> P["Processing 30s-6min"]
+        P --> Q["Video Complete"]
+        Q --> R["Preview Video 8s"]
+        R --> S["Download"]
+        R --> T["Share"]
 
-        subgraph WAITING["等待畫面內容"]
-            P --> P1[進度條]
-            P --> P2[📅 Head Shaving Day 資訊<br/>2026年3月7日<br/>中環街市]
-            P --> P3[💡 分享小貼士<br/>#shaveforhopehk]
-        end
+        T --> U["IG Reels"]
+        T --> V["WhatsApp"]
+        T --> W["Facebook"]
 
-        P --> Q[✅ 影片完成]
-        Q --> R[🎥 預覽影片<br/>8 秒短片]
-        R --> S[📥 下載影片]
-        R --> T[📤 分享影片]
-
-        T --> U[IG Reels]
-        T --> V[WhatsApp 動態]
-        T --> W[Facebook]
-
-        S --> X[🎉 感謝頁面]
+        S --> X["Thank You"]
         U --> X
         V --> X
         W --> X
 
-        X --> AA[結束]
+        X --> AA["End"]
     end
 
     style H fill:#FDF2C1
     style Q fill:#90EE90
     style X fill:#F5A623
-    style Z fill:#4A90D9
 ```
 
 ---
@@ -169,19 +161,19 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph RETURNING["🔄 回訪用戶流程"]
-        A[任何頁面] --> B{已登入?}
-        B -->|是 - Session| C[自動跳轉至<br/>控制台]
-        B -->|否| D[顯示登入按鈕]
+    subgraph RETURNING["Returning User Flow"]
+        A["Any Page"] --> B{"Logged In?"}
+        B -->|Yes| C["Auto Redirect to Dashboard"]
+        B -->|No| D["Show Login Button"]
 
-        C --> E[控制台<br/>/dashboard]
-        E --> F[查看進度<br/>• 籌款統計<br/>• 過往變身<br/>• 分享次數]
+        C --> E["Dashboard /dashboard"]
+        E --> F["View Progress"]
 
-        F --> G{操作}
-        G -->|變身| H[新變身<br/>/transform]
-        G -->|影片| I[製作新影片]
-        G -->|個人資料| J[編輯設定<br/>/settings]
-        G -->|分享| K[分享過往作品]
+        F --> G{"Action"}
+        G -->|Transform| H["New Transform"]
+        G -->|Video| I["Create Video"]
+        G -->|Profile| J["Edit Settings"]
+        G -->|Share| K["Share Past Work"]
     end
 
     style C fill:#FDF2C1
@@ -194,28 +186,28 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph ENTRY["入口點"]
-        A1[社交媒體連結]
-        A2[直接 URL]
-        A3[朋友分享]
+    subgraph ENTRY["Entry Points"]
+        A1["Social Media"]
+        A2["Direct URL"]
+        A3["Friend Share"]
     end
 
-    subgraph ANONYMOUS["訪客"]
-        B[首頁] --> C[變身]
-        C --> D[分享圖片]
-        D --> X[感謝頁面]
+    subgraph ANONYMOUS["Anonymous"]
+        B["Home"] --> C["Transform"]
+        C --> D["Share Image"]
+        D --> X["Thank You"]
     end
 
-    subgraph REGISTERED["註冊用戶"]
-        E[註冊] --> F[個人資料]
-        F --> G[控制台]
-        G --> H[製作影片]
-        H --> I[分享影片]
+    subgraph REGISTERED["Registered"]
+        E["Register"] --> F["Profile"]
+        F --> G["Dashboard"]
+        G --> H["Make Video"]
+        H --> I["Share Video"]
     end
 
-    subgraph CONVERSION["轉換"]
-        J[捐款給 CCF]
-        K[出席活動<br/>3月7日]
+    subgraph CONVERSION["Conversion"]
+        J["Donate to CCF"]
+        K["Attend Event Mar 7"]
     end
 
     A1 --> B
@@ -414,25 +406,25 @@ donations/{donationId}
 **PayMe Webhook 處理流程:**
 ```mermaid
 sequenceDiagram
-    participant U as 用戶
+    participant U as User
     participant App as Shave for Hope
     participant PM as PayMe API
     participant FS as Firestore
 
-    U->>App: 點擊「製作影片」
-    App->>App: 檢查 videoUnlocked
-    alt 未解鎖
-        App->>App: 生成 donation_id
-        App->>FS: 建立 donations/{donation_id} (status: pending)
-        App->>PM: 建立訂單 (orderId = donation_id, amount ≥ 50)
-        PM-->>U: 顯示 PayMe 付款頁面
-        U->>PM: 完成付款
-        PM->>App: Webhook (orderId, amount, status)
-        App->>FS: 更新 donations/{donation_id} (status: verified)
-        App->>FS: 更新 users/{uid} (videoUnlocked: true, totalDonated += amount)
-        App-->>U: 解鎖成功，可製作影片
-    else 已解鎖
-        App-->>U: 直接進入影片製作
+    U->>App: Click Make Video
+    App->>App: Check videoUnlocked
+    alt Not Unlocked
+        App->>App: Generate donation_id
+        App->>FS: Create donations/donation_id pending
+        App->>PM: Create order orderId=donation_id
+        PM-->>U: Show PayMe payment page
+        U->>PM: Complete payment
+        PM->>App: Webhook orderId amount status
+        App->>FS: Update donations verified
+        App->>FS: Update users videoUnlocked=true
+        App-->>U: Unlocked - can make video
+    else Already Unlocked
+        App-->>U: Direct to video creation
     end
 ```
 
@@ -706,20 +698,20 @@ Firebase Storage
 
 ```mermaid
 flowchart LR
-    subgraph INPUT["📤 上載"]
-        A[用戶照片<br/>~5MB]
+    subgraph INPUT["Upload"]
+        A["User Photo 5MB"]
     end
 
-    subgraph OPTIMIZE["⚡ 優化"]
-        B[Pre-Transform<br/>1500x1500<br/>JPEG 85%]
-        C[AI 處理<br/>Gemini 2.5]
-        D[Post-Transform<br/>1200x1600<br/>JPEG 80%]
+    subgraph OPTIMIZE["Optimize"]
+        B["Pre-Transform 1500x1500"]
+        C["AI Process Gemini 2.5"]
+        D["Post-Transform 1200x1600"]
     end
 
-    subgraph OUTPUT["💾 儲存"]
-        E[原圖<br/>~500KB]
-        F[變身圖<br/>~300KB]
-        G[OG 縮圖<br/>~150KB]
+    subgraph OUTPUT["Storage"]
+        E["Original 500KB"]
+        F["Transformed 300KB"]
+        G["OG Thumbnail 150KB"]
     end
 
     A --> B --> C --> D
@@ -749,19 +741,19 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    subgraph ANONYMOUS["訪客圖片"]
-        A1[建立] --> A2[Standard<br/>7天]
-        A2 --> A3[Archive<br/>83天]
-        A3 --> A4[刪除]
+    subgraph ANONYMOUS["Anonymous Images"]
+        A1["Create"] --> A2["Standard 7 days"]
+        A2 --> A3["Archive 83 days"]
+        A3 --> A4["Delete"]
     end
 
-    subgraph PUBLIC["公開分享"]
-        B1[建立] --> B2[Standard<br/>30天]
-        B2 --> B3[Nearline]
+    subgraph PUBLIC["Public Shares"]
+        B1["Create"] --> B2["Standard 30 days"]
+        B2 --> B3["Nearline"]
     end
 
-    subgraph REGISTERED["註冊用戶"]
-        C1[建立] --> C2[Standard<br/>永久保留]
+    subgraph REGISTERED["Registered Users"]
+        C1["Create"] --> C2["Standard Permanent"]
     end
 
     style A4 fill:#ffcccc
