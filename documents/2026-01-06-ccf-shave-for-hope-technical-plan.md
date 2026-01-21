@@ -1,5 +1,5 @@
 ---
-date: 2026-01-06
+date: 2026-01-21
 status: in-progress
 project: ccf-shave-for-hope
 type: technical-plan
