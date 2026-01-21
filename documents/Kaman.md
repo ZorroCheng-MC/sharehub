@@ -537,6 +537,10 @@ class ConversationManager:
 
 #### Chatbot Interface Wireframes
 
+**Draft Mockups (Stitch):** [View Interactive Prototype](https://stitch.withgoogle.com/projects/8323273447344960411?pli=1)
+
+![UI Mockups Overview](/sharehub/images/macau-library-ui-mockups.png)
+
 **Main Chat View (Desktop)**
 ```
 ┌────────────────────────────────────────────────────────────────────┐
