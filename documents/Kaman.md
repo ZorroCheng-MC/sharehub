@@ -80,6 +80,7 @@ flowchart TB
 ### Sprint 1-2: Infrastructure & Foundation (10 days)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Docker environment setup | DevOps | 2 | P0 |
@@ -175,6 +176,7 @@ CREATE TABLE query_logs (
 ### Sprint 3-4: System A - Tabular Data Pipeline (12 days)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Table extraction & normalization scripts | Backend | 3 | P0 |
@@ -275,6 +277,7 @@ test_queries = [
 ### Sprint 5-6: System B - RAG Recommendation Engine (12 days)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Document ingestion pipeline | Backend | 2 | P0 |
@@ -384,6 +387,7 @@ GET    /api/v1/recommend/similar/{id}        # Find similar materials
 ### Sprint 7-8: Integration & Chatbot Backend (10 days)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Unified query router | Backend | 2 | P0 |
@@ -433,6 +437,7 @@ class ConversationManager:
 ### Sprint 9-10: Testing, Fine-tuning & Deployment (11 days)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Unit & integration tests | All | 2 | P0 |
@@ -480,6 +485,7 @@ class ConversationManager:
 ### UX Sprint 1: Research & Information Architecture (Week 1-2)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | User research (library staff interviews) | UX Researcher | 2 | P0 |
@@ -528,6 +534,7 @@ class ConversationManager:
 ### UX Sprint 2: Wireframing & Prototyping (Week 3-4)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Chatbot wireframes (mobile + desktop) | UX Designer | 2 | P0 |
@@ -653,6 +660,7 @@ class ConversationManager:
 ### UX Sprint 3: Visual Design & Components (Week 5-6)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Visual design system | UI Designer | 3 | P0 |
@@ -701,6 +709,7 @@ Caption: 14px / 20px line-height
 ### UX Sprint 4: Usability Testing & Refinement (Week 7-8)
 
 #### Deliverables
+
 | Task | Owner | Days | Priority |
 |------|-------|------|----------|
 | Usability test planning | UX Researcher | 1 | P0 |
