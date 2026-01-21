@@ -1,4 +1,5 @@
 ---
+date: 2026-01-21
 title: "剃亮希望 Shave for Hope - CCF AI 籌款活動專案"
 tags:
   - project
