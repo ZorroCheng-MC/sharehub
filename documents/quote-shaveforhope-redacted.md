@@ -1,4 +1,5 @@
 ---
+date: 2026-01-23
 title: "Shave for Hope Project - Quotation Summary (Redacted)"
 type: reference
 status: inbox
