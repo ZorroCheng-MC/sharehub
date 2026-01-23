@@ -10,183 +10,98 @@ layout: null
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quotation - Shave for Hope Project</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .quote-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .quote-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #e74c3c;
-        }
-        .info-table {
-            width: 100%;
-            margin-bottom: 30px;
-            border-collapse: collapse;
-        }
-        .info-table td {
-            padding: 8px 10px;
-            vertical-align: top;
-        }
-        .info-table .label {
-            font-weight: bold;
-            color: #666;
-            width: 15%;
-        }
-        .info-table .value {
-            width: 35%;
-        }
-        .project-desc {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            border-left: 4px solid #e74c3c;
-        }
-        .items {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .items th {
-            background: #e74c3c;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        .items td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            vertical-align: top;
-        }
-        .items tr:hover {
-            background: #f9f9f9;
-        }
-        .item-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .item-desc {
-            font-size: 13px;
-            color: #666;
-        }
-        .section {
-            margin-bottom: 25px;
-        }
-        .section h3 {
-            color: #e74c3c;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
-        }
-        .section ul {
-            margin-left: 20px;
-        }
-        .section li {
-            margin-bottom: 5px;
-        }
-        .payment-info {
-            background: #f8f9fa;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .bank-details {
-            background: white;
-            padding: 15px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-        }
-        .remarks {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .acceptance {
-            border: 2px solid #333;
-            padding: 20px;
-            margin-top: 30px;
-        }
-        .acceptance h3 {
-            margin-bottom: 15px;
-        }
-        .signature-area {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-        .signature-box {
-            width: 45%;
-        }
-        .signature-line {
-            border-bottom: 1px solid #333;
-            height: 40px;
-        }
-        .signature-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-        @media print {
-            body { background: white; padding: 0; }
-            .quote-container { box-shadow: none; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #333; line-height: 1.4; background: #fff; }
+        .quote-container { max-width: 800px; margin: 20px auto; padding: 30px; background: #fff; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #1a1a2e; }
+        .header .logo img { max-height: 50px; }
+        .header .company-info { text-align: right; font-size: 11px; }
+        .header .company-info .company-name { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .quote-title { text-align: center; font-size: 24px; font-weight: bold; margin: 20px 0; color: #1a1a2e; }
+        .info-table { width: 100%; margin-bottom: 20px; }
+        .info-table td { padding: 3px 5px; vertical-align: top; }
+        .info-table .label { font-weight: bold; width: 80px; }
+        .info-table .value { width: 200px; }
+        .project-desc { background: #f5f5f5; padding: 10px 15px; margin-bottom: 20px; border-left: 4px solid #e91e63; font-weight: bold; }
+        table.items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table.items th { background: #1a1a2e; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+        table.items th:nth-child(1) { width: 5%; text-align: center; }
+        table.items th:nth-child(2) { width: 85%; }
+        table.items th:nth-child(3) { width: 10%; text-align: center; }
+        table.items td { padding: 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        table.items td:nth-child(1) { text-align: center; }
+        table.items td:nth-child(3) { text-align: center; }
+        table.items .item-name { font-weight: bold; }
+        table.items .item-desc { color: #666; font-size: 11px; margin-top: 3px; }
+        .section { margin-bottom: 20px; }
+        .section h3 { font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #1a1a2e; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .section ul { padding-left: 20px; }
+        .section li { margin-bottom: 4px; }
+        .payment-info { background: #f9f9f9; padding: 15px; margin-bottom: 20px; }
+        .payment-info h3 { margin-bottom: 10px; border-bottom: none; }
+        .bank-details { margin-top: 10px; padding: 10px; background: #fff; border: 1px solid #ddd; }
+        .bank-details p { margin-bottom: 3px; }
+        .acceptance { margin-top: 30px; padding-top: 20px; border-top: 2px solid #1a1a2e; }
+        .acceptance h3 { font-size: 14px; margin-bottom: 15px; }
+        .acceptance p { margin-bottom: 15px; font-size: 11px; }
+        .signature-area { display: flex; justify-content: space-between; margin-top: 40px; }
+        .signature-box { width: 45%; }
+        .signature-line { border-bottom: 1px solid #333; height: 40px; margin-bottom: 5px; }
+        .signature-label { font-size: 10px; color: #666; }
+        .remarks { margin-top: 20px; font-size: 10px; color: #666; font-style: italic; }
+        @media print { .quote-container { margin: 0; padding: 20px; } }
     </style>
 </head>
 <body>
     <div class="quote-container">
+        <div class="header">
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdJucB89mS354v37RfwFnM_09G90b3h-fYwA&s" alt="Master Concept">
+            </div>
+            <div class="company-info">
+                <div class="company-name">Master Concept (Hong Kong) Ltd</div>
+                <div>2/F, The Whitney, 183 Wai Yip Street,</div>
+                <div>Kwun Tong, Kowloon, Hong Kong</div>
+                <div>Telephone: +852 35896700</div>
+                <div>Fax: +852 21510490</div>
+            </div>
+        </div>
 
         <div class="quote-title">Quotation</div>
 
         <table class="info-table">
-            <tr>
-                <td class="label">Customer:</td>
-                <td class="value">Children's Cancer Foundation</td>
-                <td class="label">Quotation No:</td>
-                <td class="value">Q2026012201</td>
-            </tr>
-            <tr>
-                <td class="label">Attn:</td>
-                <td class="value">Kenny</td>
-                <td class="label">Date:</td>
-                <td class="value">22/01/2026</td>
-            </tr>
-            <tr>
-                <td class="label">Tel:</td>
-                <td class="value"></td>
-                <td class="label">Prepared By:</td>
-                <td class="value">Daniel Cheng</td>
-            </tr>
-            <tr>
-                <td class="label">E-mail:</td>
-                <td class="value"></td>
-                <td class="label">Tel:</td>
-                <td class="value">+852 35896700</td>
-            </tr>
-            <tr>
-                <td class="label">Address:</td>
-                <td class="value">Hong Kong</td>
-                <td class="label">E-mail:</td>
-                <td class="value">daniel.cheng@masterconcept.ai</td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td class="label">Customer:</td>
+                    <td class="value">Children's Cancer Foundation</td>
+                    <td class="label">Quotation No:</td>
+                    <td class="value">Q2026012201</td>
+                </tr>
+                <tr>
+                    <td class="label">Attn:</td>
+                    <td class="value">Kenny</td>
+                    <td class="label">Date:</td>
+                    <td class="value">22/01/2026</td>
+                </tr>
+                <tr>
+                    <td class="label">Tel:</td>
+                    <td class="value"></td>
+                    <td class="label">Prepared By:</td>
+                    <td class="value">Daniel Cheng</td>
+                </tr>
+                <tr>
+                    <td class="label">E-mail:</td>
+                    <td class="value"></td>
+                    <td class="label">Tel:</td>
+                    <td class="value">+852 35896700</td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td class="value">Hong Kong</td>
+                    <td class="label">E-mail:</td>
+                    <td class="value">daniel.cheng@masterconcept.ai</td>
+                </tr>
+            </tbody>
         </table>
 
         <div class="project-desc">
@@ -196,16 +111,16 @@ layout: null
         <table class="items">
             <thead>
                 <tr>
-                    <th style="width: 50px;">Item</th>
+                    <th>Item</th>
                     <th>Description</th>
-                    <th style="width: 50px;">Qty</th>
+                    <th>Qty</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>
-                        <div class="item-name">AI Image & Video Generation System</div>
+                        <div class="item-name">AI Image &amp; Video Generation System</div>
                         <div class="item-desc">- Google Gemini 2.5 Flash integration for photo transformation<br>- Realistic shaved head AI rendering<br>- 8-second animated video creation<br>- Voice synthesis (Cantonese/English)<br>- Optimized for Instagram Reels/TikTok<br>- Token-based credit system for usage management</div>
                     </td>
                     <td>1</td>
@@ -214,15 +129,15 @@ layout: null
                     <td>2</td>
                     <td>
                         <div class="item-name">User Management System</div>
-                        <div class="item-desc">- Google OAuth + Email/Password authentication<br>- User dashboard with transformation history<br>- Personal profile pages<br>- Share statistics tracking<br>- Tiered usage quotas & rate limiting</div>
+                        <div class="item-desc">- Google OAuth + Email/Password authentication<br>- User dashboard with transformation history<br>- Personal profile pages<br>- Share statistics tracking<br>- Tiered usage quotas &amp; rate limiting</div>
                     </td>
                     <td>1</td>
                 </tr>
                 <tr>
                     <td>3</td>
                     <td>
-                        <div class="item-name">Donation & Fundraising Platform</div>
-                        <div class="item-desc">- Payment gateway integration (Alipay, PayMe, Credit Card)<br>- Peer-to-peer fundraising (donors create personal campaigns)<br>- Share fundraising page with friends for support<br>- Direct donation flow<br>- Donation tracking & reporting<br>- Transaction management</div>
+                        <div class="item-name">Donation &amp; Fundraising Platform</div>
+                        <div class="item-desc">- Payment gateway integration (Alipay, PayMe, Credit Card)<br>- Peer-to-peer fundraising (donors create personal campaigns)<br>- Share fundraising page with friends for support<br>- Direct donation flow<br>- Donation tracking &amp; reporting<br>- Transaction management</div>
                     </td>
                     <td>1</td>
                 </tr>
@@ -237,16 +152,16 @@ layout: null
                 <tr>
                     <td>5</td>
                     <td>
-                        <div class="item-name">UX & Userflow Design</div>
-                        <div class="item-desc">- User experience research & design<br>- Wireframes for all user journeys<br>- User journey maps & flow diagrams<br>- Interactive prototypes (Figma)<br>- Usability testing & iteration</div>
+                        <div class="item-name">UX &amp; Userflow Design</div>
+                        <div class="item-desc">- User experience research &amp; design<br>- Wireframes for all user journeys<br>- User journey maps &amp; flow diagrams<br>- Interactive prototypes (Figma)<br>- Usability testing &amp; iteration</div>
                     </td>
                     <td>1</td>
                 </tr>
                 <tr>
                     <td>6</td>
                     <td>
-                        <div class="item-name">Admin Dashboard & Analytics</div>
-                        <div class="item-desc">- User management & campaign analytics<br>- Donation tracking & reports<br>- Instagram post monitoring<br>- System settings configuration</div>
+                        <div class="item-name">Admin Dashboard &amp; Analytics</div>
+                        <div class="item-desc">- User management &amp; campaign analytics<br>- Donation tracking &amp; reports<br>- Instagram post monitoring<br>- System settings configuration</div>
                     </td>
                     <td>1</td>
                 </tr>
@@ -261,16 +176,16 @@ layout: null
                 <tr>
                     <td>8</td>
                     <td>
-                        <div class="item-name">GCP & Firebase Infrastructure (12 months)</div>
-                        <div class="item-desc">- Google Cloud Platform project setup & configuration<br>- Firebase hosting, Firestore database, Cloud Storage<br>- Gemini AI API usage costs for image & video generation<br>- Cloud Functions & serverless compute<br>- CDN & bandwidth costs<br>- Security & monitoring services</div>
+                        <div class="item-name">GCP &amp; Firebase Infrastructure (12 months)</div>
+                        <div class="item-desc">- Google Cloud Platform project setup &amp; configuration<br>- Firebase hosting, Firestore database, Cloud Storage<br>- Gemini AI API usage costs for image &amp; video generation<br>- Cloud Functions &amp; serverless compute<br>- CDN &amp; bandwidth costs<br>- Security &amp; monitoring services</div>
                     </td>
                     <td>1</td>
                 </tr>
                 <tr>
                     <td>9</td>
                     <td>
-                        <div class="item-name">Maintenance & Support (12 months)</div>
-                        <div class="item-desc">- Dedicated technical support team<br>- Bug fixes & security patches<br>- Performance monitoring & optimization<br>- Feature enhancements & updates<br>- 24/7 system monitoring<br>- Monthly status reports</div>
+                        <div class="item-name">Maintenance &amp; Support (12 months)</div>
+                        <div class="item-desc">- Dedicated technical support team<br>- Bug fixes &amp; security patches<br>- Performance monitoring &amp; optimization<br>- Feature enhancements &amp; updates<br>- 24/7 system monitoring<br>- Monthly status reports</div>
                     </td>
                     <td>1</td>
                 </tr>
@@ -278,7 +193,7 @@ layout: null
                     <td>10</td>
                     <td>
                         <div class="item-name">Premium Express Development (30-Day Delivery)</div>
-                        <div class="item-desc">- Accelerated 30-day project timeline<br>- Dedicated development team allocation<br>- Priority support during development<br>- Parallel workstreams & extended hours<br>- Daily progress updates</div>
+                        <div class="item-desc">- Accelerated 30-day project timeline<br>- Dedicated development team allocation<br>- Priority support during development<br>- Parallel workstreams &amp; extended hours<br>- Daily progress updates</div>
                     </td>
                     <td>1</td>
                 </tr>
@@ -295,7 +210,7 @@ layout: null
                 <li>Social media sharing integration with hashtag tracking bot for viral campaign reach</li>
                 <li>Professional UX design with wireframes, user journeys, and interactive prototypes</li>
                 <li>Admin dashboard for campaign monitoring, analytics, and donation tracking</li>
-                <li>12 months of GCP & Firebase infrastructure including AI API costs</li>
+                <li>12 months of GCP &amp; Firebase infrastructure including AI API costs</li>
                 <li>12 months of dedicated maintenance, support, and system monitoring</li>
                 <li><strong>Optional:</strong> Premium express 30-day delivery with dedicated team</li>
             </ul>
@@ -315,11 +230,11 @@ layout: null
         </div>
 
         <div class="section">
-            <h3>Intellectual Property & Licensing:</h3>
+            <h3>Intellectual Property &amp; Licensing:</h3>
             <ul>
                 <li><strong>Ownership:</strong> All source code, designs, documentation, and deliverables developed under this project shall remain the exclusive intellectual property of Master Concept (Hong Kong) Limited</li>
                 <li><strong>Client License:</strong> Upon full payment, Client is granted a non-exclusive, perpetual, royalty-free license to use, operate, and modify the deliverables for the purposes of the Shave for Hope campaign</li>
-                <li><strong>Portfolio & Marketing Rights:</strong> Master Concept (Hong Kong) Limited and Google Cloud retain the right to use the project, including screenshots, descriptions, case studies, and demonstrations, for portfolio, marketing, promotional, and showcase purposes</li>
+                <li><strong>Portfolio &amp; Marketing Rights:</strong> Master Concept (Hong Kong) Limited and Google Cloud retain the right to use the project, including screenshots, descriptions, case studies, and demonstrations, for portfolio, marketing, promotional, and showcase purposes</li>
                 <li><strong>Third-Party Components:</strong> The project may incorporate open-source libraries and third-party services, which remain subject to their respective licenses</li>
             </ul>
         </div>
@@ -348,7 +263,7 @@ layout: null
                     <div class="signature-line"></div>
                     <div class="signature-label">Signature Of Authorised Officer</div>
                     <div class="signature-line" style="margin-top: 30px;"></div>
-                    <div class="signature-label">Name & Designation</div>
+                    <div class="signature-label">Name &amp; Designation</div>
                 </div>
                 <div class="signature-box">
                     <div class="signature-line"></div>
