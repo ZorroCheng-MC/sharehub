@@ -11,7 +11,7 @@ priority: high
 
 > How to sync the KnowledgeFactory setup to another Mac after the kf-claude migration.
 
-**Document Version**: 1.0
+**Document Version**: 1.1
 **Last Updated**: 2026-01-25
 
 ---
@@ -29,13 +29,16 @@ Before syncing, ensure you have:
 
 ## Overview
 
-The KnowledgeFactory setup consists of three repositories:
+The KnowledgeFactory setup consists of four repositories:
 
-| Repository | Purpose | Location |
-|------------|---------|----------|
-| **mymatrix** (Vault) | Obsidian vault with notes & commands | `~/Documents/Obsidian/Claudecode` |
-| **kf-claude** | Claude Code plugin with templates | `~/.claude/plugins/marketplaces/kf-claude` |
-| **sharehub** | GitHub Pages for publishing | `~/Dev/sharehub` |
+| Repository           | Purpose                              | Location                                     |
+| -------------------- | ------------------------------------ | -------------------------------------------- |
+| **mymatrix** (Vault) | Obsidian vault with notes & commands | `~/Documents/Obsidian/Claudecode`            |
+| **kf-claude**        | Claude Code plugin with templates    | `~/.claude/plugins/marketplaces/kf-claude`   |
+| **doublecopy**       | Desktop clipboard capture app        | `~/Documents/Obsidian/Claudecode/doublecopy` |
+| **sharehub**         | GitHub Pages for publishing          | `~/Dev/sharehub`                             |
+
+> **Note**: The `doublecopy` folder in the vault is a **separate git repository** (nested). Changes to DoubleCopy must be pushed to its own remote.
 
 ---
 
@@ -185,7 +188,68 @@ claude
 
 ---
 
-## Step 4: Clone/Sync Sharehub (for Publishing)
+## Step 4: Sync DoubleCopy (Nested Repository)
+
+The `doublecopy` folder inside the vault is a **separate git repository** with its own remote.
+
+```bash
+cd ~/Documents/Obsidian/Claudecode/doublecopy
+
+# Check current status
+git status
+git remote -v
+```
+
+### First Time Setup (Clone)
+
+If the doublecopy folder exists but isn't a git repo:
+
+```bash
+cd ~/Documents/Obsidian/Claudecode
+
+# Remove the folder (it came from vault pull)
+rm -rf doublecopy
+
+# Clone the DoubleCopy repo
+git clone https://github.com/ZorroCheng-MC/doublecopy.git
+```
+
+### Sync Existing DoubleCopy
+
+```bash
+cd ~/Documents/Obsidian/Claudecode/doublecopy
+
+# Stash local changes if any
+git stash
+
+# Pull latest
+git pull --rebase origin main
+
+# Restore stashed changes
+git stash pop
+```
+
+### Recent Changes to Sync
+
+| File | Change |
+|------|--------|
+| `process-prs.sh` | Updated to use `/kf-claude:capture` |
+| `DoubleCopyApp/main.swift` | v1.2.0 with kf-claude integration |
+| `CLAUDE.md` | Updated documentation |
+
+### Push Local Changes (If You Made Changes)
+
+```bash
+cd ~/Documents/Obsidian/Claudecode/doublecopy
+
+git add -A
+git commit -m "Your commit message"
+git push origin main
+```
+
+---
+
+## Step 5: Clone/Sync Sharehub (for Publishing)
 
 ```bash
 # If sharehub doesn't exist
@@ -200,7 +264,7 @@ git pull origin main
 
 ---
 
-## Step 5: Install Dependencies
+## Step 6: Install Dependencies
 
 ```bash
 # Required
@@ -212,7 +276,7 @@ brew install uv
 
 ---
 
-## Step 6: Verify Everything Works
+## Step 7: Verify Everything Works
 
 ### Test Short Commands
 
@@ -251,21 +315,24 @@ claude
 
 ---
 
-## Step 7: Sync DoubleCopy (Optional)
+## Step 8: Build/Install DoubleCopy (Optional)
 
-If using DoubleCopy desktop app:
+After syncing DoubleCopy in Step 4, build or download the app:
 
 ### Build from Source
 
 ```bash
 cd ~/Documents/Obsidian/Claudecode/doublecopy
 ./build-app.sh
+
+# The built app will be in dist/
+open dist/DoubleCopy.app
 ```
 
 ### Or Download Release
 
 Download latest DMG from:
-https://github.com/ZorroCheng-MC/kf-claude/releases
+https://github.com/ZorroCheng-MC/doublecopy/releases
 
 ---
 
@@ -280,6 +347,20 @@ cd ~/Documents/Obsidian/Claudecode
 git pull --rebase origin main
 
 # After making changes
+git add -A
+git commit -m "Your commit message"
+git push origin main
+```
+
+### Sync DoubleCopy (Nested Repo)
+
+```bash
+cd ~/Documents/Obsidian/Claudecode/doublecopy
+
+# Pull latest
+git pull --rebase origin main
+
+# If you made changes, push them
 git add -A
 git commit -m "Your commit message"
 git push origin main
@@ -372,6 +453,7 @@ git rebase --continue
 |------|-----|
 | Vault | https://github.com/ZorroCheng-MC/mymatrix |
 | kf-claude | https://github.com/ZorroCheng-MC/kf-claude |
+| DoubleCopy | https://github.com/ZorroCheng-MC/doublecopy |
 | Sharehub | https://github.com/ZorroCheng-MC/sharehub |
 
 ### Key Paths
@@ -380,6 +462,7 @@ git rebase --continue
 |------|------|
 | Vault | `~/Documents/Obsidian/Claudecode` |
 | Plugin | `~/.claude/plugins/marketplaces/kf-claude` |
+| DoubleCopy | `~/Documents/Obsidian/Claudecode/doublecopy` (nested repo) |
 | Sharehub | `~/Dev/sharehub` |
 | Config | `{vault}/.claude/config.local.json` |
 | Commands | `{vault}/.claude/commands/` |
@@ -387,8 +470,9 @@ git rebase --continue
 ### Useful Commands
 
 ```bash
-# Check git status across repos
+# Check git status across all repos
 cd ~/Documents/Obsidian/Claudecode && git status
+cd ~/Documents/Obsidian/Claudecode/doublecopy && git status
 cd ~/.claude/plugins/marketplaces/kf-claude && git status
 cd ~/Dev/sharehub && git status
 
@@ -409,4 +493,4 @@ git log origin/main..HEAD --oneline
 
 ---
 
-*KnowledgeFactory Sync Instructions v1.0 | 2026-01-25*
+*KnowledgeFactory Sync Instructions v1.1 | 2026-01-25*
