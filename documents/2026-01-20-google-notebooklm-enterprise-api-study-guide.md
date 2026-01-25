@@ -2,7 +2,7 @@
 title: "Development Plan: /slide Command - NotebookLM MCP Integration"
 tags: [project, AI, Google, NotebookLM, MCP, automation, technical, KnowledgeFactory, development]
 source: https://youtu.be/HRDYY-qSDuU
-date: 2026-01-20
+date: 2026-01-25
 type: project
 status: planning
 priority: high
