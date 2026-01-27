@@ -1,4 +1,5 @@
 ---
+date: 2026-01-27
 title: PDPO Compliance Assessment Report - Shave for Hope
 type: reference
 status: evergreen
