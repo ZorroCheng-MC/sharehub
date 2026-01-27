@@ -163,46 +163,11 @@ The following factors reduce the overall risk profile:
 
 ### 3.2 Data Flow Diagram
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         DATA FLOW OVERVIEW                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│   USER DEVICE              FIREBASE                 THIRD PARTIES        │
-│   ───────────              ────────                 ─────────────        │
-│                                                                          │
-│   ┌─────────┐    HTTPS    ┌─────────────┐                               │
-│   │ Browser │ ──────────► │ Firebase    │                               │
-│   │         │             │ Hosting     │                               │
-│   └────┬────┘             └──────┬──────┘                               │
-│        │                         │                                       │
-│        │ Upload Photo            │                                       │
-│        ▼                         ▼                                       │
-│   ┌─────────┐             ┌─────────────┐         ┌──────────────┐      │
-│   │ Image   │ ──────────► │ Firebase    │ ──────► │ Google       │      │
-│   │ (5MB)   │   Base64    │ Storage     │  API    │ Gemini AI    │      │
-│   └─────────┘             └─────────────┘         └──────┬───────┘      │
-│                                                          │               │
-│                                  ◄───────────────────────┘               │
-│                            Transformed Image                             │
-│                                                                          │
-│   ┌─────────┐             ┌─────────────┐         ┌──────────────┐      │
-│   │ Donate  │ ──────────► │ API Routes  │ ──────► │ Alipay /     │      │
-│   │ Page    │  Donor Info │ (Server)    │  API    │ PayMe        │      │
-│   └─────────┘             └──────┬──────┘         └──────┬───────┘      │
-│                                  │                       │               │
-│                                  ▼                       │               │
-│                           ┌─────────────┐                │               │
-│                           │ Firestore   │ ◄──────────────┘               │
-│                           │ Database    │    Webhook                     │
-│                           └─────────────┘                                │
-│                                                                          │
-│   Legend:                                                                │
-│   ──────► Data flow (all HTTPS/TLS encrypted)                           │
-│   Personal data highlighted in collection/storage                        │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+![Data Flow Diagram](/sharehub/images/pdpo-data-flow-diagram.png)
+
+*Figure 3.2: Web Application Data Flow - Hosting, Upload, & Donation Process*
+
+**Legend:** All data flows are HTTPS/TLS encrypted. Personal data is collected at User Device and stored in Firebase/Firestore.
 
 ### 3.3 Data Classification Summary
 
