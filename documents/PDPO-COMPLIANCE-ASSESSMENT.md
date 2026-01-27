@@ -1,6 +1,5 @@
 ---
-date: 2026-01-23
-title: "PDPO Compliance Assessment Report - Shave for Hope"
+title: PDPO Compliance Assessment Report - Shave for Hope
 type: reference
 status: evergreen
 access: private
@@ -17,6 +16,7 @@ tags:
   - technical
   - actionable
 created: 2026-01-23
+read: false
 ---
 
 # PDPO Compliance Assessment Report
