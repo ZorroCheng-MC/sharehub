@@ -10,6 +10,8 @@ difficulty: easy
 
 # 蒜蓉杏仁炒菜心
 
+![蒜蓉杏仁炒菜心](/sharehub/images/garlic-almond-stir-fry-vegetables.jpg)
+
 ## 🥬 材料
 
 | 食材 | 份量 |
