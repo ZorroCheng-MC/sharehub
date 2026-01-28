@@ -10,8 +10,6 @@ difficulty: easy
 
 # 蒜蓉杏仁炒菜心
 
-![炒菜心](https://placeholder-for-image.jpg)
-
 ## 🥬 材料
 
 | 食材 | 份量 |
