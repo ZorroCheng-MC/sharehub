@@ -1,4 +1,5 @@
 ---
+date: 2026-01-30
 title: "Clawdbot WhatsApp 實測 72 小時：我發現了什麼"
 tags:
   - video
