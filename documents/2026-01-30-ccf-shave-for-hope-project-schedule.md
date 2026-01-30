@@ -39,9 +39,35 @@ read: true
 ### Gantt Chart
 
 ```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#F5A623',
+    'primaryTextColor': '#333',
+    'primaryBorderColor': '#333',
+    'lineColor': '#666',
+    'sectionBkgColor': '#f9f9f9',
+    'altSectionBkgColor': '#fff',
+    'gridColor': '#ddd',
+    'todayLineColor': '#E91E63'
+  },
+  'gantt': {
+    'titleTopMargin': 25,
+    'barHeight': 30,
+    'barGap': 8,
+    'topPadding': 50,
+    'leftPadding': 150,
+    'gridLineStartPadding': 50,
+    'fontSize': 14,
+    'sectionFontSize': 16,
+    'numberSectionStyles': 4,
+    'useWidth': 1200
+  }
+}}%%
 gantt
     title 剃亮希望 Shave for Hope - Project Schedule
     dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
     tickInterval 7day
 
     section Development
