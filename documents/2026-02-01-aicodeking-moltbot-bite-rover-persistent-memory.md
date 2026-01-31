@@ -3,7 +3,7 @@ title: "OpenClaw / Moltbot / Clawdbot + Super Plugin: This SIMPLE TRICK Makes Cl
 tags: [video, AI, productivity, tools, automation, inbox, tutorial, actionable]
 url: https://www.youtube.com/watch?v=o2ytEBw-rDA
 cover: https://i.ytimg.com/vi/o2ytEBw-rDA/maxresdefault.jpg
-date: 2026-02-01
+date: 2026-01-31
 type: video
 status: inbox
 read: false
