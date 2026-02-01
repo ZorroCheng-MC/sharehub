@@ -1,3 +1,7 @@
+---
+title: "香港巴士安全帶法例爭議 (2026)"
+date: 2026-02-01
+---
 # 香港巴士安全帶法例爭議 (2026)
 **Hong Kong Bus Seatbelt Law Controversy**
 
