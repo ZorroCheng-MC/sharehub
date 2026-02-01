@@ -2,7 +2,7 @@
 title: "Study Guide: 學校 AI 助手系列 (School AI Assistant Series)"
 tags: [study-guide, AI, education, teaching, tools, processing, tutorial, actionable]
 source: https://www.notion.so/AI-2f8606b00a0e801b9b5ce57079727a4a
-date: 2026-01-31
+date: 2026-02-01
 type: study-guide
 status: processing
 difficulty: intermediate
