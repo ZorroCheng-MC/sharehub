@@ -1,4 +1,5 @@
 ---
+date: 2026-02-01
 title: "Automaker: Autonomous AI Development Studio"
 tags:
   - repository
