@@ -1,3 +1,7 @@
+---
+title: "新加坡三日遊行程建議（一家三口 + 5歲小孩）"
+date: 2026-02-01
+---
 # 新加坡三日遊行程建議（一家三口 + 5歲小孩）
 **Singapore 3-Day Family Trip Itinerary (Parents + 5-year-old Kid)**
 
