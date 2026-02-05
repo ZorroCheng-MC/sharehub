@@ -1,6 +1,6 @@
 ---
 title: 剃亮希望 Shave for Hope - Project Schedule
-date: 2026-01-30
+date: 2026-02-05
 type: reference
 status: processing
 priority: high
