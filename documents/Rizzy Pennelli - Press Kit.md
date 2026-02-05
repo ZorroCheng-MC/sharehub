@@ -1,3 +1,7 @@
+---
+title: "Rizzy Pennelli（彭艾烈）- Press Kit"
+date: 2026-02-05
+---
 # Rizzy Pennelli（彭艾烈）- Press Kit
 
 **日期：** 2026-02-05  
