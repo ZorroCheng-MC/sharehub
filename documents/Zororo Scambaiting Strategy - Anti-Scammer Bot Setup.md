@@ -1,6 +1,6 @@
 ---
 title: "Zororo Scambaiting Strategy - Anti-Scammer Bot Setup"
-date: 2026-02-07
+date: 2026-02-06
 ---
 # Zororo Scambaiting Strategy - Anti-Scammer Bot Setup
 
