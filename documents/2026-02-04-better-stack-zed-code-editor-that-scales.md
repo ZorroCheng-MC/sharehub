@@ -1,4 +1,5 @@
 ---
+date: 2026-02-06
 title: A Code Editor That Actually Scales
 tags:
   - video
