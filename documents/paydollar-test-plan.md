@@ -1,3 +1,7 @@
+---
+title: "PayDollar Test Cards"
+date: 2026-02-06
+---
 # PayDollar Test Cards
 
 Reference: https://developer.asiapay.com/integration-guide/appendix-a/3ds-testing-cards
