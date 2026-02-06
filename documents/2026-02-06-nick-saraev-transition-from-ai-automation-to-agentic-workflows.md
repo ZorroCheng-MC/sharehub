@@ -3,7 +3,7 @@ title: "How to Transition from AI Automation to Agentic Workflows"
 tags: [video, AI, automation, agentic-workflows, development, tools, inbox, tutorial, technical, actionable]
 url: https://www.youtube.com/watch?v=5rNu19PfgFg
 cover: https://i.ytimg.com/vi/5rNu19PfgFg/maxresdefault.jpg
-date: 2026-02-05
+date: 2026-02-06
 type: video
 status: inbox
 read: false
