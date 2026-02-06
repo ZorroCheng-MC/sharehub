@@ -705,7 +705,7 @@ window.addEventListener('load', function() {
                                     {% else %}
                                         <i class="bi bi-file-earmark file-icon default-icon" title="File"></i>
                                     {% endif %}
-                                    <a href="{{ file_url | relative_url }}" target="_blank">
+                                    <a href="{{ file_url }}" target="_blank">
                                         {{ file_title }}
                                     </a>
                                     {% if access_level == 'private' %}
