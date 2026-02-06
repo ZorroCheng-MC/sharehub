@@ -7,7 +7,7 @@ date: 2026-02-06
 **日期：** 2026-02-07  
 **用途：** 用AI浪費騙徒時間，保護潛在受害者
 
-![[attachments/scambaiting-hero.jpg]]
+![Scambaiting Hero](/sharehub/attachments/scambaiting-hero.jpg)
 
 ---
 
