@@ -1,7 +1,7 @@
 ---
 title: "Zororo Scambaiting Strategy - Anti-Scammer Bot Setup"
 tags: [article, scambaiting, ai-security, anti-scam, social-engineering, whatsapp, strategy, cybersecurity, ai-ethics]
-date: 2026-02-07
+date: 2026-02-06
 type: article
 status: published
 hero: attachments/scambaiting-hero.jpg
