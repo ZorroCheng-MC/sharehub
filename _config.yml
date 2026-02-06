@@ -1,8 +1,8 @@
 # Jekyll Configuration for GitHub Pages
 title: Share Hub
 description: Secure Document Sharing Portal
-baseurl: "/sharehub" # Required for GitHub Pages project site deployment
-url: "" # Will be dynamically determined
+baseurl: "" # Empty for custom domain (sharehub.zorro.hk)
+url: "https://sharehub.zorro.hk"
 
 # Build settings
 markdown: kramdown
