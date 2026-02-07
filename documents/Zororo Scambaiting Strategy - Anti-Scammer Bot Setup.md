@@ -7,7 +7,7 @@ date: 2026-02-07
 **日期：** 2026-02-07  
 **用途：** 用AI浪費騙徒時間，保護潛在受害者
 
-![](/images/zororo-whatsapp-scambaiter-hero.jpg)
+![](/sharehub/images/zororo-whatsapp-scambaiter-hero.jpg)
 
 ---
 
