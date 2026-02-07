@@ -1,13 +1,9 @@
----
-title: "Zororo Scambaiting Strategy - Anti-Scammer Bot Setup"
-date: 2026-02-07
----
 # Zororo Scambaiting Strategy - Anti-Scammer Bot Setup
 
 **日期：** 2026-02-07  
 **用途：** 用AI浪費騙徒時間，保護潛在受害者
 
-![](/sharehub/images/zororo-whatsapp-scambaiter-hero.jpg)
+![](/images/zororo-whatsapp-scambaiter-hero.jpg)
 
 ---
 
