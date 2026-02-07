@@ -1,6 +1,14 @@
+---
+date: 2026-02-07
+tags:
+  - type/exercise
+  - topic/language
+  - topic/chinese
+created: 2026-02-07
+---
+
 # Chinese Language Exercise - 褒義詞與貶義詞
 
-Date: 2026-02-07
 Source: OCR from PDF
 
 ---
