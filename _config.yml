@@ -27,9 +27,20 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
+# Collections for markdown documents
+collections:
+  documents:
+    output: true
+    permalink: /documents/:name.html
+
 # Default layout for all documents
 defaults:
   - scope:
       path: ""
+    values:
+      layout: "universal"
+  - scope:
+      path: "_documents"
+      type: "documents"
     values:
       layout: "universal"
