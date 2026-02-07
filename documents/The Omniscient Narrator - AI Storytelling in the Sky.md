@@ -1,4 +1,5 @@
 ---
+title: "The Omniscient Narrator: When AI Becomes the Storyteller in the Sky"
 date: 2026-02-08
 type: article
 status: draft
