@@ -1,4 +1,5 @@
 ---
+title: "Chinese Language Exercise - 褒義詞與貶義詞"
 date: 2026-02-07
 tags:
   - type/exercise
@@ -6,7 +7,6 @@ tags:
   - topic/chinese
 created: 2026-02-07
 ---
-
 # Chinese Language Exercise - 褒義詞與貶義詞
 
 Source: OCR from PDF
