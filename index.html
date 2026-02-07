@@ -616,9 +616,9 @@ window.addEventListener('load', function() {
             {% endif %}
         {% endfor %}
         
-        {% comment %} Collect ALL files from site.static_files (including images, PDFs, etc.) {% endcomment %}
+        {% comment %} Collect static files from documents (PDFs, images, etc.) but EXCLUDE .md files {% endcomment %}
         {% for file in site.static_files %}
-            {% if file.path contains '/documents/' %}
+            {% if file.path contains '/documents/' and file.extname != '.md' %}
                 {% assign file_extension = file.extname | remove: '.' %}
                 {% comment %} Check if not already added from site.pages {% endcomment %}
                 {% assign already_added = false %}
