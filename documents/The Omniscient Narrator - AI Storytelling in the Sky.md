@@ -1,4 +1,5 @@
 ---
+date: 2026-02-08
 type: article
 status: draft
 tags:
