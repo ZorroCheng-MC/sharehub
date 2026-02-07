@@ -1,3 +1,7 @@
+---
+title: "Chinese Language Exercise - 褒義詞與貶義詞"
+date: 2026-02-07
+---
 # Chinese Language Exercise - 褒義詞與貶義詞
 
 Date: 2026-02-07
