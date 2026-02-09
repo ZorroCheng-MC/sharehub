@@ -14,7 +14,7 @@ priority: high
 
 ![School AI Assistant Series](/sharehub/attachments/2026-01-31-captured-image.jpg)
 
-![人機協作的教育新願景 - AI Education Vision](/sharehub/images/2026-01-31-ai-education-vision-slide-enhanced.png)
+![人機協作的教育新願景 - AI Education Vision](/sharehub/images/2026-01-31-ai-education-vision-slide-enhanced.jpg)
 
 ## 📚 Overview
 
