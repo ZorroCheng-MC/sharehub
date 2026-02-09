@@ -73,10 +73,10 @@ technical_plan: "[[2026-01-06-ccf-shave-for-hope-technical-plan]]"
 ## Demo 展示
 
 ### 首頁 - AI 光頭變身前後對比
-![CCF Shave for Hope Homepage](/sharehub/images/ccf-shave-for-hope-homepage.png)
+![CCF Shave for Hope Homepage](../images/ccf-shave-for-hope-homepage.png)
 
 ### 光頭變身頁面 - 照片上載介面
-![CCF Shave for Hope Transform](/sharehub/images/ccf-shave-for-hope-transform.png)
+![CCF Shave for Hope Transform](../images/ccf-shave-for-hope-transform.png)
 
 ### 體驗連結
 

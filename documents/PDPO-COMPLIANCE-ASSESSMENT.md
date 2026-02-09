@@ -163,7 +163,7 @@ The following factors reduce the overall risk profile:
 
 ### 3.2 Data Flow Diagram
 
-![Data Flow Diagram](/sharehub/images/pdpo-data-flow-diagram.png)
+![Data Flow Diagram](../images/pdpo-data-flow-diagram.png)
 
 *Figure 3.2: Web Application Data Flow - Hosting, Upload, & Donation Process*
 
