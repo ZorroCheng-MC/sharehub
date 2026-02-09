@@ -1,5 +1,5 @@
 ---
-date: 2026-01-21
+date: 2026-02-09
 title: "剃亮希望 Shave for Hope - CCF AI 籌款活動專案"
 tags:
   - project
@@ -10,7 +10,7 @@ tags:
   - web-development
   - actionable
   - high-priority
-date: 2025-12-31
+date: 2026-02-09
 last_updated: 2026-01-21
 type: project
 status: in-progress
@@ -73,10 +73,10 @@ technical_plan: "[[2026-01-06-ccf-shave-for-hope-technical-plan]]"
 ## Demo 展示
 
 ### 首頁 - AI 光頭變身前後對比
-![CCF Shave for Hope Homepage](../images/ccf-shave-for-hope-homepage.png)
+![CCF Shave for Hope Homepage](/sharehub/images/ccf-shave-for-hope-homepage.png)
 
 ### 光頭變身頁面 - 照片上載介面
-![CCF Shave for Hope Transform](../images/ccf-shave-for-hope-transform.png)
+![CCF Shave for Hope Transform](/sharehub/images/ccf-shave-for-hope-transform.png)
 
 ### 體驗連結
 

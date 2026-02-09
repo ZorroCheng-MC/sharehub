@@ -11,13 +11,13 @@ tags:
   - article
 created: 2026-02-08
 hero: images/omniscient-narrator-hero.jpg
-date: 2026-02-08
+date: 2026-02-09
 title: The Omniscient Narrator - AI Storytelling in the Sky
 ---
 
 # The Omniscient Narrator: When AI Becomes the Storyteller in the Sky
 
-![Hero image showing a futuristic AI drone with 360° camera hovering above a bustling city plaza at golden hour](../images/omniscient-narrator-hero.jpg)
+![Hero image showing a futuristic AI drone with 360° camera hovering above a bustling city plaza at golden hour](/sharehub/images/omniscient-narrator-hero.jpg)
 
 There's a peculiar convergence happening at the intersection of autonomous flight, computer vision, and narrative intelligence. What began as a practical discussion about which drone would be better suited for AI control—the Antigravity A1 or DJI FPV—unexpectedly spiraled into something far more ambitious: a completely new form of storytelling that couldn't exist without both artificial intelligence and aerial perspective.
 

@@ -1,7 +1,7 @@
 ---
 title: "MyMatrix - Your AI powered 2nd brain"
 tags: [product, AI, knowledge-management, second-brain, open-source, mobile, productivity]
-date: 2025-10-23
+date: 2026-02-09
 type: product
 status: active
 priority: high
@@ -141,7 +141,7 @@ Result: 1000+ notes, fully organized, instantly findable
 
 Here's how MyMatrix works from input to output:
 
-![MyMatrix Workflow Architecture](../images/mymatrix-workflow-architecture.jpg)
+![MyMatrix Workflow Architecture](/sharehub/images/mymatrix-workflow-architecture.jpg)
 
 **Key Workflow:**
 1. **Capture Layer (Blue)** - Desktop and mobile inputs processed by Claude AI

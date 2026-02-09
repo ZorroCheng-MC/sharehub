@@ -2,7 +2,7 @@
 title: Master Concept AR Automation Platform - Complete UX Specification
 type: project
 status: processing
-date: 2026-01-21
+date: 2026-02-09
 read: true
 tags:
   - project
@@ -162,7 +162,7 @@ Master Concept is a Google Premier Partner with operations across Hong Kong, Sin
 
 ## 3.1 High-Level Architecture
 
-![AR Automation Platform Architecture](../images/ar-automation-architecture.png)
+![AR Automation Platform Architecture](/sharehub/images/ar-automation-architecture.png)
 
 ## 3.2 Module Summary
 
@@ -264,7 +264,7 @@ Email Remittance┘
 
 ### Layout
 
-![Payments Processing Queue](../images/ar-payments-queue.png)
+![Payments Processing Queue](/sharehub/images/ar-payments-queue.png)
 
 **Key Elements:**
 - Status tabs with counts (Unmatched, Matched, Ready, Posted, Exception)
@@ -307,7 +307,7 @@ Email Remittance┘
 
 ### Layout (Three-Panel)
 
-![Payment Matching Workspace](../images/ar-payment-matching.png)
+![Payment Matching Workspace](/sharehub/images/ar-payment-matching.png)
 
 **Three-Panel Structure:**
 
@@ -438,7 +438,7 @@ Email Remittance┘
 
 ### Layout
 
-![Remittance Email Hub](../images/ar-email-hub.png)
+![Remittance Email Hub](/sharehub/images/ar-email-hub.png)
 
 **Two-Panel Structure:**
 
@@ -480,7 +480,7 @@ NetSuite Invoice ──▶ Bot ──▶ Coupa/Ariba ──▶ Track Status ─�
 
 ### Layout
 
-![AP Portal Submission Queue](../images/ar-portal-queue.png)
+![AP Portal Submission Queue](/sharehub/images/ar-portal-queue.png)
 
 **Key Elements:**
 - Status cards with counts (To Submit, Submitted, Approved, Paid, Errors)
@@ -586,7 +586,7 @@ NetSuite Invoice ──▶ Bot ──▶ Coupa/Ariba ──▶ Track Status ─�
 
 ### Layout
 
-![Automation Bot Console](../images/ar-bot-console.png)
+![Automation Bot Console](/sharehub/images/ar-bot-console.png)
 
 **Key Sections:**
 
@@ -611,7 +611,7 @@ NetSuite Invoice ──▶ Bot ──▶ Coupa/Ariba ──▶ Track Status ─�
 
 ### Layout
 
-![Dashboard Overview](../images/ar-dashboard-overview.png)
+![Dashboard Overview](/sharehub/images/ar-dashboard-overview.png)
 
 **Key Elements:**
 - Cash Application metrics (Received, Matched %, Ready to Post, Exceptions)
@@ -630,7 +630,7 @@ NetSuite Invoice ──▶ Bot ──▶ Coupa/Ariba ──▶ Track Status ─�
 
 ### Layout
 
-![Customer Financial Profile](../images/ar-customer-profile.png)
+![Customer Financial Profile](/sharehub/images/ar-customer-profile.png)
 
 **Key Sections:**
 

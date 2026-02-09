@@ -1,7 +1,7 @@
 ---
 title: "蒜蓉杏仁炒菜心"
 tags: [recipe, cooking, vegetables, chinese-cuisine, healthy, low-carbon]
-date: 2026-01-28
+date: 2026-02-09
 type: recipe
 cuisine: chinese
 cooking-time: 10min
@@ -10,7 +10,7 @@ difficulty: easy
 
 # 蒜蓉杏仁炒菜心
 
-![蒜蓉杏仁炒菜心](../images/garlic-almond-stir-fry-vegetables.jpg)
+![蒜蓉杏仁炒菜心](/sharehub/images/garlic-almond-stir-fry-vegetables.jpg)
 
 ## 🥬 材料
 

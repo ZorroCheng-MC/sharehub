@@ -1,6 +1,6 @@
 ---
 title: "Product Development Plan"
-date: 2026-01-21
+date: 2026-02-09
 ---
 # Product Development Plan
 ## Macau University Library LLM Systems
@@ -24,7 +24,7 @@ Both systems share a common infrastructure using DeepSeek-R1-Distill-Llama 8B de
 
 ## Product Architecture Overview
 
-![Product Architecture](../images/macau-library-architecture.png)
+![Product Architecture](/sharehub/images/macau-library-architecture.png)
 ### Architecture Diagram (Mermaid)
 
 ```mermaid
@@ -546,7 +546,7 @@ class ConversationManager:
 
 **Draft Mockups (Stitch):** [View Interactive Prototype](https://stitch.withgoogle.com/projects/8323273447344960411?pli=1)
 
-![UI Mockups Overview](../images/macau-library-ui-mockups.png)
+![UI Mockups Overview](/sharehub/images/macau-library-ui-mockups.png)
 
 **Main Chat View (Desktop)**
 ```

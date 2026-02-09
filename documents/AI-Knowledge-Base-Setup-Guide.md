@@ -1,7 +1,7 @@
 ---
 title: "AI-Powered Knowledge Base: Capture, Organize, and Share Your Ideas"
 tags: [guide, AI, knowledge-management, tools, obsidian, evergreen, tutorial, actionable]
-date: 2025-10-23
+date: 2026-02-09
 type: guide
 status: evergreen
 ---
@@ -106,7 +106,7 @@ When you capture content, Claude analyzes it and automatically assigns:
 title: "Andrew Huberman - Focus Toolkit"
 tags: [video, productivity, learning, personal-growth, inbox, tutorial, deep-dive]
 url: https://youtube.com/watch?v=example
-date: 2025-10-23
+date: 2026-02-09
 type: video
 status: inbox
 priority: high
@@ -217,7 +217,7 @@ AI analyzes each file and adds comprehensive tags automatically.
 ---
 title: "AI-Powered Student Learning System"
 tags: [idea, AI, learning, education, inbox, actionable, conceptual]
-date: 2025-10-23
+date: 2026-02-09
 type: idea
 status: inbox
 priority: medium
@@ -262,7 +262,7 @@ title: "Building Better APIs - Fireship Tutorial"
 tags: [video, development, web-development, API, inbox, tutorial, technical]
 url: https://youtube.com/watch?v=dQw4w9WgXcQ
 cover: https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg
-date: 2025-10-23
+date: 2026-02-09
 type: video
 status: inbox
 priority: high
@@ -326,7 +326,7 @@ Complete with:
 title: "Study Guide: Machine Learning Fundamentals"
 tags: [study-guide, AI, data-science, learning, processing, technical, deep-dive]
 source: https://example.com/ml-article
-date: 2025-10-23
+date: 2026-02-09
 type: study-guide
 status: processing
 difficulty: intermediate
@@ -793,7 +793,7 @@ Once you have the system set up, here's how you actually use it day-to-day.
 
 The recommended setup uses **two side-by-side windows**:
 
-![Workspace Setup - Obsidian and Claude Code](../images/workspace-setup.jpg)
+![Workspace Setup - Obsidian and Claude Code](/sharehub/images/workspace-setup.jpg)
 
 **The ideal layout**:
 - **Obsidian (left)** - Browse your notes, see the knowledge graph, organize files

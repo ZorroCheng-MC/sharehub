@@ -10,7 +10,7 @@ tags:
   - inbox
   - actionable
   - conceptual
-date: 2026-02-07
+date: 2026-02-09
 type: article
 status: inbox
 priority: medium
@@ -21,7 +21,7 @@ priority: medium
 **日期：** 2026-02-07
 **用途：** 用AI浪費騙徒時間，保護潛在受害者
 
-![](../images/zororo-whatsapp-scambaiter-hero.jpg)
+![](/sharehub/images/zororo-whatsapp-scambaiter-hero.jpg)
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Louis Gabriel Nouchi x OnlyFans - 時裝品牌開設OnlyFans的哲學"
-date: 2026-02-05
+date: 2026-02-09
 ---
 # Louis Gabriel Nouchi x OnlyFans - 時裝品牌開設OnlyFans的哲學
 
@@ -120,55 +120,55 @@ Louis Gabriel Nouchi用時尚秀 + OnlyFans的組合，問了一個核心問題�
 
 ## 📸 原文內容摘錄
 
-![](../images/lg-nouchi-onlyfans/01-title.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/01-title.jpg)
 
 ### Image 1/10 - 標題
 **這個時裝品牌開設 Onlyfans 因為社群平台演算法太虛偽！**
 Louis Gabreil Nouchi FW2026：我們都是「異形」！
 
-![](../images/lg-nouchi-onlyfans/02-intro.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/02-intro.jpg)
 
 ### Image 2/10 - INTRO
 近幾年巴黎時裝週總是備受關注的 LGN Louis Gabriel Nouchi 在 FW2026 系列「Alien」又再一次引起話題。不僅把秀辦在地下停車場，配上 techno 的音樂，讓模特兒蒙面走秀，更宣布推出了官方的 Onlyfans 帳號！而這個 Troye Sivan 和 BTS 的 V 都穿過的品牌究竟想做什麼，我們在巴黎的後台和秀場又看到了什麼？趕快看看今天的貼文吧！
 
-![](../images/lg-nouchi-onlyfans/03-lucas-bravo.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/03-lucas-bravo.jpg)
 
 ### Image 3/10 - 《艾蜜莉在巴黎》的天菜主廚都愛的品牌？
 Louis Gabriel Nouchi 原本攻讀藥學和法律，就毅然決然轉向時尚設計，並獲得 Raf Simons 肯定成為其團隊成員之一。2017 年他則成立同名品牌並拿下 ANDAM 時尚獎肯定。前衛的剪裁、對男性氣質的重新詮釋、結合流行文化和文學元素，在巴黎是許多年輕藝術家和 DJ 私下喜歡的品牌。近幾年最讓人印象深刻的一幕，則是以《美國殺人魔》為靈感的 FW23，邀請到《艾蜜莉在巴黎》的 Lucas Bravo 替大秀開場。
 
-![](../images/lg-nouchi-onlyfans/04-facehugger.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/04-facehugger.jpg)
 
 ### Image 4/10 - 把模特兒的臉都用「抱臉體」遮住？
 我們剛剛在巴黎看完的 FW26 名為 Alien，靈感正是經典科幻作品《異形》。童年被禁止看這部片的他只能聽房間傳出的痛音，而長大後終於看了電影的他則深深著迷於 H.R. Giger 的「外星美學」。這也是為什麼模特兒在秀上會被頭髮做的「抱臉體」蒙面，除了呼應畫年看不到畫面的神秘，也因為匿名更能強化慾望、讓服裝成為焦點、並打破傳統時尚秀裡的「明星文化」。
 
-![](../images/lg-nouchi-onlyfans/05-onlyfans-runway.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/05-onlyfans-runway.jpg)
 
 ### Image 5/10 - 時裝品牌開官方 OnlyFans！
 秀上我們看到舞者 Ivan Urgin 穿著寫有 Onlyfans 的白色背心走秀，原本以為只是個設計，沒想到品牌真的開了官方 Onlyfans。設計師表示「私密並不代表色情；這是一個信任、親密的空間。」在這個社群平台審查機制嚴格，對性愛和肉體有大量限制的年代，品牌會很難表達真正的核心理念。而透過 OnlyFans 這種「開放卻私密」的平台，讓品牌精神與受眾能夠建立更直接的連結。此舉並不是追求流量，而是追求「真實」。
 
-![](../images/lg-nouchi-onlyfans/06-quote-sexuality.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/06-quote-sexuality.jpg)
 
 ### Image 6/10 - Louis Gabriel Nouchi 語錄
 > "男性談論「性」很容易，但要真正觸及「感性」卻很困難。它往往被視為禁忌或是忽視，甚至淪為刻板印象。我想打破成見，讓大家談論它。"
 > — Louis Gabriel Nouchi
 
-![](../images/lg-nouchi-onlyfans/07-diversity.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/07-diversity.jpg)
 
 ### Image 7/10 - 不管高矮胖瘦都能走秀！
 如果有在關注 Louis Gabriel Nouchi 便會發現秀場的模特兒的多元性幾乎是時裝週之最。模特兒來自各種膚色和年齡、身形和性別：不到 170 公分的男模特兒、大尺碼、年長者都能穿上品牌的設計。這系列以長身形、誇張的肩線、以及俐落的剪裁，搭配薄紗、乳膠、和針織等等材質，帶來一種「宇宙與地球之間的曖味」感。顏色上則以品牌一貫的黑、白、灰三色為主，並腳踩 Puma 的聯名鞋！
 
-![](../images/lg-nouchi-onlyfans/08-quote-inclusion.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/08-quote-inclusion.jpg)
 
 ### Image 8/10 - Louis Gabriel Nouchi 語錄
 > "我們致力於實踐「包容」：年齡、膚色、身形，素人或名人都是我們的客戶。這種多元異質的組合，最後反而形成了一致又和諧的整體。"
 > — Louis Gabriel Nouchi
 
-![](../images/lg-nouchi-onlyfans/09-celebrities.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/09-celebrities.jpg)
 
 ### Image 9/10 - 你最愛的明星也穿這個品牌！
 近年 LGN 的版圖早已超越巴黎地下文化，成為許多明星紅毯、私底下的穿搭選擇。除了前面提到的 Lucas Bravo 曾擔任開場的模特，像 Troye Sivan、Pedro Pascal、剛剛拿下葛萊美年度專輯獎的 Bad Bunny，甚至連 BTS 的 V（金泰亨）都曾經穿過他的設計。性感、俐落、大膽的輪廓線條，卻又帶有辦公室正裝元素，這種微妙的平衡可以說是品牌的代表性風格。
 
-![](../images/lg-nouchi-onlyfans/10-conclusion.jpg)
+![](/sharehub/images/lg-nouchi-onlyfans/10-conclusion.jpg)
 
 ### Image 10/10 - 總結
 LGN Louis Gabriel Nouchi 的 FW2026 不只是一場普通的時裝秀，也仿佛《異形》一樣，是視覺、慾望、科幻的綜合：地下停車場、超現實裁剪、到 OnlyFans 的成立，這個系列不只和衣有關服，而是在質疑服裝是怎麼定義「人」的？慾望又能怎麼展現在人體與布料之中？在情色被社會視為禁忌的環境裡，他們或許找到了解答。

@@ -1,5 +1,5 @@
 ---
-date: 2026-01-27
+date: 2026-02-09
 title: PDPO Compliance Assessment Report - Shave for Hope
 type: reference
 status: evergreen
@@ -163,7 +163,7 @@ The following factors reduce the overall risk profile:
 
 ### 3.2 Data Flow Diagram
 
-![Data Flow Diagram](../images/pdpo-data-flow-diagram.png)
+![Data Flow Diagram](/sharehub/images/pdpo-data-flow-diagram.png)
 
 *Figure 3.2: Web Application Data Flow - Hosting, Upload, & Donation Process*
 
