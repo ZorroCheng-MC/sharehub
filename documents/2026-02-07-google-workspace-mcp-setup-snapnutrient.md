@@ -1,3 +1,7 @@
+---
+title: "Google Workspace API Setup Guide (for AI Assistants)"
+date: 2026-02-09
+---
 # Google Workspace API Setup Guide (for AI Assistants)
 
 Give your AI assistant full read/write access to Gmail, Drive, Calendar, and Docs via OAuth 2.0.
