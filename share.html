@@ -332,7 +332,7 @@
                     <a href="#merge" class="btn btn-outline-light btn-sm" onclick="switchToMergeMode()">
                         <i class="bi bi-layers"></i> Merge
                     </a>
-                    <a href="/sharehub/" class="btn btn-outline-light btn-sm">
+                    <a href="/" class="btn btn-outline-light btn-sm">
                         <i class="bi bi-house"></i> Home
                     </a>
                 </div>
@@ -345,6 +345,14 @@
         <div class="alert alert-danger">
             <h4><i class="bi bi-exclamation-triangle"></i> Unable to Load Content</h4>
             <p id="error-message">The shared link appears to be invalid or corrupted.</p>
+        </div>
+        <div id="error-help" class="alert alert-warning" style="display: none;">
+            <h5><i class="bi bi-lightbulb"></i> How to fix this</h5>
+            <ul class="mb-0">
+                <li><strong>URL was truncated</strong> - Long share URLs get cut off by messaging apps (Slack, WhatsApp, email). Ask the sender to copy the full URL again.</li>
+                <li><strong>Ask sender to use a URL shortener</strong> or paste the URL in a code block / plain text message.</li>
+                <li><strong>For large notes</strong> - Consider using <code>/publish</code> instead, which creates a permanent hosted page.</li>
+            </ul>
         </div>
     </div>
 
@@ -427,8 +435,8 @@
 
             <div class="mb-3">
                 <label class="form-label">Paste URLs (one per line)</label>
-                <textarea class="form-control url-input-area" id="merge-urls" placeholder="https://zorrocheng-mc.github.io/sharehub/share#eJxLTE...
-https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
+                <textarea class="form-control url-input-area" id="merge-urls" placeholder="https://sharehub.zorro.hk/share#eJxLTE...
+https://sharehub.zorro.hk/share#eJyKSE..."></textarea>
             </div>
 
             <div class="d-flex gap-2">
@@ -481,6 +489,27 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
             return `${adj}-${noun}-${num}`;
         }
 
+        // CRC32 lookup table
+        const crc32Table = (() => {
+            const table = new Uint32Array(256);
+            for (let i = 0; i < 256; i++) {
+                let c = i;
+                for (let j = 0; j < 8; j++) {
+                    c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                }
+                table[i] = c;
+            }
+            return table;
+        })();
+
+        function crc32(str) {
+            let crc = 0xFFFFFFFF;
+            for (let i = 0; i < str.length; i++) {
+                crc = crc32Table[(crc ^ str.charCodeAt(i)) & 0xFF] ^ (crc >>> 8);
+            }
+            return (crc ^ 0xFFFFFFFF) >>> 0;
+        }
+
         // URL-safe Base64 decode
         function urlSafeBase64Decode(str) {
             str = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -500,9 +529,23 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
                     bytes[i] = binaryString.charCodeAt(i);
                 }
                 const decompressed = pako.inflate(bytes, { to: 'string' });
-                return JSON.parse(decompressed);
+                const data = JSON.parse(decompressed);
+
+                // Verify checksum if present
+                if (data._crc !== undefined) {
+                    const payload = JSON.stringify({ p: data.p, a: data.a });
+                    const expected = crc32(payload);
+                    if (data._crc !== expected) {
+                        throw new Error('Checksum mismatch - content may have been corrupted');
+                    }
+                }
+
+                return data;
             } catch (e) {
                 console.error('Decode error:', e);
+                if (e.message.includes('invalid') || e.message.includes('unexpected') || e.message.includes('Checksum')) {
+                    throw new Error('URL_CORRUPTED');
+                }
                 throw new Error('Failed to decode content: ' + e.message);
             }
         }
@@ -510,7 +553,11 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
         // Encode data to hash
         function encodeHashData(data) {
             try {
-                const jsonStr = JSON.stringify(data);
+                // Add checksum for integrity verification
+                const payload = JSON.stringify({ p: data.p, a: data.a });
+                const dataWithCrc = { ...data, _crc: crc32(payload) };
+
+                const jsonStr = JSON.stringify(dataWithCrc);
                 const compressed = pako.deflate(jsonStr);
                 let binaryString = '';
                 for (let i = 0; i < compressed.length; i++) {
@@ -786,6 +833,7 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
         function switchToMergeMode() {
             currentMode = 'merge';
             document.getElementById('main-wrapper').style.display = 'none';
+            document.getElementById('error-display').style.display = 'none';
             document.getElementById('merge-content').style.display = 'block';
             document.getElementById('panel-toggle').style.display = 'none';
             document.getElementById('page-title').textContent = 'Merge Feedback';
@@ -841,7 +889,7 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
                 });
 
                 if (!baseContent) {
-                    alert('Could not extract content from any URL');
+                    alert('Could not extract content from any URL. The URL(s) may be corrupted or truncated. Ask the sender to re-copy the full URL.');
                     return;
                 }
 
@@ -972,11 +1020,17 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
             setTimeout(() => toast.remove(), 3000);
         }
 
-        function showError(message) {
+        function showError(message, isCorrupted) {
             document.getElementById('main-wrapper').style.display = 'none';
             document.getElementById('panel-toggle').style.display = 'none';
             document.getElementById('error-display').style.display = 'block';
-            document.getElementById('error-message').textContent = message;
+            if (isCorrupted) {
+                document.getElementById('error-message').textContent =
+                    'The share URL appears to have been corrupted or truncated during sharing.';
+                document.getElementById('error-help').style.display = 'block';
+            } else {
+                document.getElementById('error-message').textContent = message;
+            }
         }
 
         // Initialize
@@ -1007,7 +1061,11 @@ https://zorrocheng-mc.github.io/sharehub/share#eJyKSE..."></textarea>
                 }
 
             } catch (e) {
-                showError('Failed to decode the shared content: ' + e.message);
+                if (e.message === 'URL_CORRUPTED') {
+                    showError('', true);
+                } else {
+                    showError('Failed to decode the shared content: ' + e.message);
+                }
             }
         });
 
