@@ -1,4 +1,5 @@
 ---
+date: 2026-02-10
 title: 道指新高是假象！美股『七崩賢』全線瓦解？從 Claude Crash 看 SaaS 股末路：教你識別恐慌底 Capitulation！
 tags:
   - video
@@ -28,7 +29,7 @@ video_date: 2026-02-07
 
 # 道指新高是假象！美股『七崩賢』全線瓦解？從 Claude Crash 看 SaaS 股末路：教你識別恐慌底 Capitulation！
 
-[![Watch on YouTube](/images/market-analysis-sector-rotation-thumb.jpg)](https://www.youtube.com/watch?v=j4RzZhbC3cw)
+[![Watch on YouTube](/sharehub/images/market-analysis-sector-rotation-thumb.jpg)](https://www.youtube.com/watch?v=j4RzZhbC3cw)
 
 ## 📖 Description
 
