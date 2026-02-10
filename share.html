@@ -329,7 +329,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h1><i class="bi bi-share"></i> <span id="page-title">Shared Content</span></h1>
                 <div class="d-flex gap-2">
-                    <a href="#merge" class="btn btn-outline-light btn-sm" onclick="handleMergeClick(event)">
+                    <a href="javascript:void(0)" class="btn btn-outline-light btn-sm" onclick="handleMergeClick(event)">
                         <i class="bi bi-layers"></i> Merge
                     </a>
                     <a href="/" class="btn btn-outline-light btn-sm">
@@ -429,7 +429,7 @@
 
     <!-- Merge Mode View -->
     <div class="container merge-container pt-5 mt-4" id="merge-content" style="display: none;">
-        <div class="content-card">
+        <div class="content-card" id="merge-form-card">
             <h4><i class="bi bi-layers"></i> Merge Team Feedback</h4>
             <p class="text-muted">Paste annotated URLs from your team members to merge all feedback into one view.</p>
 
@@ -832,6 +832,7 @@ https://sharehub.zorro.hk/share#eJyKSE..."></textarea>
         // Handle merge button click
         function handleMergeClick(event) {
             event.preventDefault();
+            event.stopPropagation();
 
             // If we already have loaded content with annotations, auto-merge
             if (sharedData.p && sharedData.a && sharedData.a.length > 0) {
@@ -840,6 +841,7 @@ https://sharehub.zorro.hk/share#eJyKSE..."></textarea>
                 document.getElementById('main-wrapper').style.display = 'none';
                 document.getElementById('error-display').style.display = 'none';
                 document.getElementById('merge-content').style.display = 'block';
+                document.getElementById('merge-form-card').style.display = 'none';
                 document.getElementById('panel-toggle').style.display = 'none';
                 document.getElementById('page-title').textContent = 'Merged Feedback';
 
@@ -860,9 +862,9 @@ https://sharehub.zorro.hk/share#eJyKSE..."></textarea>
             document.getElementById('main-wrapper').style.display = 'none';
             document.getElementById('error-display').style.display = 'none';
             document.getElementById('merge-content').style.display = 'block';
+            document.getElementById('merge-form-card').style.display = 'block';
             document.getElementById('panel-toggle').style.display = 'none';
             document.getElementById('page-title').textContent = 'Merge Feedback';
-            window.location.hash = 'merge';
         }
 
         function switchToViewMode() {
