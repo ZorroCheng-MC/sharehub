@@ -31,7 +31,7 @@
 
 ### Option A: Use the Release (Recommended)
 
-Download the latest release which contains only the core platform files (no personal content):
+Download the [latest release](https://github.com/ZorroCheng-MC/sharehub/releases/latest) which contains only the core platform files (no personal content):
 
 ```bash
 # Download and extract the latest release
