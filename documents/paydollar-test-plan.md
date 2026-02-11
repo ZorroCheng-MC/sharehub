@@ -7,11 +7,12 @@ date: 2026-02-06
 Reference: https://developer.asiapay.com/integration-guide/appendix-a/3ds-testing-cards
 
 > To test for payment failure case, use a different Expiry Date and/or Secure Code.
+> Remember online refund at the PayDollar console!!!
 
 ## Common Test Info
 ```
 Email: test@example.com
-Phone: 91234567
+Phone: +852 91234567
 ```
 
 ## Cards for 3DS 2.2 (Challenge Flow)
@@ -23,9 +24,9 @@ Expiry: 07/2030
 CVV:    123
 OTP:    123456
 ```
-- [ ] Desktop browser
+- [x] Desktop browser
 - [ ] iPhone
-- [ ] Android
+- [x] Android
 
 ### Mastercard
 ```
@@ -35,8 +36,8 @@ CVV:    123
 OTP:    123456
 ```
 - [x] Desktop browser
-- [x] iPhone
-- [ ] Android
+- [ ] iPhone
+- [x] Android
 
 ### AMEX
 ```
@@ -45,116 +46,30 @@ Expiry: 07/2030
 CVV:    1234
 OTP:    123456
 ```
-- [ ] Desktop browser
-- [x] iPhone
-- [ ] Android
+- [x] Desktop browser
+- [ ] iPhone
+- [x] Android
 
 ### UnionPay (CUP)
 ```
-Card:   6220230626000073
-Expiry: 07/2030
+Card:   6250947000000014
+Expiry: 12/2033
 CVV:    123
-OTP:    123456
+OTP:    111111 (Desktop) / 123456 (Mobile)
 ```
 - [x] Desktop browser
 - [ ] iPhone
-- [ ] Android
+- [x] Android
 
 ### Discover
 ```
-Card:   6011000300002585
+Card:   36189141071950
 Expiry: 07/2030
 CVV:    123
-OTP:    123456
 ```
 - [x] Desktop browser
-- [x] iPhone
-- [ ] Android
-
-### JCB
-```
-Card:   3518910000200021
-Expiry: 07/2030
-CVV:    123
-OTP:    123456
-```
-- [ ] Desktop browser
 - [ ] iPhone
-- [ ] Android
-
-## Cards for 3DS 2.2 (Frictionless Flow)
-
-### Visa
-```
-Card:   4333880000200019
-Expiry: 07/2030
-CVV:    123
-```
-
-### Mastercard
-```
-Card:   5422880000200018
-Expiry: 07/2030
-CVV:    123
-```
-
-### AMEX
-```
-Card:   371891000200017
-Expiry: 07/2030
-CVV:    1234
-```
-
-### UnionPay (CUP)
-```
-Card:   6220230626000057
-Expiry: 07/2030
-CVV:    1234
-```
-
-### Discover
-```
-Card:   6011000300002569
-Expiry: 07/2030
-CVV:    1234
-```
-
-### JCB
-```
-Card:   3518910000200013
-Expiry: 07/2030
-CVV:    123
-```
-
-## Cards for No 3DS
-
-### Visa
-```
-Card:   4918914107195005
-Expiry: 07/2030
-CVV:    123
-```
-
-### Mastercard
-```
-Card:   5258950000000020
-Expiry: 07/2030
-CVV:    123
-```
-
-### AMEX
-```
-Card:   378416000100026
-Expiry: 07/2030
-CVV:    1234
-```
-
-### JCB
-```
-Card:   3528010000010021
-Expiry: 07/2030
-CVV:    123
-```
+- [x] Android
 
 ## PayMe (No wallet)
 ```
@@ -162,10 +77,10 @@ Success: amount ends .81 (e.g., 100.81)
 Failure: amount ends .77 (e.g., 100.77)
 ```
 - [x] Desktop browser
-- [x] iPhone
-- [ ] Android
-
-## Alipay HK (Real wallet, amount 0.10)
-- [ ] Desktop browser
 - [ ] iPhone
-- [ ] Android
+- [x] Android
+
+## Alipay HK (use real wallet)
+- [x] Desktop browser
+- [ ] iPhone
+- [x] Android
