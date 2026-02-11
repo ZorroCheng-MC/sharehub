@@ -3,60 +3,27 @@
 
 # ShareHub
 
-> **Jekyll-based document portal + serverless note sharing**
->
-> Publish documents to GitHub Pages with password protection, and share notes via compressed URLs with annotation support.
+ShareHub is a free, self-hosted platform for publishing and sharing documents — powered by GitHub Pages, no backend required.
 
----
+**Two ways to share your content:**
 
-## Features
+1. **Publish** — push markdown or HTML files to your repo and they become web pages at your GitHub Pages URL. Add `access: private` to any document's frontmatter to password-protect it.
 
-### Document Publishing
-- Publish markdown/HTML to GitHub Pages
-- Password-protect documents with `access: private` frontmatter
-- Organize with subfolders and tags
-- Auto-generated index page with search
-
-### Serverless Note Sharing (`share.html`)
-- Share notes via URL — no server storage, content lives in the URL fragment
-- **zlib compression** keeps URLs compact
-- **CRC32 checksums** detect URL corruption from messaging app truncation
-- **Annotations** — recipients can add inline comments and re-share
-- **One-click merge** — merge annotations back into your original document
-- Compatible with [kf-claude](https://github.com/ZorroCheng-MC/kf-claude) plugin's `/share` command
+2. **Share via URL** — compress a note into a single URL and send it to anyone. The content lives entirely in the link (no server storage). Recipients can add inline comments and send back an annotated URL for you to merge.
 
 ---
 
 ## Quick Start
 
-### Option A: Use the Release (Recommended)
-
-Download the [latest release](https://github.com/ZorroCheng-MC/sharehub/releases/latest) which contains only the core platform files (no personal content):
+Download the [latest release](https://github.com/ZorroCheng-MC/sharehub/releases/latest) (core platform only, no sample content):
 
 ```bash
-# Download and extract the latest release
+# Download and extract
 gh release download --repo ZorroCheng-MC/sharehub --pattern "sharehub-core-*.zip"
 unzip sharehub-core-*.zip -d my-sharehub
 cd my-sharehub
 
 # Initialize git
-git init
-git add .
-git commit -m "Initial commit from sharehub template"
-```
-
-### Option B: Clone and Clean
-
-```bash
-git clone https://github.com/ZorroCheng-MC/sharehub.git my-sharehub
-cd my-sharehub
-
-# Remove personal content
-rm -rf documents/* images/*
-touch documents/.gitkeep images/.gitkeep
-
-# Remove template history
-rm -rf .git
 git init
 git add .
 git commit -m "Initial commit from sharehub template"
