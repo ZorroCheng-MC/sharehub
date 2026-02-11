@@ -1,3 +1,7 @@
+---
+title: "Instagram Graph API Token Setup Guide"
+date: 2026-02-11
+---
 # Instagram Graph API Token Setup Guide
 
 ## For CCF Shave for Hope Hashtag Bot
