@@ -1,347 +1,231 @@
 ---
 ---
 
-# Share Hub - Tag-Based Document Sharing Portal
+# ShareHub
 
-> **Jekyll-based publishing platform with password protection**
+> **Jekyll-based document portal + serverless note sharing**
 >
-> Publish documents to GitHub Pages with optional password protection using frontmatter tags.
+> Publish documents to GitHub Pages with password protection, and share notes via compressed URLs with annotation support.
 
 ---
 
-## 🚀 Quick Start
+## Features
 
-### What is Sharehub?
+### Document Publishing
+- Publish markdown/HTML to GitHub Pages
+- Password-protect documents with `access: private` frontmatter
+- Organize with subfolders and tags
+- Auto-generated index page with search
 
-Sharehub is a **Jekyll-based document publishing platform** that lets you:
+### Serverless Note Sharing (`share.html`)
+- Share notes via URL — no server storage, content lives in the URL fragment
+- **zlib compression** keeps URLs compact
+- **CRC32 checksums** detect URL corruption from messaging app truncation
+- **Annotations** — recipients can add inline comments and re-share
+- **One-click merge** — merge annotations back into your original document
+- Compatible with [kf-claude](https://github.com/ZorroCheng-MC/kf-claude) plugin's `/share` command
 
-- Publish markdown and HTML documents to GitHub Pages
-- Protect sensitive documents with password authentication
-- Organize content with subfolders and tags
-- Control access via simple frontmatter tags (not folder structure)
+---
 
-### Initial Setup (5 minutes)
+## Quick Start
 
-**Step 1: Clone this template repository**
+### Option A: Use the Release (Recommended)
+
+Download the latest release which contains only the core platform files (no personal content):
 
 ```bash
-cd ~/Documents
-git clone https://github.com/ZorroCheng-MC/sharehub.git
-cd sharehub
+# Download and extract the latest release
+gh release download --repo ZorroCheng-MC/sharehub --pattern "sharehub-core-*.zip"
+unzip sharehub-core-*.zip -d my-sharehub
+cd my-sharehub
 
-# Remove template's git history
+# Initialize git
+git init
+git add .
+git commit -m "Initial commit from sharehub template"
+```
+
+### Option B: Clone and Clean
+
+```bash
+git clone https://github.com/ZorroCheng-MC/sharehub.git my-sharehub
+cd my-sharehub
+
+# Remove personal content
+rm -rf documents/* images/*
+touch documents/.gitkeep images/.gitkeep
+
+# Remove template history
 rm -rf .git
 git init
 git add .
-git commit -m "Initial commit: My document portal"
+git commit -m "Initial commit from sharehub template"
 ```
 
-**Step 2: Create your GitHub repository**
+### Deploy to GitHub Pages
 
 ```bash
-# Using GitHub CLI (recommended)
+# Create your repo
 gh repo create my-sharehub --public --source=. --push
 
-# Or manually at github.com/new, then:
-# git remote add origin https://github.com/YOUR_USERNAME/my-sharehub.git
-# git push -u origin main
-```
-
-**Step 3: Enable GitHub Pages**
-
-```bash
-# Using GitHub CLI
+# Enable GitHub Pages
 gh repo edit --enable-pages --pages-branch main
-
-# Or manually: Settings → Pages → Source: "main" branch → Save
 ```
 
-**Step 4: Configure Jekyll baseurl**
+Edit `_config.yml`:
+```yaml
+baseurl: "/my-sharehub"  # Change to YOUR repo name (empty string if using custom domain)
+url: "https://YOUR_USERNAME.github.io"
+```
 
-Edit `_config.yml` and change baseurl to match your repository name:
+Your site will be live at `https://YOUR_USERNAME.github.io/my-sharehub` after the GitHub Actions workflow completes.
+
+---
+
+## Core Files
+
+These files make up the platform — everything else is personal content:
+
+```
+sharehub/
+├── _config.yml          # Jekyll configuration
+├── _layouts/            # Page layouts with access control
+│   ├── default.html
+│   ├── private_protected.html
+│   └── universal.html
+├── .github/workflows/   # GitHub Pages deployment
+├── index.html           # Document listing with search/filter
+├── share.html           # Serverless note sharing page
+├── Gemfile              # Ruby dependencies
+├── .gitignore
+├── README.md
+├── documents/           # YOUR documents go here
+└── images/              # YOUR images go here
+```
+
+---
+
+## Publishing Documents
+
+### Public Document (default)
+
+Place in `documents/` with frontmatter:
 
 ```yaml
-baseurl: "/my-sharehub"  # IMPORTANT: Change to YOUR repo name
+---
+title: "My Document"
+date: 2026-01-15
+---
+
+Content here...
 ```
 
-Commit and push:
+### Private Document
+
+Add `access: private` — password is "maco":
+
+```yaml
+---
+title: "Confidential Report"
+access: private
+---
+
+Private content...
+```
+
+### Publish and Push
 
 ```bash
-git add _config.yml
-git commit -m "Configure Jekyll baseurl"
+git add documents/my-document.md
+git commit -m "Add: my document"
 git push
 ```
 
-**Step 5: Verify deployment**
-
-1. Go to: `https://github.com/YOUR_USERNAME/my-sharehub/actions`
-2. Wait for "Deploy Jekyll site to Pages" workflow to complete (green checkmark)
-3. Visit: `https://YOUR_USERNAME.github.io/my-sharehub`
-
-**✅ Setup complete!** Your sharehub is ready to publish documents.
+Document URL: `https://your-domain/documents/my-document.html`
 
 ---
 
-## 📖 Complete Documentation
+## Sharing Notes via URL
 
-### Overview
+### How It Works
 
-Share Hub is a Jekyll-based document sharing portal with tag-based access control. Documents can be public or private based on tags in their front matter, not their folder location. All documents are stored in a single `documents/` folder for better organization.
+`share.html` encodes note content directly into the URL fragment using zlib compression + Base64. No server storage — the recipient decodes the URL client-side.
 
-## 🆕 Tag-Based Protection System
-Unlike traditional folder-based protection, Share Hub uses front matter tags to control access:
-- **Public files**: No `access` tag needed (default)
-- **Private files**: Add `access: private` in front matter
-- **Password**: "maco" for all private documents
+**URL format**: `https://your-domain/share#<compressed-base64-data>`
 
-## Repository Structure
+### Using with kf-claude
+
+If you use the [kf-claude](https://github.com/ZorroCheng-MC/kf-claude) Claude Code plugin:
+
 ```
-sharehub/
-├── documents/          # All documents (both public and private)
-│   ├── *.md           # Markdown files
-│   ├── *.html         # HTML files
-│   └── [subfolders]/  # Optional organization by topic
-├── _layouts/          # Jekyll layouts (DO NOT MODIFY)
-│   └── universal.html # Universal layout with protection logic
-└── index.html         # Main listing page
+/kf-claude:share my-note.md
 ```
 
-## File Upload Guidelines
+This compresses the note and copies the share URL to your clipboard.
 
-### 1. Public Documents
-Documents are public by default. Simply upload to `documents/` folder.
+The public decoder is hosted at `https://sharehub.zorro.hk/share` — all kf-claude users can use this without deploying their own instance. To use your own decoder, set `share_base_url` in `.claude/config.local.json`:
 
-**For Markdown files (.md):**
-```yaml
----
-title: "Document Title"
-date: 2025-01-15
----
-
-Your content here...
+```json
+{
+  "share_base_url": "https://your-domain/share"
+}
 ```
 
-**For HTML files (.html):**
-```yaml
----
-title: "Document Title"
----
-<!DOCTYPE html>
-<html>
-...
-</html>
-```
+### Annotation Workflow
 
-### 2. Private Documents
-Add `access: private` tag to make any document password-protected.
+1. **Share** — generate a share URL for your note
+2. **Annotate** — recipient opens URL, adds inline comments, gets a new URL with annotations
+3. **Merge** — open the annotated URL and click "Merge" to see annotations inline with the original content
+4. **Export** — download the merged result as markdown
 
-**For Markdown files (.md):**
-```yaml
----
-title: "Confidential Document"
-date: 2025-01-15
-access: private
+### URL Length Limits
+
+| Length | Status |
+|--------|--------|
+| < 4,000 chars | Safe for all platforms |
+| 4,000–8,000 chars | May be truncated by some messaging apps |
+| > 8,000 chars | Will likely be truncated — use `/publish` instead |
+
+CRC32 checksums detect corruption. If a URL is truncated, the decoder shows an error with guidance.
+
 ---
 
-Your confidential content here...
-```
+## Access Control
 
-**For HTML files (.html):**
-```yaml
+| Frontmatter | Behavior |
+|-------------|----------|
+| (none) | Public — anyone can view |
+| `access: private` | Password-protected ("maco") |
+
+The index page shows only public documents by default. After entering the password, private documents become visible with a lock icon.
+
 ---
-title: "Confidential Document"
-access: private
+
+## Custom Domain
+
+To use a custom domain instead of `github.io`:
+
+1. Set up DNS (CNAME or A record pointing to GitHub Pages)
+2. Add domain in repo Settings > Pages > Custom domain
+3. Update `_config.yml`:
+   ```yaml
+   baseurl: ""
+   url: "https://your-domain.com"
+   ```
+
 ---
-<!DOCTYPE html>
-<html>
-...
-</html>
-```
-
-### 3. Organizing with Subfolders
-Create subfolders within `documents/` for topical organization:
-```
-documents/
-├── reports/
-│   ├── quarterly_report.md
-│   └── annual_summary.html
-├── presentations/
-│   └── product_launch.md
-└── internal/
-    └── strategy.md (with access: private)
-```
-
-## Key Features
-
-### Index Page Behavior
-- **Before login**: Shows only public documents
-- **After login**: Shows all documents (public + private)
-- **Visual indicators**: 
-  - 🔒 Lock icon for private files
-  - Folder badges for files in subfolders
-- **Default view**: HTML/MD files only (checkbox to show all file types)
-- **Sorting**: Alphabetical by title/folder name
-
-### Document Access
-- Files without `access: private` → Publicly accessible
-- Files with `access: private` → Password required ("maco")
-- Session-based: Password remembered until browser closed
-
-## Git Workflow
-
-### Step 1: Pull Latest Changes
-```bash
-git pull origin main
-```
-
-### Step 2: Add Your Document
-Place your file in `documents/` folder with appropriate front matter.
-
-### Step 3: Commit Changes
-```bash
-git add documents/[filename]
-git commit -m "Add [type]: [description]"
-```
-
-Example commit messages:
-- "Add public report: Q1 2025 marketing analysis"
-- "Add private document: Confidential financial data"
-
-### Step 4: Push to Repository
-```bash
-git push origin main
-```
-
-## Quick Guide for Adding Files
-
-### 📄 **Public Document (Default)**
-Simply place your file in `documents/` folder with minimal front matter:
-
-**Simplest (title from filename):**
-```yaml
----
----
-Content here...
-```
-
-**With custom title (optional):**
-```yaml
----
-title: "Custom Title"
----
-Content here...
-```
-
-### 🔒 **Private Document**
-Just add `access: private` - that's all you need:
-
-**Simplest:**
-```yaml
----
-access: private
----
-Private content...
-```
-
-**With custom title (optional):**
-```yaml
----
-title: "Custom Title"
-access: private
----
-Private content...
-```
-
-### 🎯 **Automatic Fallbacks**
-- **No title?** → Uses filename (e.g., `my-report.md` → "my report")
-- **No date?** → Uses file modification time
-- **No author?** → Not required
-
-### 📁 **Using Subfolders**
-Organize with folders - they'll show as badges:
-```
-documents/
-├── Reports/Q1/financial.md     → Shows [Reports/Q1]
-├── Presentations/demo.html     → Shows [Presentations]
-└── strategy.md                 → No badge
-```
-
-### ⚡ **That's It!**
-- **Password**: "maco" for all private files
-- **Default**: Files are public unless tagged private
-- **Git**: `git add`, `commit`, and `push` to publish
-- **Wait**: 1-5 minutes for GitHub Pages to update
-
-## URL Structure After Upload
-Documents are accessible at:
-
-**GitHub Pages (default):**
-- `https://[username].github.io/[repository]/documents/[filename]`
-
-**Custom Domain:**
-- `https://[your-domain]/documents/[filename]`
-
-**Relative paths (always work):**
-- From index: `./documents/[filename]`
-- From anywhere: `/documents/[filename]`
-
-## Migration from Folder-Based System
-
-If you have existing files in `public/` and `private/` folders:
-
-1. Move all files to `documents/` folder
-2. Add `access: private` to front matter of previously private files
-3. Remove old `public/` and `private/` folders
-4. Commit and push changes
-
-## Important Notes
-
-1. **Default Access**: Files are public unless `access: private` is specified
-2. **Password**: All private files use password "maco"
-3. **Jekyll Processing**: GitHub Pages automatically converts .md to HTML
-4. **Build Time**: Changes take 1-5 minutes to appear after pushing
-5. **File Size**: Keep files under 100MB for optimal performance
-6. **Front Matter**: Required for all .md and .html files
 
 ## Troubleshooting
 
-### Document Not Appearing
-- Verify YAML front matter syntax
-- Check file is in `documents/` folder
-- Wait 5 minutes for GitHub Pages rebuild
-- Clear browser cache
+| Issue | Fix |
+|-------|-----|
+| Document not appearing | Check frontmatter syntax, wait 1-5 min for rebuild |
+| Private doc accessible without password | Verify `access: private` in frontmatter |
+| Share URL shows error | URL may be corrupted in transit — check CRC error message |
+| Images not loading | Use relative paths: `./images/filename.jpg` |
 
-### Access Issues
-- Private files need `access: private` in front matter
-- Password is case-sensitive: "maco"
-- Session storage keeps you logged in until browser closes
-
-### Formatting Issues
-- Validate YAML syntax (use spaces, not tabs)
-- Check markdown formatting
-- Ensure HTML is well-formed
-
-## Advanced Features
-
-### Custom Passwords (Future)
-While currently all private files use "maco", the system is designed to support custom passwords per file:
-```yaml
 ---
-access: private
-password_hash: "SHA256_HASH_HERE"
----
-```
 
-### Tags and Categories
-Use tags for better organization:
-```yaml
----
-title: "Document Title"
-tags: [report, financial, q1-2025]
-category: finance
-access: private
----
-```
+## License
 
-## Support
-For issues or questions, check the repository issues page or contact the administrator.
+MIT
