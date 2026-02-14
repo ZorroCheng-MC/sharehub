@@ -1,5 +1,5 @@
 ---
-date: 2026-02-12
+date: 2026-02-14
 title: NotebookLM Gives you Super Powers, Here's How to Unlock it
 tags:
   - video
@@ -12,7 +12,7 @@ tags:
   - inbox
 url: https://www.youtube.com/watch?v=x0hqVISDSus
 cover: https://i.ytimg.com/vi/x0hqVISDSus/maxresdefault.jpg
-date: 2026-02-11
+date: 2026-02-14
 video_date: 2026-02-07
 type: video
 status: inbox
