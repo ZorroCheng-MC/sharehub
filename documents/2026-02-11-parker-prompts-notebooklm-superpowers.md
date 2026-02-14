@@ -1,4 +1,5 @@
 ---
+date: 2026-02-12
 title: NotebookLM Gives you Super Powers, Here's How to Unlock it
 tags:
   - video
