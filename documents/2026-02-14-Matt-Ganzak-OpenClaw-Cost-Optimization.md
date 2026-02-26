@@ -1,4 +1,5 @@
 ---
+date: 2026-02-26
 title: "I Cut My OpenClaw Costs by 97%: Token Optimization Guide"
 tags:
   - video
