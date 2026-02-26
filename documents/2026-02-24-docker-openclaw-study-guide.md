@@ -1,4 +1,5 @@
 ---
+date: 2026-02-26
 title: "Study Guide: Secure AI Agent Execution with Docker Sandboxes and OpenClaw"
 tags:
   - study-guide
