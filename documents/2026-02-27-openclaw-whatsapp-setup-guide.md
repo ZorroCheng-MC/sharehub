@@ -23,7 +23,7 @@ created: 2026-02-27
 
 # OpenClaw WhatsApp Setup Guide: Getting Your AI Bot to Message Friends
 
-![](/images/openclaw-whatsapp-setup-guide-hero.jpg)
+![](/sharehub/images/openclaw-whatsapp-setup-guide-hero.jpg)
 
 ## TL;DR
 
