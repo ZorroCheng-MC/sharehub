@@ -23,7 +23,7 @@ created: 2026-02-27
 
 # OpenClaw WhatsApp Setup Guide: Getting Your AI Bot to Message Friends
 
-![](/images/openclaw-whatsapp-setup-guide-hero.jpg)
+![](/sharehub/images/openclaw-whatsapp-setup-guide-hero.jpg)
 
 So you've got OpenClaw running in Docker and the WhatsApp channel is connected. Now you want your AI bot to actually message people — and for people to message it back. Sounds simple, but there are a few gotchas that will silently eat your messages if you don't get them right.
 
