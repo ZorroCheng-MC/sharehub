@@ -25,6 +25,16 @@ created: 2026-02-27
 
 ![](/sharehub/images/openclaw-whatsapp-setup-guide-hero.jpg)
 
+## TL;DR
+
+1. Add the number to **both** `channels.whatsapp.allowFrom` and `channels.whatsapp.accounts.default.allowFrom`
+2. Use E.164 format — no spaces: `+85292319324`
+3. Restart the gateway
+4. Have the friend send "hi" first, then check `openclaw directory peers list`
+5. Send with `openclaw message send --channel whatsapp --target "+852..." --message "hello"`
+
+---
+
 So you've got OpenClaw running in Docker and the WhatsApp channel is connected. Now you want your AI bot to actually message people — and for people to message it back. Sounds simple, but there are a few gotchas that will silently eat your messages if you don't get them right.
 
 This guide covers the exact configuration steps, the pitfalls we discovered the hard way, and how to verify everything works before you tell your friends to try it.
@@ -212,16 +222,6 @@ WhatsApp doesn't expose contact names through its API. The directory only stores
 | Send message (real) | `openclaw message send --channel whatsapp -t "+852..." -m "text"` |
 | Check error logs | `cat ~/.openclaw/logs/gateway.err.log \| tail -20` |
 | Restart gateway | `docker restart <container>` |
-
-## The TL;DR
-
-1. Add the number to **both** `channels.whatsapp.allowFrom` and `channels.whatsapp.accounts.default.allowFrom`
-2. Use E.164 format — no spaces: `+85292319324`
-3. Restart the gateway
-4. Have the friend send "hi" first, then check `openclaw directory peers list`
-5. Send with `openclaw message send --channel whatsapp --target "+852..." --message "hello"`
-
-That's it. Once both allowlists are right and the number format is clean, it just works.
 
 ---
 
