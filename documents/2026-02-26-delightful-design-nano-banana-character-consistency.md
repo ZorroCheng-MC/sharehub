@@ -3,7 +3,7 @@ title: "Perfect Character Consistency with Nano Banana Pro - Secret Prompts & Te
 tags: [video, ai-generation, character-consistency, gemini, nano-banana-pro, photorealistic, character-sheets, inbox, tutorial, deep-dive]
 url: https://www.youtube.com/watch?v=G01kghX152g
 cover: https://i.ytimg.com/vi/G01kghX152g/maxresdefault.jpg
-date: 2026-02-26
+date: 2026-02-28
 type: video
 status: inbox
 priority: high
