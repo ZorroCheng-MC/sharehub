@@ -104,6 +104,9 @@ date: 2026-03-02
 ---
 
 ### STEM@eClass
+
+![eClass Logo](/images/eClassLogo_GreenGrey_650x225px.png)
+
 **Expertise:** Gen AI Education, Python Programming, Music Production, Ethical AI Integration
 
 **Website:** https://stem.eclass.com.hk/stem-solutions/genai/
