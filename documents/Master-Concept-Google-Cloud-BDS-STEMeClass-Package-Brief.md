@@ -1,6 +1,6 @@
 ---
 title: "Master Concept × Google Cloud × Big Dipper Studio × STEM@eClass"
-date: 2026-03-03
+date: 2026-03-05
 ---
 # Master Concept × Google Cloud × Big Dipper Studio × STEM@eClass
 ## Gemini AI Education Package - Marketing Brief
