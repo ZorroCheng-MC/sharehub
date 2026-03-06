@@ -1,3 +1,7 @@
+---
+title: "Make Better Charts with RAG on Video - Notes"
+date: 2026-03-06
+---
 # Make Better Charts with RAG on Video - Notes
 
 **Video:** RAG on Video with LlamaIndex: Using Gemini 1.5 Pro and Flash  
