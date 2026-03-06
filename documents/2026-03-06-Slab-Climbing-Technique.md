@@ -1,3 +1,7 @@
+---
+title: "スラブ / Slab Climbing Technique Guide"
+date: 2026-03-06
+---
 # スラブ / Slab Climbing Technique Guide
 
 **Source:** YouTube  
