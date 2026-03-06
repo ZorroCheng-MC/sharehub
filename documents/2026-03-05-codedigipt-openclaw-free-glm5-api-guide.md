@@ -3,7 +3,7 @@ title: "Openclaw + FREE GLM 5 API : Full Step By Step Guide"
 tags: [video, AI, development, tools, automation, inbox, tutorial, technical]
 url: https://www.youtube.com/watch?v=D7xcoJs146s
 cover: https://i.ytimg.com/vi/D7xcoJs146s/maxresdefault.jpg
-date: 2026-03-05
+date: 2026-03-06
 type: video
 status: inbox
 read: false
