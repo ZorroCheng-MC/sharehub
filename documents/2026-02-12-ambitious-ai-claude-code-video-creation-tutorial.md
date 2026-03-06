@@ -1,4 +1,5 @@
 ---
+date: 2026-03-06
 title: Claude Code Just Changed Content Creation FOREVER (Tutorial)
 tags:
   - video
