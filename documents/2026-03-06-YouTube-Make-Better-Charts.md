@@ -11,7 +11,7 @@ date: 2026-03-06
 
 ## Video Thumbnail
 
-![Video Thumbnail](/2026-03-06-YouTube-Make-Better-Charts-thumbnail.jpg)
+![Video Thumbnail](2026-03-06-YouTube-Make-Better-Charts-thumbnail.jpg)
 
 ---
 
