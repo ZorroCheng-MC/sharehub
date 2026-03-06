@@ -1,3 +1,7 @@
+---
+title: "Effective Data Presentation: Telling Stories with Data"
+date: 2026-03-06
+---
 # Effective Data Presentation: Telling Stories with Data
 
 **Speaker:** Stephanie Evergreen  
