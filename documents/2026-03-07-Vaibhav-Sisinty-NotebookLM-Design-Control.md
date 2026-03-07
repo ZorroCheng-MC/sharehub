@@ -3,7 +3,7 @@ title: "Google's NotebookLM Just DESTROYED Canva With 1 Update (It's FREE)"
 tags: [video, ai-tools, productivity, design, presentation, notebooklm, automation, inbox]
 url: https://www.youtube.com/watch?v=hqquu7H7X0w
 cover: https://i.ytimg.com/vi/hqquu7H7X0w/hqdefault.jpg
-date: 2026-02-27
+date: 2026-03-07
 type: video
 status: inbox
 read: false
