@@ -1,4 +1,5 @@
 ---
+date: 2026-03-09
 title: 蒸發150億！市場捉錯用神？ AI 其實係 Cybersecurity 最大利好？【CC中文字幕】
 tags:
   - video
