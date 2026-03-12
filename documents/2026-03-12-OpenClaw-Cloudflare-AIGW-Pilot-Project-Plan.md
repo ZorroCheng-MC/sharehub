@@ -13,11 +13,40 @@ priority: high
 
 ## 🎯 Project Overview
 
-**Objective**: Run a controlled POC where invited users access OpenClaw via Telegram, with all LLM traffic routed through Cloudflare AI Gateway. The goal is to observe how Cloudflare AI Gateway and AI Firewall behave under real usage, and identify specific value propositions Master Concept can bring to enterprise customers — enabling us to sell Cloudflare professional services with strong, evidence-based selling points.
+**Objective**: Deploy OpenClaw as a **24/7 production service** on Cloudflare Moltworker with intelligent AI Gateway routing. Users access via Telegram with zero downtime. The goal is to demonstrate serverless AI agent architecture at scale, validate cost efficiency through smart model selection, and identify key selling points for Cloudflare professional services.
+
+**Key Innovation**: AI Gateway's **intelligent routing + fallback** handles model selection based on task complexity, latency targets, and cost in real-time. No manual intervention needed.
 
 **Sponsor**: Cloudflare (USD $5,000 token budget)
 **Project Lead**: Zorro (Master Concept)
-**Duration**: ~3 weeks (5-day setup + 2-week monitoring)
+**Duration**: ~3 weeks (5-day setup + 2-week live operation + monitoring)
+
+---
+
+## 🛠️ Technology Stack (Moltworker)
+
+**Cloudflare Products:**
+- **Workers** — Entrypoint API router + proxy; always-on (no cold starts)
+- **Sandbox SDK** — Isolated container per user (OpenClaw Gateway runtime)
+- **Sandbox Containers** — Full Docker support for OpenClaw; auto-scale per demand
+- **AI Gateway** — Intelligent LLM routing, model fallbacks, cost optimization
+- **Durable Objects** — Background job queue for long-running tasks (>30s)
+- **Browser Rendering** — Puppeteer/Playwright for web automation
+- **R2** — Persistent storage for credentials, session files, logs
+- **Secrets Store** — Encrypted storage for OAuth tokens, API keys, LLM credentials
+- **Zero Trust Access** — JWT authentication for admin UI
+- **Workers Analytics** — Real-time cost & performance metrics
+
+**OpenClaw Integration:**
+- GitHub: `cloudflare/moltworker` (official Cloudflare implementation)
+- OpenClaw Gateway runs inside Sandbox Container
+- Telegram routing via Moltworker API layer
+- GWS credentials stored securely in R2 + Secrets (encrypted at rest)
+
+**Monitoring & Analytics:**
+- Cloudflare AI Gateway dashboard (request logs, token usage, costs)
+- Moltworker custom metrics (Sandbox CPU/memory, container uptime)
+- OpenClaw internal metrics (session count, tool usage, errors)
 
 ---
 
@@ -39,10 +68,10 @@ priority: high
 | Name | Role | Responsibilities |
 |------|------|-----------------|
 | Zorro | Project Lead | Overall project coordination; consumer invitation and onboarding; stakeholder communication; final findings report; go/no-go decisions |
-| Tommy | Engineer | Docker container setup and deployment; one container per user on Mac Studio (Ollama); GWS service integration (Gmail, Calendar, Drive) |
-| Alfred | Engineer | Telegram bot configuration per container; routing containers through Cloudflare AI Gateway endpoint; troubleshooting |
+| Tommy | Engineer | Moltworker deployment on Cloudflare (via GitHub repo); Sandbox Container provisioning per user; GWS service integration (Gmail, Calendar, Drive) via R2/Secrets Store; credential lifecycle management |
+| Alfred | Engineer | Telegram bot routing setup (via Moltworker API); OpenClaw Gateway configuration within sandbox; custom skills adaptation; monitoring and debugging within Sandbox environment |
 
-**Privileges**: Full access to infrastructure (Mac Studio, Docker, Ollama); manage consumer onboarding; review aggregate usage; no visibility into Cloudflare billing.
+**Privileges**: Full access to Moltworker codebase, Cloudflare Workers dashboard, Sandbox SDK; R2 bucket management for user data; Secrets Store configuration; review aggregate usage logs; no direct access to Cloudflare billing (managed by MC-Cloudflare team).
 
 ---
 
@@ -69,10 +98,12 @@ priority: high
 Consumer (Telegram)
         │
         ▼
-OpenClaw Container (Docker, Mac Studio)
-  - One container per user
-  - GWS tools enabled (Gmail, Calendar, Drive)
-  - Configured with Ollama for local model support
+Cloudflare Moltworker (Serverless Edge)
+  - Runs on Cloudflare Workers + Sandbox Containers
+  - One worker instance per user (isolated)
+  - GWS tools enabled (Gmail, Calendar, Drive via R2 credential storage)
+  - Browser Rendering for web automation
+  - Credential management via Cloudflare Secrets
         │
         ▼
 Cloudflare AI Gateway
@@ -80,10 +111,136 @@ Cloudflare AI Gateway
   - Candidate providers: Claude Sonnet, MiniMax, Gemini Flash, GLM
   - AI Firewall (sensitive data protection)
   - Full traffic logging & analytics
+  - Unified billing (consume sponsored credits)
         │
         ▼
 LLM Providers (Cloud)
 ```
+
+**Key Architectural Changes:**
+- **No local hardware** — Moltworker runs entirely on Cloudflare's global network (24/7 uptime, no maintenance)
+- **Sandboxed isolation** — Each user gets isolated Sandbox Container via Sandbox SDK
+- **Persistent storage** — R2 bucket for session memory, configs, GWS credentials (encrypted)
+- **Credential security** — Secrets Store for LLM keys, OAuth tokens, API credentials
+- **Browser Rendering** — Puppeteer/Playwright via Cloudflare (no local Chromium needed)
+- **Background jobs** — Durable Objects handle tasks >30s (e.g., long-running research, document processing)
+
+---
+
+## 🧠 AI Gateway Intelligent Model Routing Strategy
+
+### Model Tier System
+
+**Tier 1: Fast & Cheap (Entry tasks)**
+- **Models**: GLM-5, MiniMax M2.5, Claude Haiku
+- **Use case**: Simple Q&A, email drafts, quick lookups, transcription
+- **Cost**: ~50% less than Sonnet
+- **Latency**: <500ms (usually <200ms)
+- **Accuracy**: 85-90% for routine tasks
+
+**Tier 2: Balanced (Standard tasks)**
+- **Models**: Claude Sonnet 4.5, Gemini Flash, GLM-5-Plus
+- **Use case**: Content creation, analysis, tool usage, complex reasoning
+- **Cost**: Baseline (reference point)
+- **Latency**: 500-1500ms
+- **Accuracy**: 95%+ for most tasks
+
+**Tier 3: Powerful (Complex tasks)**
+- **Models**: Claude Opus (when available via API), Gemini 2.0
+- **Use case**: Deep analysis, novel problem-solving, edge cases
+- **Cost**: 2-3x Sonnet
+- **Latency**: 1-3s
+- **Accuracy**: 99% for specialized reasoning
+
+### AI Gateway Configuration (Intelligent Routing)
+
+**AI Gateway will be configured with:**
+
+```
+Primary model: Claude Sonnet 4.5
+Fallback chain: [MiniMax M2.5 → GLM-5 → Gemini Flash]
+Cost threshold: Route to Tier 1 if task is classified as "simple"
+Latency constraint: If <500ms needed → use Tier 1 only
+```
+
+**How It Works:**
+1. Request arrives from Telegram user (via Moltworker)
+2. AI Gateway inspects request metadata:
+   - Task type (from OpenClaw classification)
+   - Token estimate (word count heuristic)
+   - Time constraint (implicit from Telegram interaction)
+   - User quota remaining
+3. **Smart routing decision**:
+   - **Simple task** (Q&A, lookup) → Route to GLM-5 (cheapest)
+   - **Standard task** (normal chat) → Route to Sonnet 4.5 (balanced)
+   - **Complex task** (reasoning, analysis) → Route to Opus (if quota allows)
+   - **Primary unavailable** → Automatic fallback to next tier
+   - **Budget at risk** (>80% consumed) → Force downgrade to cheaper model
+4. Request forwarded to selected provider
+5. Response returned to Moltworker → Telegram user
+
+### Cost Optimization Features (Built into AI Gateway)
+
+| Feature | Benefit | How It Helps |
+|---------|---------|-------------|
+| **Request caching** | Deduplicate identical prompts | Same question twice = 1st hit cached |
+| **Token-level compression** | Reduce token count before sending | Markdown formatting → saves ~5-10% |
+| **Batch processing** | Combine multiple small requests | Mail summary → 1 request vs. N |
+| **Fallback cost handling** | If Tier 2 fails, retry Tier 1 (cheaper) | Fault tolerance + cost savings |
+| **Quota-aware routing** | Dynamically degrade quality to save budget | Never exceed $5K limit |
+
+### 24/7 Uptime Strategy
+
+**Cloudflare provides:**
+- ✅ Global edge network (no SPOF)
+- ✅ Auto-scaling Sandbox Containers (handle traffic spikes)
+- ✅ Worker cold-start: **~50ms** (no "starting up" delays)
+- ✅ SLA: 99.99% uptime (Cloudflare guarantees)
+
+**Moltworker provides:**
+- ✅ Always-on Workers (billing per request, not per hour)
+- ✅ Persistent session data in R2 (survive container restarts)
+- ✅ Durable Objects for background tasks (don't timeout)
+
+**OpenClaw integration:**
+- ✅ Stateless design (each request independent)
+- ✅ Session memory persisted to R2 (resume interrupted conversations)
+- ✅ No scheduled restarts needed (unlike local Docker)
+
+**Result**: Service runs 24/7 with zero planned downtime.
+
+### Long-Running Tasks (>30s)
+
+The 30-second Sandbox timeout applies per HTTP request. For longer tasks:
+
+**Solution: Durable Objects as Job Queue**
+
+```
+User request (Telegram)
+        │
+        ▼
+Moltworker receives → Immediately returns "processing..."
+        │
+        ▼
+Enqueues job in Durable Object
+        │
+        ▼
+Durable Object processes in background (no timeout)
+        │
+        ▼
+Stores result in R2
+        │
+        ▼
+User gets update notification when done
+```
+
+**Example flow:**
+1. User: "Analyze the top 100 GitHub issues for my repo"
+2. Moltworker: "Got it, analyzing. I'll send results via Telegram when ready" (instant response)
+3. Durable Object: Spawns long-running Sandbox, iterates issues, synthesizes report (~2-5 min)
+4. User: Receives "Analysis complete: [summary]" via Telegram notification
+
+**Cost**: Durable Objects billed separately (~$0.15/M reads + $1.15/M writes). Likely trivial for this POC.
 
 ---
 
@@ -93,15 +250,15 @@ LLM Providers (Cloud)
 
 | Day | Task | Owner |
 |-----|------|-------|
-| Mon | Cloudflare AI Gateway provisioned; dynamic routing policy drafted | Kelvin, Kitty |
-| Mon | Mac Studio / Ollama environment confirmed; Docker base image prepared | Tommy, Alfred |
-| Tue | First container deployed and connected to Cloudflare AI Gateway endpoint | Tommy, Alfred |
-| Tue | GWS integration tested (Gmail, Calendar, Drive) in container | Tommy |
-| Wed | Telegram bot configured and linked per container | Alfred |
-| Wed | AI Firewall rules baseline configured | Kelvin, Kitty |
-| Thu | End-to-end test with internal accounts (Zorro/Tommy/Alfred as test users) | All OpenClaw team |
-| Thu | Consumer containers (Suee, Casey) provisioned | Tommy, Alfred |
-| Fri | Consumer onboarding — send invitation, Telegram setup, confirm access | Zorro |
+| Mon | Cloudflare AI Gateway provisioned; dynamic routing policy drafted; Unified Billing configured | Kelvin, Kitty |
+| Mon | Moltworker repo cloned; Cloudflare account and Workers setup confirmed; R2 bucket + Secrets Store created | Tommy, Alfred |
+| Tue | Moltworker deployed to Cloudflare Workers; initial Sandbox Container spawned and tested | Tommy, Alfred |
+| Tue | GWS credential integration tested (OAuth flow for Gmail, Calendar, Drive stored in Secrets) | Tommy |
+| Wed | Telegram bot routing configured via Moltworker API; test message flow through Gateway | Alfred |
+| Wed | AI Firewall rules baseline configured; credential masking rules set | Kelvin, Kitty |
+| Thu | End-to-end test with internal accounts (Zorro/Tommy/Alfred as test users); Browser Rendering validation | All OpenClaw team |
+| Thu | Consumer Sandbox instances (Suee, Casey) provisioned via Moltworker dashboard | Tommy, Alfred |
+| Fri | Consumer onboarding — send invitation, Telegram link, confirm first message received | Zorro |
 | Fri | Buffer / fix day; Phase 1 sign-off meeting | All teams |
 
 ### Phase 2: Monitoring & Study (Weeks 2–3, 10 business days)
@@ -121,12 +278,14 @@ LLM Providers (Cloud)
 
 | # | Deliverable | Owner | Due |
 |---|------------|-------|-----|
-| 1 | Docker container image (OpenClaw + GWS + TG) | Tommy, Alfred | Day 3 |
-| 2 | Cloudflare AI Gateway configured with dynamic LLM routing | Kelvin, Kitty | Day 2 |
-| 3 | AI Firewall baseline rules | Kelvin, Kitty | Day 3 |
-| 4 | Consumer containers deployed (Suee, Casey) | Tommy | Day 5 |
-| 5 | Weekly Gateway usage analytics report | Kelvin, Kitty | End of each week |
-| 6 | Final findings report with enterprise selling points | Zorro | End of Week 3 |
+| 1 | Moltworker deployed to Cloudflare Workers (from cloudflare/moltworker repo) | Tommy, Alfred | Day 2 |
+| 2 | Cloudflare AI Gateway configured with dynamic LLM routing + Unified Billing | Kelvin, Kitty | Day 1 |
+| 3 | AI Firewall baseline rules (credential masking, sensitive data detection) | Kelvin, Kitty | Day 3 |
+| 4 | R2 bucket provisioned for user session persistence; Secrets Store configured | Tommy | Day 2 |
+| 5 | Consumer Sandbox instances created and Telegram routing tested (Suee, Casey) | Tommy, Alfred | Day 5 |
+| 6 | Moltworker admin dashboard setup (monitoring, user management, logs) | Alfred | Day 3 |
+| 7 | Weekly Gateway usage analytics + Sandbox performance report | Kelvin, Kitty | End of each week |
+| 8 | Final findings report with enterprise selling points (serverless advantage, cost, scaling) | Zorro | End of Week 3 |
 
 ---
 
@@ -141,13 +300,51 @@ LLM Providers (Cloud)
 
 ## ✅ Success Criteria
 
-The POC is considered successful if we can document at least **two of the following**:
+The POC is considered successful if we can document at least **FOUR of the following**:
 
-1. **Cost saving evidence** — Dynamic LLM routing demonstrably reduces token cost vs. using a single premium provider
-2. **Security event caught** — AI Firewall intercepted sensitive data (API keys, PII, credentials) before it reached an LLM provider
-3. **Routing intelligence** — Cloudflare AI Gateway demonstrated intelligent fallback or load balancing between LLM providers
-4. **Enterprise use case identified** — At least one concrete scenario where a customer would pay for this architecture (e.g. compliance, cost control, multi-model strategy)
-5. **Selling point documented** — A clear, evidence-based narrative Zorro/team can use in customer conversations about Cloudflare professional services
+### Primary Metrics (Must have 2+)
+
+1. **Intelligent model routing reduces costs by >20%**
+   - *Success*: AI Gateway's dynamic routing saves tokens vs. always using Sonnet
+   - *Measurement*: Compare actual spend to "all Sonnet" baseline
+   - *Target*: Reduce $5K budget by >$1K through smart tier selection
+
+2. **24/7 uptime achieved with zero downtime**
+   - *Success*: System runs continuously for 2 weeks with no planned/unplanned restarts
+   - *Measurement*: Cloudflare uptime dashboard shows 100% or >99.9%
+   - *Target*: Prove serverless is more reliable than local Docker
+
+3. **AI Firewall blocks sensitive data**
+   - *Success*: Firewall catches and redacts at least 1 real PII/API key attempt
+   - *Measurement*: Firewall logs show blocked patterns with redaction
+   - *Target*: Demonstrate security value of gateway inspection
+
+### Secondary Metrics (Pick 2 more for full success)
+
+4. **Sandbox scalability validated**
+   - *Success*: Easily onboard 5+ new consumers without infra changes
+   - *Measurement*: Add Suee, Casey, +3 more in <30 min each
+   - *Target*: Prove Sandbox auto-scaling works
+
+5. **Edge latency advantage proven**
+   - *Success*: Cloudflare edge responds faster than API-direct calls
+   - *Measurement*: p50/p95 latency to Cloudflare vs. direct LLM provider
+   - *Target*: Show 200-500ms edge advantage for typical requests
+
+6. **Durable Objects handles long-running tasks**
+   - *Success*: At least 1 background job (>30s) completes successfully
+   - *Example*: Analyze 10+ GitHub issues, email thread summarization
+   - *Measurement*: Task completes, user notified, result correct
+
+7. **Cost model beats alternatives**
+   - *Success*: Total 2-week spend demonstrates value vs. alternatives
+   - *Comparison*: Moltworker cost vs. Mac Studio + local Ollama vs. traditional VPS
+   - *Target*: Moltworker = cheapest per-user option
+
+8. **Enterprise customer conversation ready**
+   - *Success*: Zorro can pitch specific customer segments (startups, enterprises, security-conscious)
+   - *Selling points*: "24/7 serverless", "cost-optimized AI", "built-in security", "no ops overhead"
+   - *Measurement*: 3-5 written talking points with evidence from this POC
 
 ---
 
@@ -201,6 +398,544 @@ Master Concept
 
 ---
 
-**Created**: 2026-03-12
+## 🔧 Moltworker Implementation Notes
+
+### Prerequisites
+
+**Cloudflare Account Requirements:**
+- ✅ Cloudflare account with **Workers Paid plan** (required for Sandbox Containers)
+- ✅ Sandbox SDK enabled in account
+- ✅ AI Gateway feature enabled
+- ✅ R2 bucket provisioned (free tier: 10GB included)
+- ✅ Secrets Store configured
+- ✅ Zero Trust Access available (for admin UI protection)
+
+**Repository & Deployment:**
+- Source: `cloudflare/moltworker` (GitHub — open source, proof-of-concept)
+- Deployment: `wrangler deploy` (Cloudflare Workers CLI)
+- Configuration: `wrangler.toml` + `.env` secrets
+- Status: **Not an official Cloudflare product** — community-maintained with Cloudflare support
+
+**GWS Credential Flow:**
+1. User completes OAuth for Gmail/Calendar/Drive (out-of-band, first-time setup)
+2. OAuth tokens stored in Secrets Store (encrypted, no personal device storage)
+3. Tokens injected into Sandbox Container at runtime
+4. Session memory stored in R2 (encrypted)
+5. Credentials never exposed to UI or logs
+
+### Sandbox Container Constraints
+
+- **Max CPU**: 1 vCPU per container
+- **Max Memory**: 128MB per container (sufficient for OpenClaw Gateway)
+- **Max Runtime**: 30s per request (enforced)
+- **Disk**: Ephemeral (mounted from R2 on startup, sync on shutdown)
+- **Networking**: Outbound only (to AI Gateway, GWS, external APIs)
+
+### Known Limitations & Mitigations
+
+| Limitation | Impact | Mitigation |
+|-----------|--------|-----------|
+| 30s request timeout | Long-running tasks fail | Use Durable Objects for background jobs; implement chunked processing |
+| 128MB memory | Memory-intensive models (e.g., local LLMs) won't fit | Rely on cloud LLMs via AI Gateway; disable Ollama |
+| Ephemeral disk | Container state lost after request | Persist critical data to R2; design for stateless operations |
+| Sandbox per-user isolation | Multiple simultaneous users consume quota | Monitor concurrent Sandbox count; set rate limits per user |
+
+### Moltworker vs. Local Docker (Comparison)
+
+| Aspect | Local Docker (Mac Studio) | Moltworker (Cloudflare) |
+|--------|--------------------------|------------------------|
+| **Hardware** | Dedicated Mac Studio | None (serverless) |
+| **Cost** | Mac hardware + electricity | Workers Paid plan + Sandbox usage |
+| **Scaling** | Max N users (hardware limit) | Unlimited auto-scaling |
+| **Maintenance** | Manual (OS updates, Docker, Ollama) | Zero (Cloudflare managed) |
+| **Latency** | Geographic (users → Mac Studio) | Low (users → closest Cloudflare edge) |
+| **Security** | Shared host OS | Isolated Sandbox per user |
+| **Dev speed** | Slow iteration (Docker rebuild) | Fast (instant deploy via Workers) |
+| **Credentials** | Stored on Mac (encrypted?) | Secrets Store (managed encryption) |
+
+### Moltworker Deployment Checklist
+
+**Cloudflare Infrastructure:**
+- [ ] Cloudflare account + Workers Paid plan active
+- [ ] Sandbox SDK enabled + quota verified
+- [ ] R2 bucket created (`openclaw-users-data`)
+- [ ] Durable Objects namespace created (`job-queue`)
+- [ ] Zero Trust Access policy created (admin dashboard protection)
+- [ ] Workers Analytics enabled (cost tracking)
+
+**AI Gateway Configuration:**
+- [ ] AI Gateway instance created
+- [ ] Unified Billing activated (consume $5K budget)
+- [ ] Model routing rules configured:
+  - [ ] Primary: Claude Sonnet 4.5
+  - [ ] Fallback tier 1: MiniMax M2.5, GLM-5
+  - [ ] Fallback tier 2: Gemini Flash
+- [ ] Request caching enabled
+- [ ] Token-level compression enabled
+- [ ] Budget alerts set (80% threshold = Zorro + Kelvin notified)
+
+**Secrets & Credentials:**
+- [ ] Secrets Store configured with:
+  - `ANTHROPIC_API_KEY` (for direct API, backup)
+  - `CLOUDFLARE_AI_GATEWAY_TOKEN` (primary routing)
+  - `CLOUDFLARE_AI_GATEWAY_ACCOUNT_ID` + `GATEWAY_ID`
+  - GWS OAuth credentials (Gmail, Calendar, Drive)
+  - Telegram bot token
+  - OpenClaw Gateway admin token
+
+**Moltworker Deployment:**
+- [ ] Fork/clone `cloudflare/moltworker` repo
+- [ ] `wrangler.toml` customized:
+  - [ ] Account ID
+  - [ ] R2 bucket binding
+  - [ ] Durable Object binding (`job-queue`)
+  - [ ] Secrets bindings
+  - [ ] Route (e.g., `openclaw.zorro.workers.dev`)
+- [ ] Environment variables set (`.env` local + Cloudflare Secrets)
+- [ ] Local testing via `wrangler dev`
+- [ ] Deployed via `wrangler deploy`
+- [ ] GitHub Actions workflow set up (auto-deploy on push to main)
+
+**Monitoring & Alerting:**
+- [ ] Workers Analytics dashboard configured
+- [ ] Cost tracking dashboard in Cloudflare (daily snapshots)
+- [ ] Telegram alert channel for errors + quota warnings
+- [ ] Uptime monitoring (Cloudflare Status + custom health check)
+- [ ] Session metrics exported (active users, requests/hour, latency p95)
+
+---
+
+---
+
+## 📖 Deployment Runbook (Step-by-Step)
+
+### Phase 1.1: Cloudflare Infrastructure Setup (Day 1 — Kelvin + Tommy)
+
+**Step 1: Enable required products**
+
+```bash
+# Login to Cloudflare dashboard
+# https://dash.cloudflare.com
+
+# 1. Upgrade Workers plan to Paid (required for Sandbox)
+#    - Navigate to Cloudflare Dashboard
+#    - Click "Workers & Pages"
+#    - Scroll down, find "Paid plan", click "Subscribe"
+#    - Cost: ~$25/month base + usage
+
+# 2. Request Sandbox SDK access
+#    - Open support ticket: "Enable Sandbox SDK for account [account_id]"
+#    - Usually approved within 1-2 hours
+#    - Confirm access via: https://dash.cloudflare.com -> Account -> Billing
+
+# 3. Verify AI Gateway available
+#    - Navigate to "AI Gateway" in dashboard
+#    - Should show "Create Gateway" button
+```
+
+**Step 2: Create R2 bucket**
+
+```bash
+# Install wrangler CLI (if not already installed)
+npm install -g wrangler
+
+# Authenticate
+wrangler login
+
+# Create R2 bucket for user data
+wrangler r2 bucket create openclaw-users-data
+
+# Verify
+wrangler r2 bucket list
+# Expected output: openclaw-users-data
+```
+
+**Step 3: Create Durable Objects namespace**
+
+```bash
+# Add to wrangler.toml:
+[durable_objects]
+bindings = [
+  { name = "JOB_QUEUE", class_name = "JobQueue", script_name = "moltworker" }
+]
+
+# Deploy to create namespace (will do this in Step 5)
+```
+
+**Step 4: Create AI Gateway instance**
+
+```bash
+# Via dashboard:
+# 1. Navigate to Cloudflare Dashboard
+# 2. Click "AI Gateway"
+# 3. Click "Create Gateway"
+# 4. Fill form:
+#    - Name: openclaw-ai-gateway
+#    - Select account
+# 5. Click "Create"
+# 6. Note the GATEWAY_ID (shown on success page)
+#
+# Example GATEWAY_ID: 8f7a-4b2e-9d1c-6f3a
+```
+
+### Phase 1.2: Moltworker Repository Setup (Day 2 — Tommy + Alfred)
+
+**Step 1: Clone Moltworker repo**
+
+```bash
+cd ~/clawd  # or your working directory
+git clone https://github.com/cloudflare/moltworker.git
+cd moltworker
+npm install
+```
+
+**Step 2: Create `.env` file with secrets**
+
+```bash
+# Create .env file (DO NOT commit to Git)
+cat > .env << 'EOF'
+# Cloudflare Account
+CLOUDFLARE_ACCOUNT_ID=your_account_id
+CLOUDFLARE_API_TOKEN=your_api_token
+
+# AI Gateway
+CLOUDFLARE_AI_GATEWAY_ACCOUNT_ID=your_account_id
+CLOUDFLARE_AI_GATEWAY_GATEWAY_ID=8f7a-4b2e-9d1c-6f3a  # From Step 4 above
+CLOUDFLARE_AI_GATEWAY_TOKEN=optional_auth_token  # If gateway auth enabled
+
+# OpenClaw / Claude
+ANTHROPIC_API_KEY=sk-ant-...  # Backup, if not using AI Gateway
+ANTHROPIC_BASE_URL=https://gateway.ai.cloudflare.com/v1/ACCOUNT_ID/GATEWAY_ID/anthropic
+
+# Google Workspace (OAuth tokens - obtained via out-of-band flow)
+GWS_GMAIL_REFRESH_TOKEN=1//...
+GWS_CALENDAR_REFRESH_TOKEN=1//...
+GWS_DRIVE_REFRESH_TOKEN=1//...
+
+# Telegram
+TELEGRAM_BOT_TOKEN=5123456789:ABCDEFGHIJKLMNOPQRSTUVWxyz...
+
+# OpenClaw
+OPENCLAW_GATEWAY_TOKEN=openclaw_token_...
+EOF
+
+# Verify .env is in .gitignore
+echo ".env" >> .gitignore
+```
+
+**Step 3: Configure wrangler.toml**
+
+```bash
+# Edit wrangler.toml
+cat > wrangler.toml << 'EOF'
+name = "moltworker"
+main = "src/index.ts"
+type = "service"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+account_id = "YOUR_ACCOUNT_ID"
+workers_dev = true
+route = "moltworker.example.workers.dev"  # Update domain
+
+# R2 Bucket binding
+[[r2_buckets]]
+binding = "USER_DATA"
+bucket_name = "openclaw-users-data"
+jurisdiction = "eu"  # or preferred region
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "JOB_QUEUE"
+class_name = "JobQueue"
+script_name = "moltworker"
+
+# Secrets (injected from .env or Cloudflare dashboard)
+[env.production.vars]
+ENVIRONMENT = "production"
+DEBUG = false
+LOG_LEVEL = "info"
+
+# Build configuration
+[build]
+command = "npm install && npm run build"
+watch_paths = ["src/**/*.ts"]
+EOF
+```
+
+**Step 4: Test locally**
+
+```bash
+# Run Moltworker in dev mode
+wrangler dev
+
+# Expected output:
+# ⛅️ wrangler 3.x.x
+# ▲ [localhost:8787]
+
+# Test health check:
+# curl http://localhost:8787/health
+# Expected: {"status": "ok"}
+```
+
+### Phase 1.3: Secrets & Credentials (Day 2 — Tommy)
+
+**Step 1: Obtain GWS OAuth tokens (out-of-band)**
+
+```bash
+# This requires interactive OAuth flow - done ONCE per service account
+
+# Save credentials template:
+cat > oauth_setup.py << 'EOF'
+import json
+import os
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
+# For Gmail
+scopes_gmail = ['https://www.googleapis.com/auth/gmail.modify']
+# For Calendar
+scopes_cal = ['https://www.googleapis.com/auth/calendar']
+# For Drive
+scopes_drive = ['https://www.googleapis.com/auth/drive.file']
+
+# Follow TOOLS.md GCP_API_SCOPE_ADDITION_PROCEDURE.md for full setup
+# Credentials will be cached locally, then moved to Cloudflare Secrets
+EOF
+
+# Run the OAuth flow (using client_secret_*.json from your GCP setup)
+python oauth_setup.py
+
+# Cache credentials locally to ~/.config/gcloud/
+# Then move to Cloudflare Secrets (next step)
+```
+
+**Step 2: Upload secrets to Cloudflare**
+
+```bash
+# Upload each secret via wrangler
+wrangler secret put CLOUDFLARE_API_TOKEN
+# Paste your token, press Ctrl+D
+
+wrangler secret put ANTHROPIC_API_KEY
+# Paste API key
+
+wrangler secret put GWS_GMAIL_REFRESH_TOKEN
+# Paste token
+
+# Repeat for all secrets in .env
+
+# Verify secrets uploaded
+wrangler secret list
+# Shows list of uploaded secrets (no values)
+```
+
+### Phase 1.4: Deploy to Cloudflare (Day 3 — Tommy)
+
+**Step 1: Build**
+
+```bash
+npm run build
+```
+
+**Step 2: Deploy**
+
+```bash
+wrangler deploy
+
+# Expected output:
+# ✓ Deployed to moltworker.ACCOUNT.workers.dev
+# ✓ Dashboard: https://dash.cloudflare.com/...
+```
+
+**Step 3: Verify deployment**
+
+```bash
+# Test health check on live deployment
+curl https://moltworker.ACCOUNT.workers.dev/health
+
+# Expected: {"status":"ok","timestamp":"2026-03-13T..."}
+```
+
+### Phase 1.5: Configure AI Gateway Routing (Day 3 — Kelvin + Kitty)
+
+**Step 1: Set AI Gateway routing rules**
+
+```bash
+# Via Cloudflare Dashboard:
+# 1. Navigate to AI Gateway
+# 2. Click "openclaw-ai-gateway"
+# 3. Click "Routing"
+# 4. Set Primary Model: Claude Sonnet 4.5
+# 5. Set Fallbacks:
+#    - Tier 1: MiniMax M2.5
+#    - Tier 2: GLM-5
+#    - Tier 3: Gemini Flash
+```
+
+**Step 2: Configure AI Firewall rules**
+
+```bash
+# Via Cloudflare Dashboard:
+# 1. Navigate to AI Gateway
+# 2. Click "Firewall"
+# 3. Create rule: Block sensitive patterns
+#    - Pattern: /api[_-]?key/i (case-insensitive)
+#    - Action: REDACT
+#    - Log: Yes
+# 4. Create rule: Block PII patterns
+#    - Pattern: SSN, credit card regex
+#    - Action: BLOCK
+#    - Log: Yes
+# 5. Enable "Cost limit" alert at 80% of $5K budget
+```
+
+**Step 3: Activate Unified Billing**
+
+```bash
+# Via Cloudflare Dashboard:
+# 1. Navigate to AI Gateway
+# 2. Click "Billing"
+# 3. Select "Unified Billing"
+# 4. Top up account with $5,000 (Kelvin handles)
+# 5. Confirm budget limit set
+```
+
+### Phase 1.6: Telegram Bot Setup (Day 4 — Alfred)
+
+**Step 1: Create new Telegram bot**
+
+```bash
+# Talk to @BotFather on Telegram
+# /newbot
+# Follow prompts:
+#   - Name: OpenClaw Suee (or Casey)
+#   - Username: openclaw_suee_bot (must be unique)
+# Receive: BOT_TOKEN (save securely)
+
+# Example: 5123456789:ABCDEFGHIJKLMNOPQRSTUVWxyz123...
+```
+
+**Step 2: Configure webhook**
+
+```bash
+# Tell Telegram to send updates to Moltworker
+curl -X POST https://api.telegram.org/bot${BOT_TOKEN}/setWebhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://moltworker.ACCOUNT.workers.dev/telegram/hook",
+    "secret_token": "your_secret_for_verification"
+  }'
+
+# Verify:
+curl https://api.telegram.org/bot${BOT_TOKEN}/getWebhookInfo
+```
+
+**Step 3: Upload bot token to Cloudflare**
+
+```bash
+wrangler secret put TELEGRAM_BOT_TOKEN
+# Paste: 5123456789:ABCDEFGHIJKLMNOPQRSTUVWxyz...
+```
+
+### Phase 1.7: Consumer Setup (Day 5 — Tommy + Zorro)
+
+**Step 1: Create consumer Sandbox instances**
+
+```bash
+# Via Moltworker admin dashboard or wrangler:
+
+# For Suee:
+wrangler durable-object:create JOB_QUEUE "suee-consumer"
+
+# For Casey:
+wrangler durable-object:create JOB_QUEUE "casey-consumer"
+
+# Create R2 folders for session data:
+# /suee/session.json
+# /casey/session.json
+```
+
+**Step 2: Send Telegram invites**
+
+```bash
+# Template message (send via Zorro):
+
+Hi Suee,
+
+You're invited to test OpenClaw — a personal AI assistant.
+
+To get started:
+1. Add this bot: t.me/openclaw_suee_bot
+2. Send any message
+3. Say hi! 👋
+
+This is a free pilot. All done!
+
+—Zorro
+```
+
+**Step 3: Monitor first messages**
+
+```bash
+# Check Cloudflare Workers logs:
+wrangler tail
+
+# Or via dashboard:
+# https://dash.cloudflare.com/[account]/workers/view/moltworker/logs
+
+# Expected: User sends message → Telegram webhook → Moltworker processes → Response sent
+```
+
+---
+
+### Troubleshooting Quick Reference
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| `Error: Sandbox SDK not enabled` | Account doesn't have Sandbox access | Open support ticket (1-2 hrs) |
+| `401 Unauthorized on AI Gateway` | Token expired or wrong account ID | Check Secrets; re-auth if needed |
+| `Telegram webhook returns 403` | Secret token mismatch | Verify `secret_token` in setWebhook call |
+| `R2 bucket not found` | Bucket name typo in wrangler.toml | Run `wrangler r2 bucket list` to verify |
+| `Response timeout (>30s)` | Sandbox request too long | Use Durable Objects for long tasks |
+| `Cost spike` | Model routing misconfigured | Check AI Gateway logs; manually switch to cheaper model |
+
+---
+
+## 📚 Reference Links
+
+- **Moltworker GitHub**: https://github.com/cloudflare/moltworker
+- **Moltworker Deployment Guide**: https://github.com/cloudflare/moltworker/blob/main/README.md
+- **Cloudflare Sandbox SDK**: https://developers.cloudflare.com/sandbox/
+- **Cloudflare AI Gateway**: https://developers.cloudflare.com/ai-gateway/
+- **Cloudflare Durable Objects**: https://developers.cloudflare.com/durable-objects/
+- **Telegram Bot API**: https://core.telegram.org/bots/api
+- **OpenClaw Docs**: https://docs.openclaw.ai
+- **Cloudflare Blog (Moltworker intro)**: https://blog.cloudflare.com/moltworker-self-hosted-ai-agent/
+
+---
+
+## 🎯 Key Decision Log
+
+| Date | Decision | Rationale |
+|------|----------|-----------|
+| 2026-03-12 | Migrate from local Docker → Cloudflare Moltworker | Eliminates Mac Studio ops, enables 24/7 uptime, scales infinitely, reduces maintenance |
+| 2026-03-12 | Implement intelligent AI Gateway routing (3-tier model system) | Optimize costs per-request, prove dynamic routing value, handle >80% of tasks with cheaper models |
+| 2026-03-12 | Use Durable Objects for background jobs (>30s) | Work around 30s Sandbox timeout, support long-running tasks (analysis, research) |
+| 2026-03-12 | Fresh start for consumer instances (Suee, Casey) | Avoid migration complexity, clean state for measurements, simpler debugging |
+| 2026-03-12 | Emphasis on 24/7 uptime + cost-efficiency | Shift narrative from "local assistant" → "production AI platform" for enterprise customers |
+
+---
+
+**Created**: 2026-03-12 (Original)
+**Last Revised**: 2026-03-12 22:15 GMT+8 (Comprehensive revision for Moltworker + 24/7 + intelligent routing)
 **Lead**: Zorro (Master Concept)
-**Status**: Planning → Setup begins next Monday
+**Status**: ✅ REVISED & FINALIZED → Deployment runbook ready → Setup begins Monday 2026-03-17
+
+**Next Actions:**
+1. ✅ Share revised plan with Kelvin/Kitty (MC-Cloudflare team) — **Friday 2026-03-14**
+2. ⏳ Cloudflare infrastructure setup (Kelvin/Kitty) — **Monday 2026-03-17 morning**
+3. ⏳ Moltworker deployment (Tommy/Alfred) — **Monday-Tuesday 2026-03-17-18**
+4. ⏳ Consumer onboarding (Zorro) — **Friday 2026-03-21**
+5. ⏳ Live monitoring (all teams) — **Week of 2026-03-24 (Weeks 2-3)**
