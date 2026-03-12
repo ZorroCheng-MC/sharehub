@@ -348,6 +348,430 @@ The POC is considered successful if we can document at least **FOUR of the follo
 
 ---
 
+---
+
+## 🧑‍💼 Consumer Preparation Checklist
+
+**Each consumer needs to prepare BEFORE tech team setup begins.**
+
+### Consumer Self-Service Checklist (Pre-Setup)
+
+| # | Task | Owner | Example | Status |
+|---|------|-------|---------|--------|
+| 1 | Create new Gmail account (independent from personal email) | Consumer | `suee-openclaw@gmail.com` | ⏳ |
+| 2 | Create new GCP project (for OAuth credentials) | Consumer | `suee-openclaw-gcp` (project ID) | ⏳ |
+| 3 | Share Gmail + GCP Project ID with Zorro | Consumer | Email or Telegram | ⏳ |
+| 4 | Confirm Telegram username/ID for bot link | Consumer | `@suee_tz` | ⏳ |
+| 5 | Review & acknowledge pilot terms (data monitoring, security) | Consumer | Sign-off email | ⏳ |
+
+---
+
+### Pre-Setup Email to Consumers (Send 1 week before tech setup)
+
+**Subject: OpenClaw Pilot — Action Required (Setup Prep)**
+
+> Hi [Name],
+>
+> Great news — you're approved to join the OpenClaw pilot! 🎉
+>
+> Before our tech team can set you up, we need you to prepare a few things (15 min, one-time):
+>
+> **Step 1: Create a new Gmail account** (separate from personal email)
+> - Go to https://accounts.google.com/signup
+> - Use format: `[your-name]-openclaw@gmail.com` (e.g., suee-openclaw@gmail.com)
+> - Save the password somewhere safe (you'll need it later)
+> - ✅ Confirm account creation
+>
+> **Step 2: Create a new Google Cloud project** (for OAuth credentials)
+> - Go to https://console.cloud.google.com
+> - Click "Select a Project" (top-left)
+> - Click "NEW PROJECT"
+> - Enter name: `[your-name]-openclaw` (e.g., suee-openclaw)
+> - Click "CREATE"
+> - Wait 30 seconds for project to initialize
+> - Note the **Project ID** (will be shown in dashboard, usually auto-generated)
+> - ✅ Project created successfully
+>
+> **Step 3: Share credentials with tech team**
+> - Reply to this email with:
+>   - **New Gmail**: suee-openclaw@gmail.com
+>   - **GCP Project ID**: [from step 2]
+>   - **Your Telegram username**: @suee_tz (or ID: 123456789)
+> - ✅ Credentials submitted
+>
+> **Step 4: Review pilot terms**
+> - All traffic monitored by Cloudflare AI Gateway (for research)
+> - AI Firewall may block sensitive data before it reaches LLM (for security)
+> - This is a free pilot funded by Cloudflare
+> - Reply: "I acknowledge and accept the above terms"
+> - ✅ Terms acknowledged
+>
+> **Timeline:**
+> - You submit above: Friday
+> - Tech team prepares setup: Monday
+> - You get Telegram bot link: Tuesday
+> - Live access: Wednesday
+>
+> Questions? Reply to this email.
+>
+> Best,  
+> Zorro
+
+---
+
+### Tech Team Setup Checklist (Tommy & Alfred)
+
+**Once consumer submits their prep info, follow this checklist per consumer.**
+
+#### Consumer Onboarding Template
+
+```yaml
+Consumer: [NAME]
+Status: Ready for setup
+Date: 2026-03-[XX]
+
+CONSUMER_PROVIDED:
+  gmail: [EMAIL]           # e.g., suee-openclaw@gmail.com
+  gcp_project_id: [ID]    # e.g., suee-openclaw-gcp
+  telegram_username: [TG] # e.g., @suee_tz
+  telegram_id: [ID]       # e.g., 123456789
+  terms_acknowledged: Yes
+
+TECH_TEAM_TASKS:
+  ☐ Task 1: Enable GWS APIs in GCP project
+  ☐ Task 2: Create OAuth 2.0 credentials
+  ☐ Task 3: Complete OAuth flow (out-of-band)
+  ☐ Task 4: Upload credentials to Cloudflare Secrets Store
+  ☐ Task 5: Create Telegram bot (BotFather)
+  ☐ Task 6: Configure Telegram webhook
+  ☐ Task 7: Create Sandbox instance in Moltworker
+  ☐ Task 8: Verify end-to-end test
+  ☐ Task 9: Send Telegram bot link to consumer
+  ☐ Task 10: Consumer confirms access
+
+CREDENTIALS_CREATED:
+  telegram_bot_token: [TOKEN]  # Secrets Store
+  oauth_refresh_tokens: [STORED] # Secrets Store
+  sandbox_instance: [CREATED] # Moltworker
+  r2_session_folder: /[consumer]/session.json # R2
+```
+
+---
+
+### Tech Team Step-by-Step (Per Consumer)
+
+**Step 1: Enable GWS APIs in GCP project** (Tommy)
+
+```bash
+# Consumer provides:
+# - GCP Project ID: suee-openclaw-gcp
+# - Gmail: suee-openclaw@gmail.com
+
+# Via GCP Console:
+# 1. Go to https://console.cloud.google.com
+# 2. Select project: suee-openclaw-gcp
+# 3. Click "APIs & Services" → "Library"
+# 4. Search and enable EACH of these:
+#    - Google Drive API
+#    - Google Calendar API
+#    - Gmail API
+#    - Google Workspace Admin API (optional, for advanced features)
+# 5. Screenshot enabled APIs and save for records
+```
+
+**Step 2: Create OAuth 2.0 Credentials** (Tommy)
+
+```bash
+# Still in GCP Console (same project):
+# 1. Go to "APIs & Services" → "Credentials"
+# 2. Click "Create Credentials" → "OAuth 2.0 Client IDs"
+# 3. If prompted: "Create OAuth consent screen first"
+#    - User type: External
+#    - Fill in app name: "[Consumer] OpenClaw Bot"
+#    - Add scopes: drive.file, calendar, gmail.modify
+#    - Save
+# 4. Back to Credentials → "Create Credentials" → "OAuth 2.0 Client IDs"
+# 5. Application type: Desktop app
+# 6. Click "Create"
+# 7. Download JSON file (client_secret_*.json)
+# 8. Save securely: ~/Downloads/client_secret_[consumer].json
+```
+
+**Step 3: Complete OAuth Flow (Out-of-Band)** (Tommy)
+
+```bash
+# Run this ONCE per consumer (interactive, must use local browser)
+
+python3 << 'EOF'
+import json, os
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+# Load client secret
+client_secret_file = os.path.expanduser("~/Downloads/client_secret_suee.json")
+
+# Define scopes
+scopes = [
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/gmail.modify'
+]
+
+# Run OAuth flow (opens browser for user to authorize)
+flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, scopes=scopes)
+credentials = flow.run_local_server(port=18088)
+
+# Save credentials to file
+creds_cache = os.path.expanduser("~/.config/gcloud/suee_openclaw_creds.json")
+with open(creds_cache, 'w') as f:
+    f.write(credentials.to_json())
+
+print(f"✅ Credentials saved: {creds_cache}")
+print(f"Refresh token: {credentials.refresh_token}")
+EOF
+
+# Expected output:
+# ✅ Credentials saved: ~/.config/gcloud/suee_openclaw_creds.json
+# Refresh token: 1//0gxxxx...
+```
+
+**Step 4A: Create Consumer secrets.json File** (Tommy) — **RECOMMENDED APPROACH**
+
+OpenClaw now uses `secrets.json` for centralized credential management (via SecretRefs).
+
+```bash
+# Create consumer-specific secrets.json file
+# This will be stored in R2 and injected into each Sandbox Container
+
+cat > /tmp/suee_secrets.json << 'EOF'
+{
+  "providers": {
+    "gws": {
+      "gmail": {
+        "refreshToken": "1//0gxxxx..."  // from OAuth flow above
+      },
+      "calendar": {
+        "refreshToken": "1//0gxxxx..."  // same token
+      },
+      "drive": {
+        "refreshToken": "1//0gxxxx..."  // same token
+      }
+    },
+    "anthropic": {
+      "apiKey": "sk-ant-..."  // AI Gateway token or backup Anthropic key
+    },
+    "cloudflare": {
+      "aiGatewayToken": "your_cf_token_if_gateway_auth_enabled"
+    }
+  }
+}
+EOF
+
+# Upload to R2 bucket (one per consumer)
+wrangler r2 object put openclaw-users-data/suee/secrets.json /tmp/suee_secrets.json
+
+# Verify upload
+wrangler r2 object list openclaw-users-data --prefix=suee/
+# Should see: suee/secrets.json
+```
+
+**Why secrets.json + R2?**
+- ✅ Centralized per-consumer credentials (not scattered across Cloudflare Secrets)
+- ✅ OpenClaw's native SecretRefs can read from file source
+- ✅ R2 persists across Sandbox Container restarts
+- ✅ Encrypted at rest by Cloudflare
+- ✅ One file = all credentials for that consumer
+- ✅ Easier to rotate (update one file)
+
+**Step 4B: Configure OpenClaw SecretRefs in Moltworker** (Alfred)
+
+In the Sandbox Container startup, configure OpenClaw to use the `secrets.json` via SecretRefs:
+
+```bash
+# Moltworker startup script (runs inside Sandbox)
+# This mounts R2 secrets.json and tells OpenClaw where to find credentials
+
+SANDBOX_CONSUMER="suee"
+
+# Download secrets.json from R2 to ephemeral disk
+mkdir -p /workspace/secrets
+wrangler r2 object get openclaw-users-data/${SANDBOX_CONSUMER}/secrets.json /workspace/secrets/secrets.json
+
+# Start OpenClaw Gateway with SecretRefs pointing to secrets.json
+openclaw gateway \
+  --config-override '{
+    "secrets": {
+      "providers": {
+        "consumer_file": {
+          "source": "file",
+          "path": "/workspace/secrets/secrets.json",
+          "mode": "json"
+        }
+      }
+    },
+    "channels": {
+      "telegram": {
+        "token": { "source": "file", "provider": "consumer_file", "id": "/telegram/token" }
+      }
+    },
+    "models": {
+      "providers": {
+        "anthropic": {
+          "apiKey": { "source": "file", "provider": "consumer_file", "id": "/providers/anthropic/apiKey" }
+        }
+      }
+    },
+    "tools": {
+      "gws": {
+        "gmail": {
+          "refreshToken": { "source": "file", "provider": "consumer_file", "id": "/providers/gws/gmail/refreshToken" }
+        },
+        "calendar": {
+          "refreshToken": { "source": "file", "provider": "consumer_file", "id": "/providers/gws/calendar/refreshToken" }
+        },
+        "drive": {
+          "refreshToken": { "source": "file", "provider": "consumer_file", "id": "/providers/gws/drive/refreshToken" }
+        }
+      }
+    }
+  }'
+```
+
+**Alternative: Cloudflare Secrets → Environment Variables → SecretRefs**
+
+If you prefer Cloudflare Secrets Store instead of R2:
+
+```bash
+# Upload to Cloudflare Secrets
+wrangler secret put GWS_GMAIL_REFRESH_TOKEN_SUEE
+# Paste: 1//0gxxxx...
+
+# Moltworker injects as env var → OpenClaw reads via env SecretRef
+# Then in OpenClaw config:
+{
+  "tools": {
+    "gws": {
+      "gmail": {
+        "refreshToken": { "source": "env", "provider": "default", "id": "GWS_GMAIL_REFRESH_TOKEN_SUEE" }
+      }
+    }
+  }
+}
+```
+
+**Recommendation:** Use `secrets.json` + R2 (Step 4A) because:
+- Fewer Cloudflare Secrets entries (one per consumer instead of 3-5)
+- Matches OpenClaw's native secrets model
+- Easier to backup and rotate
+- Self-contained per consumer
+
+**Step 5: Create Telegram Bot** (Alfred)
+
+```bash
+# Talk to @BotFather on Telegram
+# /newbot
+# Bot name: OpenClaw Suee Bot
+# Bot username: suee_openclaw_bot (MUST have "bot" suffix, be unique)
+# Receive: BOT_TOKEN
+
+# Save token
+wrangler secret put TELEGRAM_BOT_TOKEN_SUEE
+# Paste: 5123456789:ABCDEFGHIJKLMNOPQRSTUVWxyz...
+```
+
+**Step 6: Configure Telegram Webhook** (Alfred)
+
+```bash
+BOT_TOKEN="5123456789:ABCDEFGHIJKLMNOPQRSTUVWxyz..."
+WEBHOOK_URL="https://moltworker.ACCOUNT.workers.dev/telegram/suee/hook"
+
+curl -X POST https://api.telegram.org/bot${BOT_TOKEN}/setWebhook \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"url\": \"${WEBHOOK_URL}\",
+    \"secret_token\": \"suee_secret_$(date +%s)\"
+  }"
+
+# Verify:
+curl https://api.telegram.org/bot${BOT_TOKEN}/getWebhookInfo | jq .
+# Should show: "url": "https://moltworker..."
+```
+
+**Step 7: Create Sandbox Instance** (Tommy)
+
+```bash
+# Via Moltworker admin or Cloudflare dashboard:
+# 1. Create new Sandbox: suee-consumer
+# 2. Mount R2 bucket
+# 3. Inject Secrets: GWS_*_TOKEN_SUEE, TELEGRAM_BOT_TOKEN_SUEE
+# 4. Set environment: CONSUMER_NAME=suee
+
+# Verify:
+# Moltworker dashboard should show "suee-consumer" instance (running)
+```
+
+**Step 8: End-to-End Test** (Alfred)
+
+```bash
+# Send test message to Telegram bot link:
+# https://t.me/suee_openclaw_bot
+
+# Test message: "hello"
+
+# Expected:
+# Bot receives message
+# Routes to Moltworker
+# Moltworker → Sandbox (suee-consumer)
+# Sandbox → OpenClaw → AI Gateway → Claude
+# Response: "Hi! I'm OpenClaw..."
+
+# Check logs:
+wrangler tail
+# Should see: [suee-consumer] message received, processed, response sent
+```
+
+**Step 9: Send Bot Link to Consumer** (Zorro)
+
+```bash
+# Template message (send via Zorro):
+
+Hi Suee,
+
+Your OpenClaw bot is ready! 🎉
+
+Add this bot to Telegram:
+https://t.me/suee_openclaw_bot
+
+Then say anything — ask questions, get help, create content, whatever!
+
+This pilot runs 24/7. All done.
+
+—Zorro
+```
+
+**Step 10: Consumer Confirms Access** (Consumer)
+
+- Consumer clicks link
+- Sends test message ("hello" or similar)
+- Confirms bot responds
+- Mark complete in checklist
+
+---
+
+### Verification Checklist (Before going live)
+
+| Item | Check | Evidence |
+|------|-------|----------|
+| Gmail account created | ✅ | Consumer confirms login works |
+| GCP project created | ✅ | Project ID provided, APIs enabled |
+| OAuth credentials obtained | ✅ | Refresh token saved in Secrets |
+| Telegram bot created | ✅ | Bot token in Secrets, webhook configured |
+| Sandbox instance live | ✅ | Dashboard shows `[consumer]-consumer` running |
+| End-to-end test passed | ✅ | Test message → response verified |
+| Consumer can access | ✅ | Consumer adds bot, sends message, gets reply |
+
+---
+
 ## 📬 Consumer Invitation Email Template
 
 > Use this for all future consumer invitations. Customise `[Name]` and send from Zorro.
@@ -900,6 +1324,271 @@ wrangler tail
 | `R2 bucket not found` | Bucket name typo in wrangler.toml | Run `wrangler r2 bucket list` to verify |
 | `Response timeout (>30s)` | Sandbox request too long | Use Durable Objects for long tasks |
 | `Cost spike` | Model routing misconfigured | Check AI Gateway logs; manually switch to cheaper model |
+| `SecretRef resolution fails` | secrets.json not mounted or path wrong | Verify R2 upload; check Sandbox mount path |
+| `OpenClaw can't find credentials` | SecretRef path typo (JSON pointer) | Check `/path/to/credential` in config; use tester tool |
+
+---
+
+## 🤖 Command Automation Log — For Future Skill Development
+
+**⚠️ CRITICAL: Document all commands used in initial setup here.** This enables future automation via Claude Code skill (kf-claude or similar).
+
+### Consumer Onboarding Command Log
+
+**For each consumer setup, Tommy/Alfred MUST capture:**
+1. **All shell commands executed** (copy-paste from terminal)
+2. **All interactive responses** (what was entered when prompted)
+3. **All file paths** (exact paths, not generic)
+4. **All secrets** (tokenized as [PLACEHOLDER])
+5. **Order of operations** (step sequence matters)
+
+**Example capture template:**
+
+```markdown
+## Consumer: Suee — Setup Commands Log
+
+**Date**: 2026-03-17
+**Engineer**: Tommy
+**Duration**: 45 minutes
+
+### Phase 1: GCP Setup
+
+**Command 1: Create GCP project**
+```
+gcloud projects create suee-openclaw-gcp --name="Suee OpenClaw"
+gcloud config set project suee-openclaw-gcp
+```
+
+**Input**: [GCP_PROJECT_ID]=suee-openclaw-gcp
+
+**Phase 2: OAuth Flow**
+
+**Command 2: Run OAuth flow**
+```
+python3 << 'EOF'
+import json, os
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+client_secret_file = os.path.expanduser("~/Downloads/client_secret_suee.json")
+scopes = [
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/gmail.modify'
+]
+
+flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, scopes=scopes)
+credentials = flow.run_local_server(port=18088)
+
+creds_cache = os.path.expanduser("~/.config/gcloud/suee_openclaw_creds.json")
+with open(creds_cache, 'w') as f:
+    f.write(credentials.to_json())
+
+print(f"✅ Credentials saved: {creds_cache}")
+EOF
+```
+
+**Output**: 
+```
+✅ Credentials saved: ~/.config/gcloud/suee_openclaw_creds.json
+Refresh token: [REFRESH_TOKEN_SUEE]
+```
+
+**Manual Input**: 
+- Browser opened: ✅ Yes
+- User authorized: ✅ Yes
+- Credentials cached: ✅ /Users/tommy/.config/gcloud/suee_openclaw_creds.json
+
+### Phase 3: Cloudflare + R2
+
+**Command 3: Create secrets.json**
+```bash
+cat > /tmp/suee_secrets.json << 'EOF'
+{
+  "providers": {
+    "gws": {
+      "gmail": { "refreshToken": "[REFRESH_TOKEN_SUEE]" },
+      "calendar": { "refreshToken": "[REFRESH_TOKEN_SUEE]" },
+      "drive": { "refreshToken": "[REFRESH_TOKEN_SUEE]" }
+    },
+    "anthropic": { "apiKey": "[ANTHROPIC_API_KEY]" }
+  }
+}
+EOF
+```
+
+**Command 4: Upload to R2**
+```bash
+wrangler r2 object put openclaw-users-data/suee/secrets.json /tmp/suee_secrets.json
+```
+
+**Output**: `Uploaded: 1.2 KB`
+
+**Command 5: Verify upload**
+```bash
+wrangler r2 object list openclaw-users-data --prefix=suee/
+```
+
+**Output**: `suee/secrets.json`
+
+### Phase 4: Telegram Bot
+
+**Command 6: Create Telegram bot (via BotFather)**
+- Manual action in Telegram
+- Output: `BOT_TOKEN=[TELEGRAM_BOT_TOKEN_SUEE]`
+
+**Command 7: Set webhook**
+```bash
+BOT_TOKEN="[TELEGRAM_BOT_TOKEN_SUEE]"
+WEBHOOK_URL="https://moltworker.ACCOUNT.workers.dev/telegram/suee/hook"
+
+curl -X POST https://api.telegram.org/bot${BOT_TOKEN}/setWebhook \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"url\": \"${WEBHOOK_URL}\",
+    \"secret_token\": \"suee_secret_$(date +%s)\"
+  }"
+```
+
+**Output**: `{"ok":true,"result":true}`
+
+### Phase 5: Moltworker Sandbox
+
+**Command 8: Create Sandbox instance**
+```bash
+wrangler durable-object:create JOB_QUEUE "suee-consumer"
+```
+
+**Output**: `Instance ID: [SANDBOX_INSTANCE_ID]`
+
+**Command 9: Deploy Moltworker**
+```bash
+wrangler deploy
+```
+
+**Output**: `✓ Deployed to moltworker.ACCOUNT.workers.dev`
+
+### Phase 6: End-to-End Test
+
+**Command 10: Test message via Telegram**
+- Manual action: Send "hello" to bot
+- Expected response: OpenClaw greeting from Sandbox
+- **Status**: ✅ Pass / ❌ Fail
+
+---
+
+### Key Findings for Skill Automation
+
+1. **Human interaction required**: BotFather (Telegram bot creation) — cannot automate
+2. **Authentication required**: OAuth flow needs browser → can be wrapped in script with error handling
+3. **Timing dependencies**: Some steps wait for API availability (R2 upload, Sandbox creation) — need retry logic
+4. **Token sensitivity**: All tokens must be carefully handled → use environment variables, not hardcode
+5. **Validation gates**: Verify each step before proceeding to next
+6. **Idempotency**: Can re-run commands safely (R2 overwrites, Terraform-like)
+
+### Commands Suitable for Automation (Claude Code Skill)
+
+These commands can be wrapped in a skill for future consumers:
+
+- ✅ GCP project creation (gcloud)
+- ✅ OAuth flow with browser integration (Python script)
+- ✅ secrets.json creation (jq or Python JSON)
+- ✅ R2 object upload (wrangler)
+- ✅ Telegram webhook setup (curl)
+- ✅ Sandbox provisioning (wrangler durable-object)
+- ✅ Moltworker deployment (wrangler)
+- ✅ End-to-end testing (curl + verification)
+
+### Commands Requiring Manual Input
+
+These need human intervention:
+
+- ⚠️ Telegram bot creation (@BotFather chat)
+- ⚠️ GCP project authorization (browser OAuth)
+- ⚠️ Consumer name/Telegram username confirmation
+
+---
+
+### Future Skill: `kf-claude:setup-consumer`
+
+**Proposed command:**
+```bash
+/kf-claude:setup-consumer --consumer-name suee --consumer-email suee-openclaw@gmail.com --consumer-tg-username @suee_tz
+```
+
+**Skill would:**
+1. Read consumer info from passed arguments
+2. Prompt for manual OAuth (browser) + BotFather (Telegram)
+3. Execute all automated steps (GCP, R2, secrets, webhooks, Sandbox)
+4. Log all commands executed (for reproducibility)
+5. Output: Consumer setup complete + bot link ready
+6. Save command log to `memory/setup-consumer-logs/[consumer]/commands.md`
+
+**Skills repo location:** `~/clawd/kf-claude/commands/setup-consumer.md` (template for future automation)
+```
+
+---
+
+## 🔐 Secrets Integration Strategy: OpenClaw SecretRefs + Cloudflare
+
+### Architecture Decision: secrets.json + R2 vs Cloudflare Secrets
+
+**OpenClaw's native approach uses `secrets.json` + SecretRefs** (recommended for this POC):
+
+```
+Cloudflare Moltworker Sandbox (per consumer)
+  ↓
+  └─→ R2 bucket: /[consumer]/secrets.json (encrypted at rest)
+      ↓
+      └─→ OpenClaw Gateway reads SecretRefs
+          ├─→ GWS tokens (Gmail, Calendar, Drive)
+          ├─→ Anthropic API key (or AI Gateway token)
+          └─→ Custom provider keys
+```
+
+**Why this works:**
+- ✅ OpenClaw's native security model (designed for secrets.json)
+- ✅ R2 provides encryption + persistence
+- ✅ One file per consumer = easy audit + rotation
+- ✅ SecretRefs use file source → no environment variable pollution
+- ✅ Matches Cloudflare's secrets management philosophy
+
+**Alternative (less preferred):**
+- Cloudflare Secrets Store → Environment variables → OpenClaw env SecretRefs
+- Issue: Scatters credentials across multiple systems
+
+### Implementation Flow
+
+**Setup Phase:**
+1. Consumer provides: Gmail, GCP Project ID, Telegram username
+2. Tech team: OAuth flow → refresh tokens
+3. Tech team: Create `secrets.json` with consumer credentials
+4. Tech team: Upload to R2 (`/[consumer]/secrets.json`)
+5. Moltworker Sandbox startup: Download from R2 → mount to `/workspace/secrets/`
+6. OpenClaw Gateway startup: Read from `/workspace/secrets/secrets.json` via SecretRefs
+
+**Runtime Phase:**
+- OpenClaw resolves SecretRefs at startup (eager resolution)
+- All credentials in memory (no re-reading from disk)
+- Rotation: Update `secrets.json` in R2 → restart Sandbox → new tokens loaded
+
+### OpenClaw SecretRef Documentation
+
+- **Docs**: https://docs.openclaw.ai/gateway/secrets
+- **Key concept**: SecretRefs are opt-in, non-plaintext credential references
+- **Sources**: `env`, `file`, `exec` (we use `file` for this POC)
+- **Validation**: Eager at startup (fail-fast model)
+- **Atomicity**: Secrets snapshot swaps atomically on reload
+
+### Integration Checklist
+
+- [ ] Understand OpenClaw SecretRef model (read: https://docs.openclaw.ai/gateway/secrets)
+- [ ] Test `secrets audit` command locally to find plaintext credentials
+- [ ] Create template `secrets.json` file structure
+- [ ] Practice OAuth flow → tokens → secrets.json → R2 upload workflow
+- [ ] Test Moltworker Sandbox mounting R2 → reading secrets.json
+- [ ] Verify OpenClaw can resolve SecretRefs at startup
+- [ ] Document consumer secrets.json schema (for automation)
 
 ---
 
