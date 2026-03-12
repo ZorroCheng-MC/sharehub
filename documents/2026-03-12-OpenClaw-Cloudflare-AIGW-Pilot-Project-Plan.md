@@ -43,6 +43,13 @@ priority: high
 - Telegram routing via Moltworker API layer
 - GWS credentials stored securely in R2 + Secrets (encrypted at rest)
 
+**Standard Packages per Instance:**
+- **Vercel Agent Browser** — Web automation, form filling, screenshot capture
+  - GitHub: `vercel/agent-browser`
+  - Integration: MCP-compatible tool for OpenClaw
+  - Use cases: Web scraping, automated testing, form submission
+  - Configuration: Via secrets.json (if auth required)
+
 **Monitoring & Analytics:**
 - Cloudflare AI Gateway dashboard (request logs, token usage, costs)
 - Moltworker custom metrics (Sandbox CPU/memory, container uptime)
@@ -710,24 +717,59 @@ curl https://api.telegram.org/bot${BOT_TOKEN}/getWebhookInfo | jq .
 # Moltworker dashboard should show "suee-consumer" instance (running)
 ```
 
+**Step 7B: Configure Vercel Agent Browser in OpenClaw** (Alfred)
+
+```bash
+# Inside Sandbox Container startup, add to OpenClaw config:
+
+cat >> /workspace/openclaw-config-overrides.json << 'EOF'
+{
+  "tools": {
+    "browser": {
+      "enabled": true,
+      "provider": "vercel-agent-browser",
+      "config": {
+        "headless": true,
+        "timeout": 30000,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      }
+    }
+  }
+}
+EOF
+
+# Merge with existing OpenClaw config:
+openclaw config apply --overlay /workspace/openclaw-config-overrides.json
+```
+
 **Step 8: End-to-End Test** (Alfred)
 
 ```bash
-# Send test message to Telegram bot link:
+# Send test messages to Telegram bot link:
 # https://t.me/suee_openclaw_bot
 
-# Test message: "hello"
+# Test 1 - Basic message:
+# "hello"
+# Expected: Bot responds
 
-# Expected:
-# Bot receives message
-# Routes to Moltworker
-# Moltworker → Sandbox (suee-consumer)
-# Sandbox → OpenClaw → AI Gateway → Claude
-# Response: "Hi! I'm OpenClaw..."
+# Test 2 - Browser command:
+# "take a screenshot of https://example.com and describe it"
+# Expected: Bot uses Vercel Agent Browser → captures screenshot → describes
+
+# Test 3 - GWS tool:
+# "what emails do I have from alice@example.com?"
+# Expected: Bot queries Gmail via GWS tools → returns results
 
 # Check logs:
 wrangler tail
-# Should see: [suee-consumer] message received, processed, response sent
+# Should see: 
+# [suee-consumer] message received
+# [suee-consumer] browser automation: screenshot captured
+# [suee-consumer] gws: gmail query executed
+# [suee-consumer] response sent
 ```
 
 **Step 9: Send Bot Link to Consumer** (Zorro)
@@ -909,6 +951,9 @@ Master Concept
 
 **Moltworker Deployment:**
 - [ ] Fork/clone `cloudflare/moltworker` repo
+- [ ] Install standard packages in `package.json`:
+  - [ ] `@vercel/agent-browser` (web automation)
+  - [ ] Any additional MCP tools as needed
 - [ ] `wrangler.toml` customized:
   - [ ] Account ID
   - [ ] R2 bucket binding
@@ -916,7 +961,7 @@ Master Concept
   - [ ] Secrets bindings
   - [ ] Route (e.g., `openclaw.zorro.workers.dev`)
 - [ ] Environment variables set (`.env` local + Cloudflare Secrets)
-- [ ] Local testing via `wrangler dev`
+- [ ] Local testing via `wrangler dev` (test browser automation)
 - [ ] Deployed via `wrangler deploy`
 - [ ] GitHub Actions workflow set up (auto-deploy on push to main)
 
@@ -1045,6 +1090,17 @@ EOF
 
 # Verify .env is in .gitignore
 echo ".env" >> .gitignore
+```
+
+**Step 2.5: Add Standard Packages** (Tommy)
+
+```bash
+# Add Vercel Agent Browser to package.json
+npm install @vercel/agent-browser
+
+# Verify installation
+npm ls @vercel/agent-browser
+# Expected: @vercel/agent-browser@^1.x.x
 ```
 
 **Step 3: Configure wrangler.toml**
@@ -1544,21 +1600,28 @@ These need human intervention:
    - Configure Sandbox with secrets.json mount
    - Deploy Moltworker with consumer-specific routing
 
-5. **Telegram Bot Setup (fully automated)**
+5. **Standard Packages Installation (fully automated)**
+   - Install Vercel Agent Browser (`npm install @vercel/agent-browser`)
+   - Register as MCP tool in OpenClaw config
+   - Verify browser automation capabilities
+
+6. **Telegram Bot Setup (fully automated)**
    - Configure webhook: `https://moltworker.ACCOUNT.workers.dev/telegram/[consumer]/hook`
    - Test webhook connectivity
    - Verify bot responds to test message
 
-6. **OpenClaw Instance Startup (fully automated)**
+7. **OpenClaw Instance Startup (fully automated)**
    - Start OpenClaw Gateway inside Sandbox
    - Load secrets.json via SecretRefs
    - Initialize GWS tools (Gmail, Calendar, Drive)
-   - Test end-to-end: Telegram message → Gateway → AI → Response
+   - Initialize Vercel Agent Browser
+   - Test end-to-end: Telegram message → Gateway → AI → Response (including browser commands)
 
-7. **Output & Handoff**
+8. **Output & Handoff**
    - Generate consumer bot invite link: `https://t.me/[consumer]_openclaw_bot`
    - Save all commands executed to: `memory/openclaw-instances/[consumer]/provisioning-log.md`
-   - Output: Ready-to-use OpenClaw instance with credentials already loaded
+   - Verify installed tools: GWS (Gmail, Calendar, Drive) + Vercel Agent Browser
+   - Output: Ready-to-use OpenClaw instance with credentials + standard packages
    - Slack/Telegram notification to Zorro: "Instance ready for [consumer]"
 
 **What's automated vs manual:**
@@ -1623,6 +1686,91 @@ These need human intervention:
 - 📊 Generates provisioning reports + troubleshooting logs
 - 🤖 Fully repeatable (same consumers = identical setup)
 ```
+
+---
+
+## 🌐 Standard Packages: Vercel Agent Browser
+
+### Overview
+
+**Vercel Agent Browser** is a web automation tool packaged with every OpenClaw instance on Moltworker.
+
+- **GitHub**: https://github.com/vercel/agent-browser
+- **Type**: MCP (Model Context Protocol) tool
+- **Integration**: Native OpenClaw tool
+- **Runtime**: Chromium headless (provided by Vercel)
+
+### Capabilities
+
+| Capability | Use Case | Example |
+|------------|----------|---------|
+| **Screenshot** | Capture web page state | "Take a screenshot of example.com" |
+| **Navigate** | Go to URLs | "Visit github.com and list repositories" |
+| **Form fill** | Auto-complete web forms | "Sign up for service X with email Y" |
+| **Click** | Interact with buttons/links | "Click the login button" |
+| **Extract** | Parse page content | "Get all article titles from news site" |
+| **JavaScript exec** | Run custom JS | "Execute script to fetch API data" |
+| **Wait** | Handle dynamic content | "Wait for table to load, then extract data" |
+
+### Configuration
+
+All instances have Vercel Agent Browser enabled by default:
+
+```json
+{
+  "tools": {
+    "browser": {
+      "enabled": true,
+      "provider": "vercel-agent-browser",
+      "config": {
+        "headless": true,
+        "timeout": 30000,
+        "viewport": { "width": 1920, "height": 1080 }
+      }
+    }
+  }
+}
+```
+
+### Example Commands (via Telegram)
+
+```
+User: "Find the latest news on TechCrunch"
+→ Bot: Uses Vercel Agent Browser to navigate TechCrunch → extract titles → summarize
+
+User: "What's the weather in Hong Kong?"
+→ Bot: Navigate weather.com → screenshot → extract forecast → reply
+
+User: "Automate form submission on example.com"
+→ Bot: Fill form fields → click submit → capture confirmation screenshot
+```
+
+### Integration with GWS Tools
+
+Both work together:
+- **GWS tools** (Gmail, Calendar, Drive) — Direct API access
+- **Vercel Agent Browser** — Web automation for sites without APIs
+
+Example: "Check my calendar and book a meeting on Calendly"
+1. Query Calendar via GWS API → get free slots
+2. Use Browser to navigate Calendly → fill booking form
+3. Confirm with Calendar API
+
+### Performance & Limits
+
+- **Timeout**: 30 seconds per operation (configurable)
+- **Memory**: ~100MB per browser instance
+- **Concurrency**: 1 browser per Sandbox Container (Moltworker auto-scales)
+- **Cost**: Included in Cloudflare Workers billing (no extra charge)
+
+### Future Enhancements
+
+Potential additions to Vercel Agent Browser integration:
+- [ ] Optical Character Recognition (OCR) for image text extraction
+- [ ] PDF generation from web pages
+- [ ] Video recording of user actions
+- [ ] Proxy rotation for high-volume scraping
+- [ ] JavaScript breakpoint debugging
 
 ---
 
