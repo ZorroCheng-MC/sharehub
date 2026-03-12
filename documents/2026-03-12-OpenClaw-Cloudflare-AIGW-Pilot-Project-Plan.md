@@ -9,7 +9,7 @@ priority: high
 
 # OpenClaw × Cloudflare AI Gateway — Pilot Project Plan
 
-![Hero Image](/sharehub/images/openclaw-cloudflare-lobster-farm.png)
+![Hero Image](/images/openclaw-cloudflare-lobster-farm.png)
 
 ## 🎯 Project Overview
 

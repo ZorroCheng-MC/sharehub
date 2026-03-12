@@ -127,7 +127,7 @@ jobs:
             # Fix image paths for Jekyll (convert relative to absolute) - only for MD files
             if [ "$extension" = "md" ] && grep -q '!\[.*\](\.*/images/' "$file"; then
               echo "🖼️  Fixing image paths in: $file"
-              sed -i.bak 's|!\[\([^]]*\)\](\.*/images/\([^)]*\))|![\1](/sharehub/images/\2)|g' "$file"
+              sed -i.bak 's|!\[\([^]]*\)\](\.*/images/\([^)]*\))|![\1](/images/\2)|g' "$file"
               rm -f "$file.bak"
               file_modified=true
             fi
