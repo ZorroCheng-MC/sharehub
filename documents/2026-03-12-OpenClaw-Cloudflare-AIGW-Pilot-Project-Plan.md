@@ -9,6 +9,8 @@ priority: high
 
 # OpenClaw × Cloudflare AI Gateway — Pilot Project Plan
 
+![Hero Image](/images/openclaw-cloudflare-lobster-farm.png)
+
 ## 🎯 Project Overview
 
 **Objective**: Run a controlled POC where invited users access OpenClaw via Telegram, with all LLM traffic routed through Cloudflare AI Gateway. The goal is to observe how Cloudflare AI Gateway and AI Firewall behave under real usage, and identify specific value propositions Master Concept can bring to enterprise customers — enabling us to sell Cloudflare professional services with strong, evidence-based selling points.
