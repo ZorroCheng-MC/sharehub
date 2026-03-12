@@ -24,6 +24,7 @@ priority: high
 ## 👥 Stakeholders, Roles & Responsibilities
 
 ### 🟠 MC-Cloudflare Team
+
 | Name | Role | Responsibilities |
 |------|------|-----------------|
 | Kelvin | Sponsor / Gateway Admin | Set up Cloudflare AI Gateway policies; configure dynamic LLM routing; manage billing and token quotas; define AI Firewall rules |
@@ -34,6 +35,7 @@ priority: high
 ---
 
 ### 🔵 OpenClaw Team (Master Concept)
+
 | Name | Role | Responsibilities |
 |------|------|-----------------|
 | Zorro | Project Lead | Overall project coordination; consumer invitation and onboarding; stakeholder communication; final findings report; go/no-go decisions |
@@ -45,6 +47,7 @@ priority: high
 ---
 
 ### 🟢 Consumer Team
+
 | Name | Status | Access |
 |------|--------|--------|
 | Suee | Active (invited) | Telegram → OpenClaw container |
