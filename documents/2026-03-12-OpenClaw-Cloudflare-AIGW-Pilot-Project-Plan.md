@@ -1509,22 +1509,119 @@ These need human intervention:
 
 ---
 
-### Future Skill: `kf-claude:setup-consumer`
+### Future Skill: `kf-claude:provision-openclaw-instance`
+
+**What this skill does:** Takes onboarding information (consumer name, Gmail, GCP project, Telegram username) and **fully provisions a new OpenClaw instance on Moltworker** with all credentials, secrets, and routing configured.
 
 **Proposed command:**
 ```bash
-/kf-claude:setup-consumer --consumer-name suee --consumer-email suee-openclaw@gmail.com --consumer-tg-username @suee_tz
+/kf-claude:provision-openclaw-instance \
+  --consumer-name suee \
+  --consumer-email suee-openclaw@gmail.com \
+  --consumer-gcp-project suee-openclaw-gcp \
+  --consumer-tg-username @suee_tz \
+  --consumer-tg-id 123456789
 ```
 
-**Skill would:**
-1. Read consumer info from passed arguments
-2. Prompt for manual OAuth (browser) + BotFather (Telegram)
-3. Execute all automated steps (GCP, R2, secrets, webhooks, Sandbox)
-4. Log all commands executed (for reproducibility)
-5. Output: Consumer setup complete + bot link ready
-6. Save command log to `memory/setup-consumer-logs/[consumer]/commands.md`
+**Skill workflow:**
 
-**Skills repo location:** `~/clawd/kf-claude/commands/setup-consumer.md` (template for future automation)
+1. **Input validation**
+   - Verify consumer info provided (name, email, GCP project, TG username/ID)
+   - Check prerequisites (GCP project exists, Gmail account created)
+
+2. **OAuth & Credentials (semi-automated)**
+   - Launch OAuth browser flow for GWS (Gmail, Calendar, Drive)
+   - Capture refresh tokens → store in memory
+   - Prompt for Telegram bot creation (via BotFather) → receive bot token
+
+3. **Secrets Management (fully automated)**
+   - Generate `secrets.json` from captured tokens
+   - Upload to R2: `/openclaw-users-data/[consumer]/secrets.json`
+   - Verify upload successful
+
+4. **Cloudflare Resources (fully automated)**
+   - Create Durable Objects instance: `[consumer]-openclaw-instance`
+   - Configure Sandbox with secrets.json mount
+   - Deploy Moltworker with consumer-specific routing
+
+5. **Telegram Bot Setup (fully automated)**
+   - Configure webhook: `https://moltworker.ACCOUNT.workers.dev/telegram/[consumer]/hook`
+   - Test webhook connectivity
+   - Verify bot responds to test message
+
+6. **OpenClaw Instance Startup (fully automated)**
+   - Start OpenClaw Gateway inside Sandbox
+   - Load secrets.json via SecretRefs
+   - Initialize GWS tools (Gmail, Calendar, Drive)
+   - Test end-to-end: Telegram message → Gateway → AI → Response
+
+7. **Output & Handoff**
+   - Generate consumer bot invite link: `https://t.me/[consumer]_openclaw_bot`
+   - Save all commands executed to: `memory/openclaw-instances/[consumer]/provisioning-log.md`
+   - Output: Ready-to-use OpenClaw instance with credentials already loaded
+   - Slack/Telegram notification to Zorro: "Instance ready for [consumer]"
+
+**What's automated vs manual:**
+
+| Phase | Manual Input | Automated |
+|-------|-------------|-----------|
+| Consumer info | Consumer provides (email, GCP) | ✓ |
+| OAuth flow | Browser authorization required | Python script handles rest |
+| BotFather | Create bot in Telegram | ✓ |
+| Bot token | User provides | ✓ |
+| GWS credentials | Browser OAuth | Script captures tokens |
+| secrets.json | Generated from tokens | ✓ Upload to R2 |
+| Cloudflare setup | Account/project exists | ✓ Create instances |
+| Moltworker deploy | Already deployed | ✓ Configure per consumer |
+| OpenClaw startup | Image already built | ✓ Start with secrets mounted |
+| Testing | Manual test message (optional) | ✓ Automated E2E test |
+
+**Skill location:** `~/clawd/kf-claude/commands/provision-openclaw-instance.md`
+
+**Input file format (for batch provisioning):**
+```json
+{
+  "consumers": [
+    {
+      "name": "suee",
+      "email": "suee-openclaw@gmail.com",
+      "gcp_project": "suee-openclaw-gcp",
+      "tg_username": "@suee_tz",
+      "tg_id": 123456789
+    },
+    {
+      "name": "casey",
+      "email": "casey-openclaw@gmail.com",
+      "gcp_project": "casey-openclaw-gcp",
+      "tg_username": "@casey_bot",
+      "tg_id": 987654321
+    }
+  ]
+}
+```
+
+**Batch command:**
+```bash
+/kf-claude:provision-openclaw-instance --from-file consumers.json
+```
+
+**Output per consumer:**
+```
+✅ Instance created: suee-openclaw-instance
+✅ Secrets stored: s3://R2/openclaw-users-data/suey/secrets.json
+✅ Bot link: https://t.me/suee_openclaw_bot
+✅ OpenClaw online at: https://moltworker.ACCOUNT.workers.dev/consumer/suee
+📋 Setup log: memory/openclaw-instances/suee/provisioning-log.md
+```
+
+**Benefits of this skill:**
+- 🚀 One command = full instance provisioning (45 min → 5 min)
+- 📝 Captures all commands for reproducibility/auditing
+- 🔄 Enables batch provisioning (multiple consumers at once)
+- 🛡️ Enforces security best practices (secrets in R2, not plaintext)
+- 🔌 Integrates with onboarding workflow seamlessly
+- 📊 Generates provisioning reports + troubleshooting logs
+- 🤖 Fully repeatable (same consumers = identical setup)
 ```
 
 ---
