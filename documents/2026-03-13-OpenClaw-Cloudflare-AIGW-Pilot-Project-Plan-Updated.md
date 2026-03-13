@@ -1,3 +1,7 @@
+---
+title: "OpenClaw × Cloudflare AI Gateway — Pilot Project Plan (Updated 2026-03-13)"
+date: 2026-03-13
+---
 # OpenClaw × Cloudflare AI Gateway — Pilot Project Plan (Updated 2026-03-13)
 
 ## 🎯 Project Overview
