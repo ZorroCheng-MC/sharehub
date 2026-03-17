@@ -3,7 +3,7 @@ title: "How to Deploy a Web App on Google Sheets using Apps Script"
 tags: [video, google-sheets, apps-script, web-development, automation, no-code, inbox, tutorial, technical, actionable]
 url: https://www.youtube.com/watch?v=FacbiEAyXZI
 cover: https://i.ytimg.com/vi/FacbiEAyXZI/maxresdefault.jpg
-date: 2026-03-15
+date: 2026-03-17
 type: video
 status: inbox
 priority: medium
