@@ -1,3 +1,7 @@
+---
+title: "Agenda of Gemini Enterprise and NotebookLM Intro"
+date: 2026-03-18
+---
 # Agenda of Gemini Enterprise and NotebookLM Intro
 1. What is LLM, RAG, Agent?
 2. What are GE and NLM? (What is the difference)
