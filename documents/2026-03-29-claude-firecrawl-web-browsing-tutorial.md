@@ -1,3 +1,7 @@
+---
+title: "Claude + Firecrawl: Web Browsing Tutorial"
+date: 2026-03-29
+---
 # Claude + Firecrawl: Web Browsing Tutorial
 
 **Video URL:** https://youtu.be/6lxC487hYdI  
