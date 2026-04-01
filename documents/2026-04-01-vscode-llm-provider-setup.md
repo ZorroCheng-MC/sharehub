@@ -11,16 +11,63 @@ priority: high
 
 ## 💡 Core Idea
 
-Configure AI coding assistants in VS Code (Cline, Kiocode) using an OpenAI-compatible endpoint powered by Cloudflare Workers AI. This lets you use powerful models without direct API keys from OpenAI/Anthropic.
+Configure AI coding assistants in VS Code (Cline, Kiocode) using an OpenAI-compatible endpoint powered by Cloudflare AI Gateway. This lets you use powerful models without direct API keys from OpenAI/Anthropic.
 
-**Cline Configuration:**
+### What the Admin Provides
+
+The Cloudflare admin delivers a **Gateway Endpoint** (full URL ending in `/chat/completions`) and an **API Token**:
+
+```
+Gateway Endpoint: https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/compat/chat/completions
+API Token: cfut_...
+```
+
+### How to Derive the Base URL for VS Code Extensions
+
+Cline and Kiocode use the **workers-ai/v1** path directly as the Base URL — the extensions append `/chat/completions` automatically.
+
+**Base URL for both Cline and Kiocode:**
+`https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/workers-ai/v1`
+
+### Screenshots
+
+**Kilocode:**
+![Kilocode Provider Setup](/images/kilocode-provider-setup.png)
+
+**Cline:**
+![Cline Provider Setup](/images/cline-provider-setup.png)
+
+---
+
+
+### Cline & Kiocode Configuration
+
 - **Provider**: OpenAI Compatible
 - **Base URL**: `https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/workers-ai/v1`
 - **API Key**: `cfut_5RVdcs9Stcbnr185xsRrtXVbxFAhOJoykzKtQFHc8a92d307`
 - **Model**: `@cf/nvidia/nemotron-3-120b-a12b`
 
-**Kiocode Configuration:**
-- Use the same OpenAI Compatible provider settings above.
+---
+
+## 📋 Instructions for Admin: How to Deliver Config to Users
+
+When sending AI gateway credentials, please provide all of the following in one message:
+
+```
+Cloudflare AI Gateway – VS Code Setup
+
+Base URL:  https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/compat
+API Token: cfut_...
+Model:     @cf/{provider}/{model-name}
+
+Instructions:
+1. In Cline (or Kiocode): Settings → AI Provider → OpenAI Compatible
+2. Paste Base URL, API Token, and Model as above
+3. Save and test with a simple prompt
+```
+
+**Why Base URL, not Gateway Endpoint?**
+VS Code extensions construct the full request path internally — they append `/chat/completions` automatically. Giving users the full endpoint URL causes a double-path error (`/chat/completions/chat/completions`).
 
 ## 🎯 Why This Matters
 
