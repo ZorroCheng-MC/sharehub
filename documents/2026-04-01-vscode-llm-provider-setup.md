@@ -5,6 +5,7 @@ date: 2026-04-01
 type: idea
 status: inbox
 priority: high
+access: private
 ---
 
 # Setup LLM Provider in VS Code Extensions (Cline, Kiocode)
