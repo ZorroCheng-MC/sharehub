@@ -5,7 +5,6 @@ date: 2026-04-01
 type: idea
 status: inbox
 priority: high
-access: private
 ---
 
 # Setup LLM Provider in VS Code Extensions (Cline, Kiocode)
@@ -45,7 +44,7 @@ Cline and Kiocode use the **workers-ai/v1** path directly as the Base URL — th
 
 - **Provider**: OpenAI Compatible
 - **Base URL**: `https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/workers-ai/v1`
-- **API Key**: `cfut_5RVdcs9Stcbnr185xsRrtXVbxFAhOJoykzKtQFHc8a92d307`
+- **API Key**: `[Ask your Cloudflare admin]`
 - **Model**: `@cf/nvidia/nemotron-3-120b-a12b`
 
 ---
