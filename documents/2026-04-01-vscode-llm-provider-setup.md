@@ -1,4 +1,5 @@
 ---
+date: 2026-04-01
 title: Setup LLM Provider in VS Code Extensions (Cline, Kiocode)
 tags:
   - idea
