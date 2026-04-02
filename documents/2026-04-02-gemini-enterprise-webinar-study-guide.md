@@ -1,5 +1,4 @@
 ---
-date: 2026-04-02
 title: "Study Guide: Gemini Enterprise Webinar"
 tags:
   - study-guide
@@ -19,7 +18,7 @@ estimated-time: ~20 min (watch) + Q&A reading
 priority: medium
 read: true
 ---
-
+/
 # Study Guide: Gemini Enterprise Webinar
 
 [![Watch on YouTube](https://i.ytimg.com/vi/x7Y0xc2SAzU/maxresdefault.jpg)](https://www.youtube.com/watch?v=x7Y0xc2SAzU)
@@ -127,12 +126,15 @@ They can be used together but are sold separately.
 
 ---
 
-### What's the difference between Gemini Enterprise and Agentspace?
+### What's the difference between Gemini Enterprise and Anti-Gravity?
+
+> *Original audience question: "What's the difference between Gemini Enterprise and Anti-Gravity?"*
+> **Anti-Gravity** is now officially called **[Google Antigravity](https://antigravity.google/)** — an AI-first IDE (VS Code fork) for developers, announced November 2025 with Gemini 3. Gemini Enterprise was previously called **Agentspace**.
 
 | Product | Target Users | Purpose |
 |---|---|---|
-| **Gemini Enterprise** | Every employee | Broad productivity platform |
-| **Agentspace** *(prev. "Anti-Gravity")* | Software developers only | Specialized agent-driven tool |
+| **Gemini Enterprise** *(formerly Agentspace)* | Every employee | Broad agentic productivity platform |
+| **Google Antigravity** *(called "Anti-Gravity" in the video)* | Software developers | AI-first IDE for agentic coding workflows |
 
 Both can be used together as they serve different audiences.
 
