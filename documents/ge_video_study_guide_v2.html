@@ -1,0 +1,195 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.g { padding: 1.5rem 0; max-width: 740px; font-family: var(--font-sans); }
+.meta { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+.banner { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 2rem; font-size: 13px; color: var(--color-text-warning); }
+.sec-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 10px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+.row { display: flex; gap: 12px; padding: 14px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.row:last-child { border-bottom: none; }
+.row-body { flex: 1; min-width: 0; }
+.row-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+.row-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+.row-answer { font-size: 13px; color: var(--color-text-primary); line-height: 1.6; margin-top: 8px; padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+.row-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+.b-demo { background: #E1F5EE; color: #0F6E56; }
+.b-qa { background: #EEEDFE; color: #3C3489; }
+.b-skip { background: #F1EFE8; color: #5F5E5A; }
+.yt { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--color-text-info); text-decoration: none; border: 0.5px solid var(--color-border-info); border-radius: 20px; padding: 3px 10px; }
+.yt:hover { background: var(--color-background-info); }
+.yt svg { width: 11px; height: 11px; fill: currentColor; flex-shrink: 0; }
+.play { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--color-text-success); text-decoration: none; border: 0.5px solid var(--color-border-success); border-radius: 20px; padding: 3px 10px; margin-top: 6px; }
+.play:hover { background: var(--color-background-success); }
+.play svg { width: 11px; height: 11px; fill: currentColor; flex-shrink: 0; }
+h1 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+</style>
+
+<div class="g">
+  <h1>Gemini Enterprise — team study guide</h1>
+  <p class="meta">For experienced GE teams. Demo: watch in full (~20 min). Q&amp;A: read here, skip in video.</p>
+
+  <div class="banner">Skip 0:00–5:54 — intro, agenda, and AI landscape overview your team already knows.</div>
+
+  <div class="sec-label">Part 1 — Demo (watch in full)</div>
+  <div class="card">
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Search &amp; summarization across connectors</div>
+        <div class="row-desc">Study Alex's narration technique — he frames each action with a business persona before showing the feature. The citation UI and multi-source blending are worth replicating in your own demos.</div>
+        <a class="play" href="https://www.youtube.com/watch?v=x7Y0xc2SAzU&t=367s" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Jump to 6:07</a>
+      </div>
+      <div class="row-right"><span class="badge b-demo">Demo</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Content creation grounded in company data</div>
+        <div class="row-desc">Marketing one-pager generated live from enterprise sources with citations. Note how the presenter links the business outcome directly to the feature — reusable structure.</div>
+        <a class="play" href="https://www.youtube.com/watch?v=x7Y0xc2SAzU&t=525s" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Jump to 8:45</a>
+      </div>
+      <div class="row-right"><span class="badge b-demo">Demo</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Actioning — scheduling directly from chat</div>
+        <div class="row-desc">Completes the Search → Create → Action loop in one continuous workflow. This three-step sequence is the core narrative arc worth borrowing for your training flow.</div>
+        <a class="play" href="https://www.youtube.com/watch?v=x7Y0xc2SAzU&t=563s" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Jump to 9:23</a>
+      </div>
+      <div class="row-right"><span class="badge b-demo">Demo</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">No-code agent builder — Safety Expert multi-agent</div>
+        <div class="row-desc">Best ready-made template for explaining agent orchestration to non-technical audiences. Shows a main agent with two subagents using Gmail and Calendar connectors.</div>
+        <a class="play" href="https://www.youtube.com/watch?v=x7Y0xc2SAzU&t=590s" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Jump to 9:50</a>
+      </div>
+      <div class="row-right"><span class="badge b-demo">Demo</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">ADK custom agent — BigQuery + image generation</div>
+        <div class="row-desc">Natural language to SQL via ADK agent, followed by AI image generation. Watch if your team handles developer-facing or technical training.</div>
+        <a class="play" href="https://www.youtube.com/watch?v=x7Y0xc2SAzU&t=774s" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Jump to 12:54</a>
+      </div>
+      <div class="row-right"><span class="badge b-demo">Demo</span></div>
+    </div>
+
+  </div>
+
+  <div class="sec-label">Part 2 — Q&amp;A answers (read here, skip video 17:58 onward)</div>
+  <div class="card">
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">What are the license tiers?</div>
+        <div class="row-answer">Four tiers: <strong>Business</strong> — up to 300 users, 25 GB/user, core AI features (connectors, NotebookLM, no-code agents). <strong>Standard</strong> — unlimited users, 30 GB/user, adds Gemini Code Assist and priority model access. <strong>Plus</strong> — unlimited users, 75 GB/user, same developer tools as Standard. <strong>Frontline</strong> — streamlined tier for field workers, 2 GB/user only.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Do we always get the newest Gemini models?</div>
+        <div class="row-answer">Yes. Gemini Enterprise is a high-priority tier and gets near-immediate access to new models. Example: Gemini 2.5 Flash was available to GE users the day after release.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Which connectors are available? What if ours isn't listed?</div>
+        <div class="row-answer">Two categories: first-party (Google — Drive, BigQuery, etc.) and third-party (OneDrive, SharePoint, ServiceNow, Jira, Confluence including on-prem). The list is under active development. If your system isn't available, you can build a custom connector via the API. Check the public documentation for the current list.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Can agents be controlled with human-in-the-loop?</div>
+        <div class="row-answer">Yes. You can define escalation paths and confidence thresholds so agents pause for manual approval on sensitive or low-confidence tasks. For automated monitoring, implement LLM-as-judge scoring on agent outputs, combined with periodic manual sampling by domain experts.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">How does access control work — who sees what?</div>
+        <div class="row-answer">Two parallel streams run on every query: data retrieval and access control sync. Answers are only grounded in data the logged-in user is permitted to see — permissions are synced from connected third-party systems in real time. Audit logs are available to track who accessed what and when.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">What's included in the license price vs. billed separately?</div>
+        <div class="row-answer">Included: all usage within the GE interface — chat, Agent Designer (no-code), pre-built Google agents, image/video generation (Imagen/Veo to usage limits), and connector setup. Separately billed: compute for agents deployed on Agent Engine or Cloud Run outside GE, and any processing in your own custom systems.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">What's the difference between Gemini Workspace and Gemini Enterprise?</div>
+        <div class="row-answer">Three distinct products: <strong>Gemini Pro (Google One)</strong> — personal plan for individuals. <strong>Google Workspace</strong> — enterprise suite with Gemini embedded in Docs, Slides, Meet, etc. <strong>Gemini Enterprise</strong> — separate agentic platform, not included in Workspace, licensed independently. They can be used together but are sold separately.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">What's the difference between Gemini Enterprise and Agentspace?</div>
+        <div class="row-answer">Gemini Enterprise is the broad productivity platform for every employee. Agentspace (previously referenced as "Anti-Gravity" in the video) is a specialized agent-driven tool for software developers only. Both can be used together as they serve different audiences.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Is there a minimum number of licenses?</div>
+        <div class="row-answer">No minimum. Standard and Plus tiers start at one license. That said, testing with a meaningful user base is strongly recommended to surface real use cases and demonstrate ROI before a wider rollout.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">How are agents and NotebookLM connected?</div>
+        <div class="row-answer">NotebookLM is included in GE and supports shared org-wide access in the enterprise version. Agents can use a single NotebookLM as a grounded knowledge tool. Connecting multiple NotebookLMs to one agent requires ADK to orchestrate the data flows — this is not available out of the box via Agent Designer.</div>
+      </div>
+      <div class="row-right"><span class="badge b-qa">Q&amp;A</span></div>
+    </div>
+
+  </div>
+
+  <div class="sec-label">Skip entirely</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Opening intro, agenda &amp; AI landscape overview</div>
+        <div class="row-desc">Nothing your team doesn't already know.</div>
+      </div>
+      <div class="row-right"><span class="badge b-skip">0:00–5:54</span></div>
+    </div>
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Getting started CTA, sign-up prompts &amp; closing remarks</div>
+        <div class="row-desc">Commercial wrap-up with no training value.</div>
+      </div>
+      <div class="row-right"><span class="badge b-skip">15:03–17:57</span></div>
+    </div>
+    <div class="row">
+      <div class="row-body">
+        <div class="row-title">Entire Q&amp;A section — answers are above</div>
+        <div class="row-desc">GDPR detail, n8n integration, RAG explainer, free trial, Google Ads connector, and model access questions are all summarised above. No need to watch.</div>
+      </div>
+      <div class="row-right"><span class="badge b-skip">17:58–end</span></div>
+    </div>
+  </div>
+
+</div>
