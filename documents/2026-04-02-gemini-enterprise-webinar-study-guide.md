@@ -70,11 +70,13 @@ Natural language to SQL via ADK agent, followed by AI image generation. Watch if
 ## 📝 Part 2 — Q&A Answers (read here, skip video 17:58 onward)
 
 ### What are the license tiers?
-Four tiers:
-- **Business** — up to 300 users, 25 GB/user, core AI features (connectors, NotebookLM, no-code agents)
-- **Standard** — unlimited users, 30 GB/user, adds Gemini Code Assist and priority model access
-- **Plus** — unlimited users, 75 GB/user, same developer tools as Standard
-- **Frontline** — streamlined tier for field workers, 2 GB/user only
+
+| Tier | Users | Storage | Key Features |
+|---|---|---|---|
+| **Business** | Up to 300 | 25 GB/user | Connectors, NotebookLM, no-code agents |
+| **Standard** | Unlimited | 30 GB/user | + Gemini Code Assist, priority model access |
+| **Plus** | Unlimited | 75 GB/user | Same developer tools as Standard |
+| **Frontline** | Unlimited | 2 GB/user | Streamlined for field workers |
 
 ---
 
@@ -84,11 +86,13 @@ Yes. Gemini Enterprise is a high-priority tier and gets near-immediate access to
 ---
 
 ### Which connectors are available? What if ours isn't listed?
-Two categories:
-- **First-party** (Google — Drive, BigQuery, etc.)
-- **Third-party** (OneDrive, SharePoint, ServiceNow, Jira, Confluence including on-prem)
 
-The list is under active development. If your system isn't available, you can build a custom connector via the API. Check the public documentation for the current list.
+| Type | Examples |
+|---|---|
+| **First-party** (Google) | Drive, BigQuery, etc. |
+| **Third-party** | OneDrive, SharePoint, ServiceNow, Jira, Confluence (incl. on-prem) |
+
+The list is under active development. If your system isn't available, you can build a custom connector via the API.
 
 ---
 
@@ -103,24 +107,32 @@ Two parallel streams run on every query: data retrieval and access control sync.
 ---
 
 ### What's included in the license price vs. billed separately?
-- **Included:** all usage within the GE interface — chat, Agent Designer (no-code), pre-built Google agents, image/video generation (Imagen/Veo to usage limits), and connector setup
-- **Separately billed:** compute for agents deployed on Agent Engine or Cloud Run outside GE, and any processing in your own custom systems
+
+| | What's covered |
+|---|---|
+| **Included in license** | Chat, Agent Designer (no-code), pre-built Google agents, image/video generation (Imagen/Veo to usage limits), connector setup |
+| **Separately billed** | Compute for agents on Agent Engine or Cloud Run outside GE, processing in your own custom systems |
 
 ---
 
 ### What's the difference between Gemini Workspace and Gemini Enterprise?
-Three distinct products:
-- **Gemini Pro (Google One)** — personal plan for individuals
-- **Google Workspace** — enterprise suite with Gemini embedded in Docs, Slides, Meet, etc.
-- **Gemini Enterprise** — separate agentic platform, not included in Workspace, licensed independently
+
+| Product | Audience | What it is |
+|---|---|---|
+| **Gemini Pro (Google One)** | Individuals | Personal plan |
+| **Google Workspace** | Enterprises | Suite with Gemini embedded in Docs, Slides, Meet, etc. |
+| **Gemini Enterprise** | Enterprises | Separate agentic platform, licensed independently |
 
 They can be used together but are sold separately.
 
 ---
 
 ### What's the difference between Gemini Enterprise and Agentspace?
-- **Gemini Enterprise** — broad productivity platform for every employee
-- **Agentspace** (previously "Anti-Gravity" in the video) — specialized agent-driven tool for software developers only
+
+| Product | Target Users | Purpose |
+|---|---|---|
+| **Gemini Enterprise** | Every employee | Broad productivity platform |
+| **Agentspace** *(prev. "Anti-Gravity")* | Software developers only | Specialized agent-driven tool |
 
 Both can be used together as they serve different audiences.
 
