@@ -1,4 +1,5 @@
 ---
+date: 2026-04-02
 title: "Study Guide: Gemini Enterprise Webinar"
 tags:
   - study-guide
