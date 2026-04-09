@@ -124,11 +124,11 @@ Base URL:
 https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/workers-ai/v1
 ```
 
-| Model | Model ID | Cost | Context | Notes |
-|---|---|---|---|---|
-| Nvidia Nemotron 3 120B | `@cf/nvidia/nemotron-3-120b-a12b` | CF Neurons | 128K | 12B active MoE |
-| Moonshot Kimi K2.5 | `@cf/moonshotai/kimi-k2.5` | CF Neurons | 256K | CF-hosted version of Kimi K2.5 |
-| GLM 4.7 Flash | `@cf/zai-org/glm-4.7-flash` | CF Neurons | 131K | Fast, multilingual |
+| Model                  | Model ID                          | Cost       | Context | Notes                          |
+| ---------------------- | --------------------------------- | ---------- | ------- | ------------------------------ |
+| Nvidia Nemotron 3 120B | `@cf/nvidia/nemotron-3-120b-a12b` | CF Neurons | 128K    | 12B active MoE                 |
+| Moonshot Kimi K2.5     | `@cf/moonshotai/kimi-k2.5`        | CF Neurons | 256K    | CF-hosted version of Kimi K2.5 |
+| GLM 4.7 Flash          | `@cf/zai-org/glm-4.7-flash`       | CF Neurons | 131K    | Fast, multilingual             |
 
 > Workers AI uses Cloudflare's own infrastructure (not GCP). Billed in CF Neurons ($0.011/1K Neurons) with a free daily allowance. These are different model instances from the GCP Vertex AI ones above.
 
@@ -180,33 +180,45 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci
 
 ### Architecture Overview
 
+Two deployment modes are supported:
+
+**Mode A — Direct Gateway** *(single shared token, simpler)*
 ```
 Cline / Kilocode
-      │
-      │  cfut_ token (gateway auth)
+      │  cfut_... (shared gateway token)
       ▼
 Cloudflare AI Gateway (demo-hkmci)
-      │
-      ├── /workers-ai/v1        → Cloudflare Workers AI (built-in, CF Neurons billing)
-      ├── /google-ai-studio/... → Google Gemini  [BYOK: Google AI Studio key]
-      ├── /anthropic            → Anthropic Claude [BYOK: Anthropic key]
-      └── /google-vertex-ai/... → GCP Vertex AI MaaS  [BYOK: Service account JSON] ✅ working
-            └── global/endpoints/openapi → MiniMax-M2, Kimi K2 Thinking, GLM-5, GLM-4.7
+      ├── /google-ai-studio/...  → Google Gemini       [BYOK: AI Studio key]
+      ├── /google-vertex-ai/...  → GCP Vertex AI MaaS  [BYOK: service account JSON] ✅
+      ├── /workers-ai/v1         → CF Workers AI        [built-in, CF Neurons]
+      └── /anthropic             → Anthropic Claude     [BYOK: not configured]
 ```
 
-No provider keys are exposed to users — all credentials are stored as **Provider Keys (BYOK)** in the gateway.
+**Mode B — Worker Proxy** *(per-customer keys, usage tracking, revocation)* ✅ Active
+```
+Cline / Kilocode
+      │  cgk_... (per-customer key)
+      ▼
+ai-gw-proxy Worker (masterconcept-hongkong.workers.dev)
+      │  cfut_... (shared gateway token, stored as Worker secret)
+      ▼
+Cloudflare AI Gateway (demo-hkmci)
+      └── (same provider routing as Mode A)
+```
+
+No provider keys or gateway tokens are ever exposed to users.
 
 ---
 
 ### Gateway Details
 
-| Setting        | Value                              |
-| -------------- | ---------------------------------- |
-| Account        | Master Concept Demo (mcmsp.dev)    |
-| Account ID     | `b326904912840c25f63808a1d1e479aa` |
-| Gateway Name   | `demo-hkmci`                       |
-| Authentication | Enabled                            |
-| Gateway Token  | `cfut_...` (distribute to users)   |
+| Setting        | Value                                                         |
+| -------------- | ------------------------------------------------------------- |
+| Account        | Master Concept Demo (mcmsp.dev)                               |
+| Account ID     | `b326904912840c25f63808a1d1e479aa`                            |
+| Gateway Name   | `demo-hkmci`                                                  |
+| Authentication | Enabled                                                       |
+| Gateway Token  | stored as `CF_GATEWAY_TOKEN` secret in the proxy Worker       |
 
 ---
 
@@ -224,18 +236,90 @@ Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Pro
 
 ---
 
-### How to Deliver Config to Users
+### Customer Provisioning — Worker Proxy
 
-Send users the following (nothing else — no provider keys):
+#### Proxy Worker Details
+
+| Item | Value |
+|---|---|
+| Worker name | `ai-gw-proxy` |
+| Worker URL | `https://ai-gw-proxy.masterconcept-hongkong.workers.dev` |
+| Source code | `/Users/zorro/Dev/cloudflare/ai-gw-proxy/` |
+| KV namespace | `CUSTOMERS` (id: `2ab1f367fef94c74b1c2e8313d60e653`) |
+| Secrets | `CF_GATEWAY_TOKEN`, `ADMIN_SECRET` (set via `wrangler secret put`) |
+
+#### Deploy / Update
+
+```bash
+cd /Users/zorro/Dev/cloudflare/ai-gw-proxy
+wrangler deploy
+```
+
+To update a secret:
+```bash
+echo "new_value" | wrangler secret put CF_GATEWAY_TOKEN
+```
+
+#### Admin API
+
+All admin endpoints require the header: `X-Admin-Key: <ADMIN_SECRET>`
+
+**Provision a new customer**
+```bash
+curl -X POST https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers \
+  -H "X-Admin-Key: <ADMIN_SECRET>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "alice", "email": "alice@example.com", "rate_limit": 200}'
+```
+Response includes `api_key: cgk_...` — send this to the customer.
+
+| Field | Required | Description |
+|---|---|---|
+| `name` | Yes | Customer name |
+| `email` | No | Customer email (for reference) |
+| `rate_limit` | No | Max requests per day; omit for unlimited |
+
+**List all customers**
+```bash
+curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers \
+  -H "X-Admin-Key: <ADMIN_SECRET>"
+```
+
+**Get customer details**
+```bash
+curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_... \
+  -H "X-Admin-Key: <ADMIN_SECRET>"
+```
+
+**Check usage** *(defaults to today; add `?date=YYYY-MM-DD` for a specific day)*
+```bash
+curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_.../usage \
+  -H "X-Admin-Key: <ADMIN_SECRET>"
+```
+Returns `requests`, `tokens_in`, `tokens_out` for the day. Usage is retained for 90 days.
+
+**Revoke a customer key**
+```bash
+curl -X DELETE https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_... \
+  -H "X-Admin-Key: <ADMIN_SECRET>"
+```
+Revocation is immediate — the next request with that key returns 403.
+
+#### How to Deliver Config to Customers
+
+Send customers the following (nothing else):
 
 ```
-Cloudflare AI Gateway – VS Code Setup
+AI Gateway – VS Code Setup
 
-Gateway API Token: cfut_...
+Base URL:  https://ai-gw-proxy.masterconcept-hongkong.workers.dev
+API Key:   cgk_...   ← their personal key
 
-For model-specific Base URLs and setup instructions, see:
+For model selection and setup steps, see:
 https://sharehub.zorro.hk/documents/2026-04-01-vscode-llm-provider-setup.html
 ```
+
+The Base URL replaces the provider-specific gateway URLs — customers configure one Base URL and use any model from the tables above.
 
 ---
 
@@ -260,4 +344,4 @@ Billing is enabled. Service account key is stored in the gateway as the Google V
 ---
 
 **Captured**: 2026-04-01
-**Last Updated**: 2026-04-09 (added Vertex AI MaaS: MiniMax-M2, Kimi K2 Thinking, GLM-5, GLM-4.7; added pricing; added setup guide)
+**Last Updated**: 2026-04-09 (added Vertex AI MaaS pricing; added Worker proxy for per-customer key provisioning)
