@@ -1,5 +1,4 @@
 ---
-date: 2026-04-09
 title: Setup LLM Provider in VS Code Extensions (Cline, Kilocode)
 tags:
   - idea
@@ -19,16 +18,16 @@ priority: high
 
 # Setup LLM Provider in VS Code Extensions (Cline, Kilocode)
 
-> All models are accessed through **Cloudflare AI Gateway** (`demo-hkmci`). Users only need the gateway API token — no direct provider keys required.
+> All models are accessed through **Cloudflare AI Gateway** (`demo-hkmci`). Users only need their personal gateway token (`cfut_...`) — no provider keys required.
 
 ---
 
 ## 👤 User Guide
 
-### Step 1 — Get your Gateway API Token
+### Step 1 — Get your Gateway Token
 
 ```
-API Token: [Ask your Cloudflare admin]
+API Token: [Ask your admin — starts with cfut_...]
 ```
 
 ### Step 2 — Configure the Extension
@@ -180,12 +179,9 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci
 
 ### Architecture Overview
 
-Two deployment modes are supported:
-
-**Mode A — Direct Gateway** *(single shared token, simpler)*
 ```
 Cline / Kilocode
-      │  cfut_... (shared gateway token)
+      │  cfut_... (per-user gateway token)
       ▼
 Cloudflare AI Gateway (demo-hkmci)
       ├── /google-ai-studio/...  → Google Gemini       [BYOK: AI Studio key]
@@ -194,19 +190,7 @@ Cloudflare AI Gateway (demo-hkmci)
       └── /anthropic             → Anthropic Claude     [BYOK: not configured]
 ```
 
-**Mode B — Worker Proxy** *(per-customer keys, usage tracking, revocation)* ✅ Active
-```
-Cline / Kilocode
-      │  cgk_... (per-customer key)
-      ▼
-ai-gw-proxy Worker (masterconcept-hongkong.workers.dev)
-      │  cfut_... (shared gateway token, stored as Worker secret)
-      ▼
-Cloudflare AI Gateway (demo-hkmci)
-      └── (same provider routing as Mode A)
-```
-
-No provider keys or gateway tokens are ever exposed to users.
+Each user gets their own `cfut_...` token created from the gateway dashboard. No provider keys are ever exposed to users.
 
 ---
 
@@ -218,7 +202,7 @@ No provider keys or gateway tokens are ever exposed to users.
 | Account ID     | `b326904912840c25f63808a1d1e479aa`                            |
 | Gateway Name   | `demo-hkmci`                                                  |
 | Authentication | Enabled                                                       |
-| Gateway Token  | stored as `CF_GATEWAY_TOKEN` secret in the proxy Worker       |
+| Gateway Token  | created per user from dashboard; distributed as `cfut_...`    |
 
 ---
 
@@ -236,90 +220,67 @@ Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Pro
 
 ---
 
-### Customer Provisioning — Worker Proxy
+### Customer Provisioning
 
-#### Proxy Worker Details
+#### Option A — Dashboard (manual)
 
-| Item | Value |
-|---|---|
-| Worker name | `ai-gw-proxy` |
-| Worker URL | `https://ai-gw-proxy.masterconcept-hongkong.workers.dev` |
-| Source code | `/Users/zorro/Dev/cloudflare/ai-gw-proxy/` |
-| KV namespace | `CUSTOMERS` (id: `2ab1f367fef94c74b1c2e8313d60e653`) |
-| Secrets | `CF_GATEWAY_TOKEN`, `ADMIN_SECRET` (set via `wrangler secret put`) |
+**AI Gateway → `demo-hkmci` → Settings → Authenticated Gateway → Create authentication token**
+- **Name**: user's name (e.g. `alex`)
+- **Permission**: **Run**
 
-#### Deploy / Update
+Copy the `cfut_...` value — it is shown only once.
 
+#### Option B — Script (automated)
+
+Gateway tokens are standard Cloudflare API tokens and can be created programmatically using `/user/tokens`.
+
+**One-time setup:** Create a master CF API token from the dashboard with:
+- **User → API Tokens → Edit** permission
+
+Store it securely — this is the only dashboard step required.
+
+**Provision a token for each user:**
 ```bash
-cd /Users/zorro/Dev/cloudflare/ai-gw-proxy
-wrangler deploy
+CF_API_TOKEN=<master-token> \
+CF_ACCOUNT_ID=b326904912840c25f63808a1d1e479aa \
+python3 /Users/zorro/Dev/cloudflare/create_ai_gateway_token.py \
+  --gateway-id demo-hkmci \
+  --token-name alex
 ```
 
-To update a secret:
-```bash
-echo "new_value" | wrangler secret put CF_GATEWAY_TOKEN
-```
+The script prints the `cfut_...` value — save it immediately, it will not be shown again.
 
-#### Admin API
+> Script location: `/Users/zorro/Dev/cloudflare/create_ai_gateway_token.py`
 
-All admin endpoints require the header: `X-Admin-Key: <ADMIN_SECRET>`
+#### How to Deliver Config to Users
 
-**Provision a new customer**
-```bash
-curl -X POST https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers \
-  -H "X-Admin-Key: <ADMIN_SECRET>" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "alice", "email": "alice@example.com", "rate_limit": 200}'
-```
-Response includes `api_key: cgk_...` — send this to the customer.
-
-| Field | Required | Description |
-|---|---|---|
-| `name` | Yes | Customer name |
-| `email` | No | Customer email (for reference) |
-| `rate_limit` | No | Max requests per day; omit for unlimited |
-
-**List all customers**
-```bash
-curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers \
-  -H "X-Admin-Key: <ADMIN_SECRET>"
-```
-
-**Get customer details**
-```bash
-curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_... \
-  -H "X-Admin-Key: <ADMIN_SECRET>"
-```
-
-**Check usage** *(defaults to today; add `?date=YYYY-MM-DD` for a specific day)*
-```bash
-curl https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_.../usage \
-  -H "X-Admin-Key: <ADMIN_SECRET>"
-```
-Returns `requests`, `tokens_in`, `tokens_out` for the day. Usage is retained for 90 days.
-
-**Revoke a customer key**
-```bash
-curl -X DELETE https://ai-gw-proxy.masterconcept-hongkong.workers.dev/admin/customers/cgk_... \
-  -H "X-Admin-Key: <ADMIN_SECRET>"
-```
-Revocation is immediate — the next request with that key returns 403.
-
-#### How to Deliver Config to Customers
-
-Send customers the following (nothing else):
+Send users the following (nothing else — no provider keys):
 
 ```
-AI Gateway – VS Code Setup
+Cloudflare AI Gateway – VS Code Setup
 
-Base URL:  https://ai-gw-proxy.masterconcept-hongkong.workers.dev
-API Key:   cgk_...   ← their personal key
+API Token: cfut_...   ← their personal token
 
-For model selection and setup steps, see:
+For Base URLs, model IDs, and setup steps, see:
 https://sharehub.zorro.hk/documents/2026-04-01-vscode-llm-provider-setup.html
 ```
 
-The Base URL replaces the provider-specific gateway URLs — customers configure one Base URL and use any model from the tables above.
+#### Revoke a user
+
+**Dashboard:** AI Gateway → `demo-hkmci` → Settings → Authenticated Gateway → [find token] → Delete
+
+**API:**
+```bash
+# First get the token ID
+curl "https://api.cloudflare.com/client/v4/user/tokens" \
+  -H "Authorization: Bearer <master-token>"
+
+# Then delete by ID
+curl -X DELETE "https://api.cloudflare.com/client/v4/user/tokens/<token-id>" \
+  -H "Authorization: Bearer <master-token>"
+```
+
+Revocation is immediate.
 
 ---
 
