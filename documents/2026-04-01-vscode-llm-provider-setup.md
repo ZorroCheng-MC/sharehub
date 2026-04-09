@@ -11,7 +11,7 @@ tags:
   - inbox
   - actionable
   - reference
-date: 2026-04-01
+date: 2026-04-09
 type: idea
 status: inbox
 priority: high
