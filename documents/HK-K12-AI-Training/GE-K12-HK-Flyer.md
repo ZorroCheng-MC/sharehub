@@ -1,3 +1,7 @@
+---
+title: "Gemini Enterprise for Education"
+date: 2026-04-17
+---
 ![banner](/images/GE-K12-HK-Banner.webp)
 
 # Gemini Enterprise for Education
