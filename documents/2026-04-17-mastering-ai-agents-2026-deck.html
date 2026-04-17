@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering AI Agents in 60 min — 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;
+  --bg2:#f8f9fa;
+  --surface:#ffffff;
+  --border:#e8eaed;
+  --text:#202124;
+  --muted:#5f6368;
+  --c1:#4285f4;
+  --c2:#ea4335;
+  --c3:#34a853;
+  --c4:#1a73e8;
+  --c5:#f9ab00;
+  --c6:#e37400;
+  --gblue:#4285f4;
+  --gred:#ea4335;
+  --ggreen:#34a853;
+  --gyellow:#fbbc04;
+  --shadow:0 1px 3px rgba(60,64,67,.2),0 4px 8px rgba(60,64,67,.12);
+  --shadow-sm:0 1px 2px rgba(60,64,67,.15),0 2px 4px rgba(60,64,67,.1);
+  --fd:'Poppins','Google Sans',Roboto,sans-serif;
+  --fb:Roboto,'Google Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#e8eaed;color:var(--text);font-family:var(--fb);}
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+
+/* SLIDES — white cards on gray canvas */
+.slide{position:absolute;inset:0;padding:5vh 6vw;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateX(70px);transition:opacity .28s cubic-bezier(.4,0,.2,1),transform .28s cubic-bezier(.4,0,.2,1);pointer-events:none;overflow:hidden;background:var(--bg);}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.exit{opacity:0;transform:translateX(-70px);}
+
+/* Google top color bar per section */
+.slide[data-s="1"]::before,.slide[data-s="2"]::before,.slide[data-s="3"]::before,.slide[data-s="4"]::before,.slide[data-s="5"]::before,.slide[data-s="6"]::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+.slide[data-s="1"]::before{background:var(--c1);}
+.slide[data-s="2"]::before{background:var(--c2);}
+.slide[data-s="3"]::before{background:var(--c3);}
+.slide[data-s="4"]::before{background:var(--c4);}
+.slide[data-s="5"]::before{background:var(--c5);}
+.slide[data-s="6"]::before{background:var(--c6);}
+/* Divider slides don't get the thin bar */
+.div-slide::before{display:none!important;}
+
+/* TYPOGRAPHY */
+h1{font-family:var(--fd);font-size:clamp(34px,5vw,72px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--text);}
+h2{font-family:var(--fd);font-size:clamp(24px,3vw,44px);font-weight:600;line-height:1.2;color:var(--text);}
+h3{font-family:var(--fd);font-size:clamp(16px,2vw,28px);font-weight:600;color:var(--text);}
+.subtitle{font-size:clamp(13px,1.4vw,17px);color:var(--muted);margin-top:.6rem;font-weight:400;line-height:1.55;}
+.label{font-size:clamp(9px,1vw,11px);letter-spacing:.14em;text-transform:uppercase;color:var(--accent,var(--c1));margin-bottom:1rem;font-weight:500;}
+.accent{color:var(--accent,var(--c1));}
+.italic{font-style:italic;}
+
+/* CARDS — Material Design */
+.card-grid{display:grid;gap:1.2vw;margin-top:2vh;}
+.grid2{grid-template-columns:1fr 1fr;}
+.grid3{grid-template-columns:repeat(3,1fr);}
+.grid4{grid-template-columns:repeat(4,1fr);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2vw 1.4vw;box-shadow:var(--shadow-sm);}
+.card .icon{font-size:1.5rem;margin-bottom:.6rem;display:block;}
+.card h4{font-family:var(--fd);font-size:clamp(12px,1.4vw,18px);font-weight:600;margin-bottom:.4rem;color:var(--text);}
+.card p{font-size:clamp(11px,1vw,13px);color:var(--muted);line-height:1.55;}
+
+/* SECTION DIVIDERS — solid Google brand colors, white text */
+.div-slide{justify-content:flex-end;align-items:flex-start;padding-bottom:8vh;color:#fff;}
+.div-slide .div-tag{font-family:var(--fd);font-size:clamp(28px,4vw,58px);font-weight:700;line-height:1.15;max-width:65%;color:#fff;}
+.div-slide .div-sub{font-size:clamp(13px,1.4vw,18px);color:rgba(255,255,255,.75);margin-top:1rem;font-weight:400;}
+.div-slide h2,.div-slide h3{color:#fff;}
+
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;font-size:clamp(11px,1.1vw,14px);margin-top:2vh;}
+.dt th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--border);color:var(--muted);font-weight:500;font-size:.82em;letter-spacing:.06em;text-transform:uppercase;background:var(--bg2);}
+.dt td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:rgba(66,133,244,.04);}
+
+/* BULLETS */
+.blist{list-style:none;margin-top:1.5vh;display:flex;flex-direction:column;gap:.9vh;}
+.blist li{font-size:clamp(13px,1.3vw,17px);padding-left:1.4rem;position:relative;line-height:1.55;color:var(--text);}
+.blist li::before{content:'—';position:absolute;left:0;color:var(--accent,var(--c1));font-weight:600;}
+
+/* FOOTNOTE */
+.fn{font-size:clamp(9px,.85vw,11px);color:var(--muted);margin-top:auto;padding-top:1.5vh;border-top:1px solid var(--border);line-height:1.4;}
+
+/* ACCENT PER SECTION */
+.slide[data-s="1"]{--accent:var(--c1);}
+.slide[data-s="2"]{--accent:var(--c2);}
+.slide[data-s="3"]{--accent:var(--c3);}
+.slide[data-s="4"]{--accent:var(--c4);}
+.slide[data-s="5"]{--accent:var(--c5);}
+.slide[data-s="6"]{--accent:var(--c6);}
+
+/* SEEKBAR */
+#seekbar-wrap{position:fixed;bottom:0;left:0;right:0;height:28px;z-index:99;display:flex;align-items:center;padding:0 12px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-top:1px solid #e8eaed;gap:10px;}
+#seekbar{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--seek-fill,#4285f4) 0%,var(--seek-fill,#4285f4) var(--seek-pct,0%),#e8eaed var(--seek-pct,0%),#e8eaed 100%);transition:background .1s;}
+#seekbar::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#4285f4;cursor:pointer;box-shadow:0 1px 3px rgba(60,64,67,.3);transition:transform .15s;}
+#seekbar::-webkit-slider-thumb:hover{transform:scale(1.3);}
+#seekbar::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#4285f4;cursor:pointer;border:none;box-shadow:0 1px 3px rgba(60,64,67,.3);}
+/* NAV */
+#nav{position:fixed;bottom:28px;right:16px;display:flex;align-items:center;gap:6px;z-index:100;}
+#ctr-wrap{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);font-family:Roboto,sans-serif;}
+#ctr-input{width:42px;text-align:center;border:1px solid #e8eaed;border-radius:4px;padding:2px 4px;font-size:12px;font-family:Roboto,sans-serif;color:#202124;background:#fff;outline:none;}
+#ctr-input::-webkit-inner-spin-button,#ctr-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+#ctr-input[type=number]{-moz-appearance:textfield;appearance:textfield;}
+#ctr-input:focus{border-color:#4285f4;box-shadow:0 0 0 2px rgba(66,133,244,.2);}
+#ctr-total{color:#5f6368;}
+.nb{background:#fff;border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:16px;transition:background .15s,box-shadow .15s;box-shadow:var(--shadow-sm);}
+.nb:hover{background:var(--bg2);box-shadow:var(--shadow);}
+
+/* NOTES */
+#notesOv{position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:200;display:none;flex-direction:column;padding:40px;overflow-y:auto;}
+#notesOv.vis{display:flex;}
+#notesHead{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;font-family:var(--fb);}
+#notesTxt{font-size:18px;line-height:1.75;max-width:780px;color:var(--text);font-family:var(--fb);}
+#closeNotes{background:#fff;border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px;box-shadow:var(--shadow-sm);}
+#closeNotes:hover{background:var(--bg2);}
+
+/* ASSET PLACEHOLDER */
+.asset-ph{border:2px dashed rgba(251,188,4,.6);border-radius:8px;padding:16px;text-align:center;background:rgba(251,188,4,.06);color:#9a7000;font-size:13px;margin:1rem 0;}
+
+/* STAIRCASE SHARED */
+.stair-container{display:flex;align-items:flex-end;gap:0;margin-top:2vh;}
+
+/* DIVIDER BACKGROUNDS — Google brand colors */
+.kb1{background:linear-gradient(135deg,#4285f4 0%,#1a73e8 100%);}
+.kb2{background:linear-gradient(135deg,#ea4335 0%,#c5221f 100%);}
+.kb3{background:linear-gradient(135deg,#34a853 0%,#1e8e3e 100%);}
+.kb4{background:linear-gradient(135deg,#7c3aed 0%,#4c1d95 100%);}
+.kb5{background:linear-gradient(135deg,#fbbc04 0%,#f29900 100%);}
+.kb6{background:linear-gradient(135deg,#e37400 0%,#c35a00 100%);}
+
+/* divider accent bar (now white on colored bg) */
+.dbar{display:block;width:48px;height:4px;border-radius:2px;background:rgba(255,255,255,.6);margin-bottom:1.5rem;}
+
+/* feat-card */
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.8vw 2vw;box-shadow:var(--shadow-sm);}
+.feat-card h3{font-family:var(--fd);font-size:clamp(14px,1.6vw,22px);font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.feat-card p{font-size:clamp(11px,1.1vw,14px);color:var(--muted);line-height:1.6;}
+
+/* hero text */
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;}
+.hero h2{font-size:clamp(32px,4.5vw,64px);}
+
+/* YT card */
+.yt-card{background:#fff5f5;border:1px solid rgba(234,67,53,.2);border-radius:8px;padding:14px 20px;display:flex;align-items:center;gap:16px;margin-top:2rem;cursor:pointer;width:fit-content;box-shadow:var(--shadow-sm);}
+.yt-icon{width:44px;height:44px;background:#ea4335;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0;}
+.yt-text small{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* CAST quadrant color lines */
+.cast-c{border-top:3px solid var(--gblue);}
+.cast-a{border-top:3px solid var(--ggreen);}
+.cast-s{border-top:3px solid var(--gred);}
+.cast-t{border-top:3px solid var(--gyellow);}
+
+/* check list */
+.chklist{list-style:none;margin-top:2vh;display:flex;flex-direction:column;gap:1.2vh;}
+.chklist li{font-size:clamp(14px,1.4vw,19px);padding-left:2rem;position:relative;line-height:1.5;color:var(--text);}
+.chklist li::before{content:'✓';position:absolute;left:0;color:var(--c3);font-weight:700;}
+
+/* timeline row */
+.tl-row{display:flex;gap:0;margin-top:2.5vh;position:relative;}
+.tl-row::before{content:'';position:absolute;top:30px;left:0;right:0;height:2px;background:var(--border);}
+.tl-item{flex:1;text-align:center;position:relative;padding-top:56px;}
+.tl-dot{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;border:3px solid var(--accent,var(--c1));background:#fff;z-index:1;}
+.tl-year{font-size:clamp(10px,1.1vw,14px);font-weight:700;color:var(--accent,var(--c1));margin-bottom:.4rem;font-family:var(--fb);}
+.tl-name{font-family:var(--fd);font-size:clamp(14px,1.5vw,20px);font-weight:600;margin-bottom:.4rem;color:var(--text);}
+.tl-desc{font-size:clamp(10px,1vw,13px);color:var(--muted);line-height:1.45;}
+
+/* Google chip/badge */
+.g-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;color:var(--muted);}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- SPEAKER NOTES OVERLAY -->
+<div id="notesOv">
+  <div id="notesHead">
+    <span>SPEAKER NOTES — SLIDE <span id="notesSN">1</span></span>
+    <button id="closeNotes" onclick="toggleNotes()">CLOSE [S]</button>
+  </div>
+  <div id="notesTxt"></div>
+</div>
+
+<!-- ============================= SLIDES ============================= -->
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" data-s="1" data-notes="Welcome! This deck runs ~60 min. We'll go from first principles (what is AI, how to pick the right tool) all the way to Agent Corps — autonomous AI organizations. By the end you'll have a complete mental map of where AI is headed and exactly where you fit in.">
+  <div class="label">Mastering AI Agents in 60 min</div>
+  <h1>Mastering<br><span class="accent">AI Agents</span><br><span class="italic">in 60 min</span></h1>
+  <p class="subtitle">From Zorro Cheng &nbsp;·&nbsp; 2026</p>
+  <a href="https://www.youtube.com/watch?v=skmMTXmOvJY" target="_blank" class="yt-card" style="text-decoration:none;color:inherit;">
+    <div class="yt-icon">▶</div>
+    <div class="yt-text">
+      <strong style="font-size:13px;">Simon Sinek — Law of Diffusion of Innovation</strong>
+      <small>TED Talk · 2:26 — watch before we start</small>
+    </div>
+  </a>
+</div>
+
+<!-- SLIDE 2: Plan Can't Keep Up -->
+<div class="slide" data-s="1" data-notes="The Chinese saying 計劃趕不上變化 — 'Plans can't keep pace with changes' — is the entire context for this session. AI is moving faster than any plan. Our job is to build adaptable mental models, not rigid playbooks.">
+  <div class="hero">
+    <div style="font-family:var(--fd);font-size:clamp(28px,4.5vw,60px);font-weight:600;line-height:1.2;">Plan Can't Keep up with Changes</div>
+    <div style="font-family:var(--fd);font-size:clamp(24px,3.5vw,48px);color:var(--muted);margin-top:1rem;font-weight:400;">計劃趕不上變化</div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Section 1 Divider — Introduction -->
+<div class="slide div-slide kb1" data-s="1" data-notes="Section 1: Introduction. We open with context — how fast AI is accelerating, who's adopting it, and why agents are the next inflection point.">
+  <span class="dbar" style="--accent:var(--c1)"></span>
+  <div class="div-tag">Section 1<br><span class="accent">Introduction</span></div>
+  <p class="div-sub">Context, velocity, and why 2026 is different</p>
+  <!-- Decorative conductor lines -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.15;pointer-events:none;" viewBox="0 0 1000 600">
+    <line x1="500" y1="50" x2="200" y2="550" stroke="#4285f4" stroke-width="1.5"/>
+    <line x1="500" y1="50" x2="400" y2="550" stroke="#8430ce" stroke-width="1"/>
+    <line x1="500" y1="50" x2="600" y2="550" stroke="#4285f4" stroke-width="1.2"/>
+    <line x1="500" y1="50" x2="800" y2="550" stroke="#8430ce" stroke-width="0.8"/>
+    <line x1="500" y1="50" x2="100" y2="550" stroke="#4285f4" stroke-width="0.6"/>
+    <line x1="500" y1="50" x2="900" y2="550" stroke="#1a73e8" stroke-width="0.9"/>
+    <circle cx="500" cy="50" r="8" fill="#4285f4" opacity="0.8"/>
+  </svg>
+</div>
+
+<!-- SLIDE 4: What will happen to AI Agents in 2026? -->
+<div class="slide" data-s="1" data-notes="ChatGPT reached 1 million users in 5 days — faster than anything before it. Threads did it in hours. The question isn't whether AI agents will explode in adoption — it's whether you'll be on the right side of the chasm when they do.">
+  <div class="label">Introduction</div>
+  <h2>What will happen to <span class="accent">AI Agents</span> in 2026?</h2>
+  <p class="subtitle" style="margin-bottom:1.5vh;">Time it took for platforms to reach 1 million users</p>
+
+  <!-- Bar chart SVG — LOG SCALE (hours to reach 1M users) -->
+  <svg width="100%" viewBox="0 0 760 310" style="max-height:46vh;">
+    <defs>
+      <linearGradient id="bg-old" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#4285f4" stop-opacity=".7"/><stop offset="100%" stop-color="#4285f4" stop-opacity=".25"/></linearGradient>
+      <linearGradient id="bg-ai"  x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ea4335" stop-opacity=".95"/><stop offset="100%" stop-color="#ea4335" stop-opacity=".55"/></linearGradient>
+    </defs>
+
+    <!-- Log-scale axis ticks & labels (log10 hours) -->
+    <!-- tick 0=1hr, 1=10hr, 2=100hr, 3=1000hr, 4=10000hr → x = tick/4.487*460+140 -->
+    <line x1="140" y1="0" x2="140" y2="260" stroke="#e8eaed" stroke-width="1"/>
+    <line x1="242" y1="0" x2="242" y2="260" stroke="#e8eaed" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="345" y1="0" x2="345" y2="260" stroke="#e8eaed" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="447" y1="0" x2="447" y2="260" stroke="#e8eaed" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="600" y1="0" x2="600" y2="260" stroke="#e8eaed" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="140" y="275" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">1 hr</text>
+    <text x="242" y="275" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">10 hr</text>
+    <text x="345" y="275" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">100 hr</text>
+    <text x="447" y="275" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">1,000 hr</text>
+    <text x="600" y="275" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">10,000 hr</text>
+    <text x="450" y="295" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">← log scale (hours to reach 1M users)</text>
+
+    <!-- Rows: log10(hours) / 4.487 * 460 px wide
+         Netflix  30660h → log=4.487 → 460px
+         Twitter  17520h → log=4.244 → 435px
+         Facebook  7200h → log=3.857 → 395px
+         Spotify   3600h → log=3.556 → 364px
+         Instagram 1800h → log=3.255 → 334px
+         ChatGPT    120h → log=2.079 → 213px
+         Threads    1.5h → log=0.176 →  18px  -->
+
+    <!-- Netflix -->
+    <text x="132" y="22" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle">Netflix (1991)</text>
+    <rect x="140" y="10" width="460" height="20" rx="4" fill="url(#bg-old)"/>
+    <text x="606" y="22" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle">3.5 years</text>
+    <!-- Twitter -->
+    <text x="132" y="58" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle">Twitter (2006)</text>
+    <rect x="140" y="46" width="435" height="20" rx="4" fill="url(#bg-old)"/>
+    <text x="581" y="58" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle">2 years</text>
+    <!-- Facebook -->
+    <text x="132" y="94" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle">Facebook (2004)</text>
+    <rect x="140" y="82" width="395" height="20" rx="4" fill="url(#bg-old)"/>
+    <text x="541" y="94" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle">10 months</text>
+    <!-- Spotify -->
+    <text x="132" y="130" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle">Spotify (2008)</text>
+    <rect x="140" y="118" width="364" height="20" rx="4" fill="url(#bg-old)"/>
+    <text x="510" y="130" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle">5 months</text>
+    <!-- Instagram -->
+    <text x="132" y="166" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle">Instagram (2010)</text>
+    <rect x="140" y="154" width="334" height="20" rx="4" fill="url(#bg-old)"/>
+    <text x="480" y="166" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle">2.5 months</text>
+
+    <!-- Divider line before AI rows -->
+    <line x1="0" y1="186" x2="760" y2="186" stroke="#fbbc04" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <text x="140" y="183" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" font-weight="600">AI era ↓</text>
+
+    <!-- ChatGPT — highlighted red -->
+    <text x="132" y="204" fill="#202124" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle" font-weight="600">ChatGPT (2022)</text>
+    <rect x="140" y="192" width="213" height="20" rx="4" fill="url(#bg-ai)"/>
+    <text x="359" y="204" fill="#ea4335" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle" font-weight="600">5 days ⚡</text>
+    <!-- Threads — highlighted red, tiny bar with callout -->
+    <text x="132" y="240" fill="#202124" font-family="Roboto,sans-serif" font-size="12" text-anchor="end" dominant-baseline="middle" font-weight="600">Threads (2023)</text>
+    <rect x="140" y="228" width="18" height="20" rx="3" fill="#ea4335"/>
+    <!-- callout line + label -->
+    <line x1="158" y1="238" x2="200" y2="238" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="204" y="240" fill="#ea4335" font-family="Roboto,sans-serif" font-size="11" dominant-baseline="middle" font-weight="700">~1 hour ⚡⚡</text>
+    <text x="340" y="240" fill="#9aa0a6" font-family="Roboto,sans-serif" font-size="10" dominant-baseline="middle">(bar is ~18px — log scale only goes so far)</text>
+  </svg>
+</div>
+
+<!-- SLIDE 5: AI Agent is here now! -->
+<div class="slide" data-s="1" data-notes="Two seismic shifts: traditional coding (drag-and-drop, no-code) is fading because agents can code on your behalf. RPA (robotic process automation) is dying because browser agents and coding agents do everything RPA does, but smarter and cheaper.">
+  <div class="label">Introduction</div>
+  <h2>AI Agent is <span class="accent">here now!</span></h2>
+  <div class="card-grid grid2" style="margin-top:3vh;">
+    <div class="feat-card" style="border-top:3px solid var(--c2);">
+      <div class="icon">💻</div>
+      <h3>No/Low code programming is fading</h3>
+      <p>Traditional drag-and-drop coding approaches are becoming obsolete. Agents write and deploy code on your behalf — no GUI builder required.</p>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c6);">
+      <div class="icon">🤖</div>
+      <h3>RPA is dying</h3>
+      <p>Coding Agents and Auto Browsers are transforming automation. They reason, adapt, and handle exceptions — not just replay fixed scripts.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Diffusion of Innovation -->
+<div class="slide" data-s="1" data-notes="Everett Rogers' Diffusion of Innovation. The Chasm is where most technologies die — between Early Adopters and Early Majority. AI agents are crossing that chasm right now. Where are you on this curve?">
+  <div class="label">Introduction — Everett Rogers</div>
+  <h2>Diffusion of <span class="accent">Innovation</span></h2>
+  <div style="margin-top:1.5vh;width:100%;max-height:50vh;display:flex;justify-content:center;">
+    <svg width="100%" viewBox="0 0 740 280" style="max-height:48vh;">
+      <!-- Bell curve path -->
+      <defs>
+        <clipPath id="c1c"><rect x="40" y="0" width="75" height="280"/></clipPath>
+        <clipPath id="c2c"><rect x="115" y="0" width="110" height="280"/></clipPath>
+        <clipPath id="c3c"><rect x="240" y="0" width="20" height="280"/></clipPath>
+        <clipPath id="c4c"><rect x="265" y="0" width="160" height="280"/></clipPath>
+        <clipPath id="c5c"><rect x="425" y="0" width="160" height="280"/></clipPath>
+        <clipPath id="c6c"><rect x="585" y="0" width="115" height="280"/></clipPath>
+      </defs>
+      <!-- Curve fill segments -->
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220 Z" clip-path="url(#c1c)" fill="rgba(66,133,244,.25)"/>
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220 Z" clip-path="url(#c2c)" fill="rgba(26,115,232,.22)"/>
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220 Z" clip-path="url(#c4c)" fill="rgba(52,168,83,.2)"/>
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220 Z" clip-path="url(#c5c)" fill="rgba(249,171,0,.18)"/>
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220 Z" clip-path="url(#c6c)" fill="rgba(234,67,53,.2)"/>
+      <!-- Curve outline -->
+      <path d="M40,220 C80,220 90,40 160,30 C230,20 270,20 330,25 C390,30 430,220 700,220" fill="none" stroke="rgba(60,64,67,.25)" stroke-width="2"/>
+      <!-- Baseline -->
+      <line x1="40" y1="220" x2="700" y2="220" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <!-- THE CHASM -->
+      <rect x="226" y="40" width="38" height="180" fill="rgba(0,0,0,.5)" rx="0"/>
+      <line x1="226" y1="40" x2="226" y2="220" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="264" y1="40" x2="264" y2="220" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="245" y="35" fill="#ffffff" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" font-weight="600">THE</text>
+      <text x="245" y="50" fill="#ffffff" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" font-weight="600">CHASM</text>
+      <!-- Labels -->
+      <text x="77" y="250" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Innovators</text>
+      <text x="77" y="264" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">2.5%</text>
+      <text x="170" y="250" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Early Adopters</text>
+      <text x="170" y="264" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">13.5%</text>
+      <text x="345" y="250" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Early Majority</text>
+      <text x="345" y="264" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">34%</text>
+      <text x="505" y="250" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Late Majority</text>
+      <text x="505" y="264" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">34%</text>
+      <text x="640" y="250" fill="#ea4335" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Laggards</text>
+      <text x="640" y="264" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">16%</text>
+    </svg>
+  </div>
+</div>
+
+<!-- SLIDE 7: Section 2 Divider — AI Ecosystem -->
+<div class="slide div-slide kb2" data-s="2" data-notes="Section 2: AI Ecosystem. Now we get practical. How do you actually pick the right AI tool? The answer starts with a shopping analogy.">
+  <span class="dbar" style="--accent:var(--c2)"></span>
+  <div class="div-tag">Section 2<br><span style="color:var(--c2)">AI Ecosystem</span></div>
+  <p class="div-sub">Picking the right AI for the job</p>
+  <!-- Orbital rings decoration -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.12;pointer-events:none;" viewBox="0 0 1000 600">
+    <ellipse cx="500" cy="300" rx="400" ry="120" fill="none" stroke="#1a73e8" stroke-width="1"/>
+    <ellipse cx="500" cy="300" rx="280" ry="80" fill="none" stroke="#1a73e8" stroke-width="1.5"/>
+    <ellipse cx="500" cy="300" rx="160" ry="45" fill="none" stroke="#1a73e8" stroke-width="1.5"/>
+    <circle cx="500" cy="300" r="20" fill="#1a73e8" opacity="0.6"/>
+    <circle cx="100" cy="300" r="6" fill="#8430ce" opacity="0.8"/>
+    <circle cx="700" cy="180" r="5" fill="#4285f4" opacity="0.8"/>
+    <circle cx="780" cy="370" r="4" fill="#34a853" opacity="0.8"/>
+  </svg>
+</div>
+
+<!-- SLIDE 8: Sport Shoes Shopping Analogy -->
+<div class="slide" data-s="2" data-notes="The shoe shopping analogy bridges the unfamiliar (AI ecosystem) with something everyone knows. Three tiers: Brand → Product → Store. The same product often appears in multiple stores.">
+  <div class="label">AI Ecosystem — The Analogy</div>
+  <h2>Sport Shoes Shopping</h2>
+  <p class="subtitle">Brands → Products → Stores (many-to-many connections)</p>
+  <div style="width:100%;margin-top:1.5vh;overflow:hidden;">
+    <svg width="100%" viewBox="0 0 720 260">
+      <!-- Row 1: Brands (blue) -->
+      <rect x="80" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="140" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">Nike</text>
+      <rect x="300" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="360" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">Adidas</text>
+      <rect x="520" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="580" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">New Balance</text>
+      <!-- Row 2: Products (gray) -->
+      <rect x="20" y="104" width="106" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="73" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Air Jordan</text>
+      <rect x="142" y="104" width="106" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="195" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Air Force</text>
+      <rect x="264" y="104" width="106" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="317" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Ultraboost</text>
+      <rect x="386" y="104" width="106" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="439" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Yeezy</text>
+      <rect x="508" y="104" width="106" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="561" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">574</text>
+      <!-- Row 3: Stores (green) -->
+      <rect x="30" y="198" width="120" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="90" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Nike Store</text>
+      <rect x="174" y="198" width="120" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="234" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Footlocker</text>
+      <rect x="318" y="198" width="120" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="378" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Gagasport</text>
+      <rect x="462" y="198" width="120" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="522" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle">Adidas Store</text>
+      <!-- Connectors brand→product -->
+      <line x1="140" y1="42" x2="73" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="140" y1="42" x2="195" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="360" y1="42" x2="317" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="360" y1="42" x2="439" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="580" y1="42" x2="561" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <!-- Connectors product→store -->
+      <line x1="73" y1="136" x2="90" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="73" y1="136" x2="234" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="195" y1="136" x2="234" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="317" y1="136" x2="378" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="439" y1="136" x2="522" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="561" y1="136" x2="378" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <!-- Row labels -->
+      <text x="10" y="30" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" transform="rotate(-90,10,30)">Brands</text>
+      <text x="10" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" transform="rotate(-90,10,124)">Products</text>
+      <text x="10" y="218" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" transform="rotate(-90,10,218)">Stores</text>
+    </svg>
+  </div>
+</div>
+
+<!-- SLIDE 9: AI Shopping -->
+<div class="slide" data-s="2" data-notes="Same structure, mapped to AI. Vendors (Google, Anthropic, OpenAI) make Models (Gemini, Claude, GPT-5), which you access via Surfaces (websites and APIs). Same product can appear on multiple surfaces — Claude is on claude.ai, poe.com, and the API.">
+  <div class="label">AI Ecosystem</div>
+  <h2>AI Shopping <span class="accent">2026</span></h2>
+  <p class="subtitle">Same structure — Vendors → Models → Surfaces</p>
+  <div style="width:100%;margin-top:1.5vh;">
+    <svg width="100%" viewBox="0 0 720 260">
+      <!-- Row 1: Vendors (blue) -->
+      <rect x="80" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="140" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">Google</text>
+      <rect x="300" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="360" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">Anthropic</text>
+      <rect x="520" y="10" width="120" height="32" rx="6" fill="rgba(66,133,244,.2)" stroke="rgba(66,133,244,.5)" stroke-width="1"/>
+      <text x="580" y="30" fill="#4285f4" font-family="Roboto,sans-serif" font-size="13" text-anchor="middle" font-weight="500">OpenAI</text>
+      <!-- Row 2: Models (gray) -->
+      <rect x="20" y="104" width="110" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="75" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Gemini Flash</text>
+      <rect x="145" y="104" width="110" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="200" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Gemini Pro</text>
+      <rect x="270" y="104" width="116" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="328" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Claude Sonnet</text>
+      <rect x="400" y="104" width="110" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="455" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Claude Opus</text>
+      <rect x="524" y="104" width="110" height="32" rx="6" fill="rgba(110,122,150,.18)" stroke="rgba(110,122,150,.4)" stroke-width="1"/>
+      <text x="579" y="124" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">GPT-5</text>
+      <!-- Row 3: Surfaces (green) -->
+      <rect x="20" y="198" width="126" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="83" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">gemini.google.com</text>
+      <rect x="162" y="198" width="100" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="212" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">poe.com</text>
+      <rect x="278" y="198" width="118" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="337" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">perplexity.ai</text>
+      <rect x="412" y="198" width="100" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="462" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">claude.ai</text>
+      <rect x="528" y="198" width="110" height="32" rx="6" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.4)" stroke-width="1"/>
+      <text x="583" y="218" fill="#34a853" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">chatgpt.com</text>
+      <!-- Brand→Model lines -->
+      <line x1="140" y1="42" x2="75" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="140" y1="42" x2="200" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="360" y1="42" x2="328" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="360" y1="42" x2="455" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <line x1="580" y1="42" x2="579" y2="104" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <!-- Model→Surface lines -->
+      <line x1="75" y1="136" x2="83" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="200" y1="136" x2="83" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="328" y1="136" x2="462" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="328" y1="136" x2="212" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="455" y1="136" x2="462" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+      <line x1="579" y1="136" x2="583" y2="198" stroke="rgba(110,122,150,.25)" stroke-width="1"/>
+    </svg>
+  </div>
+</div>
+
+<!-- SLIDE 10: Sport Shoes 2026 (4-tier) -->
+<div class="slide" data-s="2" data-notes="Same diagram, extended. Stores now have internal experience zones — dedicated sections for running, basketball, lifestyle etc. This fourth tier maps perfectly to AI applications.">
+  <div class="label">AI Ecosystem — Extended</div>
+  <h2>Sport Shoes 2026 <span class="accent">— 4 Tiers</span></h2>
+  <p class="subtitle">Adding the fourth tier: in-store experience zones</p>
+  <div style="width:100%;margin-top:1vh;">
+    <svg width="100%" viewBox="0 0 720 300">
+      <!-- Rows 1-3 compact -->
+      <rect x="100" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="150" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Nike</text>
+      <rect x="310" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="360" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Adidas</text>
+      <rect x="520" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="570" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">New Balance</text>
+      <!-- Products -->
+      <rect x="50" y="72" width="95" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="97" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Air Jordan</text>
+      <rect x="160" y="72" width="95" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="207" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Air Force</text>
+      <rect x="280" y="72" width="95" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="327" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Ultraboost</text>
+      <rect x="390" y="72" width="90" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="435" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Yeezy</text>
+      <rect x="500" y="72" width="90" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="545" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">574</text>
+      <!-- Stores -->
+      <rect x="60" y="138" width="105" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="112" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Nike Store</text>
+      <rect x="182" y="138" width="105" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="234" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Footlocker</text>
+      <rect x="310" y="138" width="105" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="362" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Gagasport</text>
+      <rect x="432" y="138" width="105" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="484" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Adidas Store</text>
+      <!-- Experience zones (orange) -->
+      <text x="10" y="225" fill="#5f6368" font-family="Roboto,sans-serif" font-size="9" transform="rotate(-90,10,225)">Zones</text>
+      <rect x="22" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="67" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Running Hub</text>
+      <rect x="118" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="163" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Basketball Zone</text>
+      <rect x="214" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="259" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Training Center</text>
+      <rect x="310" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="355" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Sneaker Culture</text>
+      <rect x="406" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="451" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Outdoor Sports</text>
+      <rect x="502" y="210" width="90" height="24" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1"/>
+      <text x="547" y="225" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">Fitness Zone</text>
+      <!-- Connector lines (abbreviated) -->
+      <line x1="150" y1="34" x2="97" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="150" y1="34" x2="207" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="360" y1="34" x2="327" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="360" y1="34" x2="435" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="570" y1="34" x2="545" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="112" y1="164" x2="67" y2="210" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="112" y1="164" x2="163" y2="210" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="234" y1="164" x2="259" y2="210" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="362" y1="164" x2="355" y2="210" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="484" y1="164" x2="451" y2="210" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+    </svg>
+  </div>
+</div>
+
+<!-- SLIDE 11: AI Shopping 2026 (4-tier) -->
+<div class="slide" data-s="2" data-notes="The orange row is the key reveal. Codex and Atlas (ChatGPT), Claude Desktop and Claude Code (Anthropic), NotebookLM and Gemini Enterprise (Google). We'll come back to these in the agents section.">
+  <div class="label">AI Ecosystem</div>
+  <h2>AI Shopping <span class="accent">2026</span> — 4 Tiers</h2>
+  <p class="subtitle">The orange row = products/agents we'll come back to</p>
+  <div style="width:100%;margin-top:1vh;">
+    <svg width="100%" viewBox="0 0 720 280">
+      <!-- Vendors -->
+      <rect x="100" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="150" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Google</text>
+      <rect x="310" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="360" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Anthropic</text>
+      <rect x="520" y="8" width="100" height="26" rx="5" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1"/>
+      <text x="570" y="24" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">OpenAI</text>
+      <!-- Models -->
+      <rect x="50" y="72" width="100" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="100" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Gemini Flash</text>
+      <rect x="162" y="72" width="100" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="212" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Gemini Pro</text>
+      <rect x="280" y="72" width="110" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="335" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Claude Sonnet</text>
+      <rect x="402" y="72" width="100" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="452" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Claude Opus</text>
+      <rect x="514" y="72" width="90" height="26" rx="5" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.35)" stroke-width="1"/>
+      <text x="559" y="88" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">GPT-5</text>
+      <!-- Surfaces -->
+      <rect x="60" y="138" width="120" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="120" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">gemini.google.com</text>
+      <rect x="200" y="138" width="90" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="245" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">claude.ai</text>
+      <rect x="304" y="138" width="95" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="351" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">perplexity.ai</text>
+      <rect x="412" y="138" width="95" height="26" rx="5" fill="rgba(52,168,83,.12)" stroke="rgba(52,168,83,.38)" stroke-width="1"/>
+      <text x="459" y="154" fill="#34a853" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">chatgpt.com</text>
+      <!-- Apps (orange highlight) -->
+      <rect x="22" y="202" width="95" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="69" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">NotebookLM</text>
+      <rect x="124" y="202" width="100" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="174" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Gemini Enterprise</text>
+      <rect x="232" y="202" width="95" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="279" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Claude Desktop</text>
+      <rect x="334" y="202" width="90" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="379" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Claude Code</text>
+      <rect x="430" y="202" width="80" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="470" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Codex</text>
+      <rect x="516" y="202" width="80" height="26" rx="5" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="556" y="218" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">ChatGPT Plus</text>
+      <!-- Some connectors -->
+      <line x1="150" y1="34" x2="100" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="150" y1="34" x2="212" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="360" y1="34" x2="335" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="360" y1="34" x2="452" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="570" y1="34" x2="559" y2="72" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+      <line x1="120" y1="164" x2="69" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="120" y1="164" x2="174" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="245" y1="164" x2="279" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="245" y1="164" x2="379" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="459" y1="164" x2="470" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+      <line x1="459" y1="164" x2="556" y2="202" stroke="rgba(52,168,83,.2)" stroke-width="1"/>
+    </svg>
+  </div>
+  <p class="fn">Notice the orange row — these are where agents live. We'll come back to them in Half 2.</p>
+</div>
+
+<!-- SLIDE 12: One Model CAN'T Fit All -->
+<div class="slide" data-s="2" data-notes="No single AI wins at everything. Gemini Pro for vision/multimodal. GPT for reasoning/analysis. Claude for coding and long documents. DeepSeek for Chinese-language tasks. Build an AI toolbox, not a single-vendor relationship.">
+  <div class="label">AI Ecosystem</div>
+  <h2>One Model <span class="accent">CAN'T</span> Fit All</h2>
+  <p class="subtitle">Build your AI toolbox — each model excels in unique ways</p>
+  <div class="card-grid grid4" style="margin-top:2.5vh;">
+    <div class="card"><h4 style="color:var(--c2)">Gemini Pro</h4><p>Multimodal champion with exceptional visual understanding and native Google Workspace integration</p></div>
+    <div class="card"><h4 style="color:var(--c1)">OpenAI GPT-5</h4><p>Thoughtful problem-solver with strong analytical and reasoning capabilities across domains</p></div>
+    <div class="card"><h4 style="color:var(--c3)">Claude Opus</h4><p>Go-to for complex coding, long documents, and nuanced instruction-following</p></div>
+    <div class="card"><h4 style="color:var(--c4)">DeepSeek</h4><p>Specialized in Chinese-language tasks and cultural contexts; strong coding and reasoning</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 13: Understanding AI Model Fundamentals -->
+<div class="slide" data-s="2" data-notes="Two numbers matter most when comparing AI models: (1) how smart/accurate it is (avoiding hallucination), and (2) how much it can hold in working memory at once (context window). Everything else is secondary.">
+  <div class="label">AI Ecosystem — Fundamentals</div>
+  <h2>Understanding <span class="accent">AI Model Fundamentals</span></h2>
+  <p class="subtitle">When evaluating models, check these 2 critical attributes</p>
+  <div class="card-grid grid2" style="margin-top:3vh;">
+    <div class="card" style="border-top:3px solid var(--c1);padding:2vw 2.2vw;">
+      <div class="icon">🧠</div>
+      <h3>Smartness</h3>
+      <p>Accuracy without hallucination. How often does the model produce correct, reliable answers? Does it make up citations, invent facts, or confidently say wrong things?</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--c4);padding:2vw 2.2vw;">
+      <div class="icon">💾</div>
+      <h3>Memory Capacity</h3>
+      <p>Context Window — how much text the model can process at once. Bigger = can handle longer documents, longer conversations, more context.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: Understanding Tokens -->
+<div class="slide" data-s="2" data-notes="Tokens are the currency of AI. 1 token ≈ 4 characters or ¾ of a word. APIs charge by tokens. The context window is measured in tokens. A 200K context window can hold about 150,000 words — roughly a full novel.">
+  <div class="label">AI Ecosystem — Tokens</div>
+  <h2>Understanding <span class="accent">Tokens</span></h2>
+  <div class="card-grid grid4" style="margin-top:3vh;">
+    <div class="card" style="border-left:3px solid var(--c1);">
+      <span class="icon">🪙</span>
+      <h4>Example</h4>
+      <p>1 token ≈ 4 characters &nbsp;·&nbsp; ¾ of an English word</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--c3);">
+      <span class="icon">💰</span>
+      <h4>Cost</h4>
+      <p>APIs charge per token consumed — both input (prompt) and output (response)</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--c2);">
+      <span class="icon">💬</span>
+      <h4>Includes</h4>
+      <p>Everything in your conversation: your messages, AI replies, documents pasted in</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--c4);">
+      <span class="icon">🔭</span>
+      <h4>Context Window</h4>
+      <p>The size of the AI model's working memory — all it can "see" right now</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15: AI Cost — Subscription vs API -->
+<div class="slide" data-s="2" data-notes="This is the bridge slide for cost. Subscription is predictable but capped. API is unlimited but variable. When you move to agents, you almost always move to API — because agents burn tokens fast. This cost shift is why enterprise pricing matters.">
+  <div class="label">AI Ecosystem — How You Pay</div>
+  <h2>Subscription <span class="accent">vs</span> API</h2>
+  <div class="card-grid grid2" style="margin-top:2.5vh;">
+    <div class="card" style="border-top:3px solid var(--c5);">
+      <h4>🍱 Subscription — "All You Can Eat"</h4>
+      <ul class="blist" style="--accent:var(--c5)">
+        <li>Flat ~US$20/month (ChatGPT Plus, Claude Pro, Gemini Advanced)</li>
+        <li>Usage quota — resets on a rolling window</li>
+        <li>Predictable cost, hits a wall when quota exceeded</li>
+        <li><strong>Best for:</strong> individuals, daily chat, exploration</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--c2);">
+      <h4>🔌 API — Pay As You Go (per token)</h4>
+      <ul class="blist" style="--accent:var(--c2)">
+        <li>Claude Sonnet: ~$3/1M input tokens, ~$15/1M output</li>
+        <li>Sample Q&amp;A: 10K input = $0.03 + 2K output = $0.03 → <strong>$0.06/req</strong></li>
+        <li>No cap — cost scales with usage linearly</li>
+        <li><strong>Best for:</strong> apps, automation, agents, variable workloads</li>
+      </ul>
+    </div>
+  </div>
+  <p class="fn">When you move from chat to agents, you almost always move to API — agents burn tokens fast. This is the cost shift to expect in Half 2.</p>
+</div>
+
+<!-- SLIDE 16: AI Memory — Context Window -->
+<div class="slide" data-s="2" data-notes="Memory is the single biggest reason people get frustrated with AI. The model didn't 'forget on purpose' — it ran out of working memory. Once you internalize that the context window IS the memory, you stop blaming the AI and start managing the window.">
+  <div class="label">AI Ecosystem — Memory</div>
+  <h2>AI Memory = <span class="accent">Context Window</span></h2>
+  <div style="display:flex;gap:3vw;align-items:flex-start;margin-top:2vh;">
+    <div style="flex:1;">
+      <ul class="blist">
+        <li>No long-term memory between sessions — each new chat starts fresh</li>
+        <li>Within a session, the context window IS its working memory</li>
+        <li>When the window fills up, the AI starts forgetting the earliest parts</li>
+        <li>Bigger model = bigger memory (Gemini Pro 1M, Claude 200K)</li>
+        <li>Long chats need handover summaries — same as a temp worker</li>
+      </ul>
+    </div>
+    <div style="flex:0 0 42%;">
+      <!-- Context window visual -->
+      <svg width="100%" viewBox="0 0 300 240">
+        <!-- Window frame -->
+        <rect x="20" y="10" width="260" height="210" rx="10" fill="none" stroke="rgba(66,133,244,.5)" stroke-width="1.5"/>
+        <text x="150" y="230" fill="#5f6368" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">context window</text>
+        <!-- Fading bubbles (older = more transparent) -->
+        <rect x="40" y="22" width="180" height="24" rx="6" fill="rgba(110,122,150,.1)" stroke="rgba(110,122,150,.15)" stroke-width="1"/>
+        <text x="130" y="37" fill="rgba(110,122,150,.3)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">User: Hello, can you help me...</text>
+        <rect x="40" y="52" width="160" height="24" rx="6" fill="rgba(110,122,150,.15)" stroke="rgba(110,122,150,.2)" stroke-width="1"/>
+        <text x="120" y="67" fill="rgba(110,122,150,.4)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">AI: Of course! Let me...</text>
+        <rect x="40" y="82" width="190" height="24" rx="6" fill="rgba(66,133,244,.1)" stroke="rgba(66,133,244,.2)" stroke-width="1"/>
+        <text x="135" y="97" fill="rgba(66,133,244,.5)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">User: What about the project...</text>
+        <rect x="40" y="112" width="170" height="24" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+        <text x="125" y="127" fill="rgba(66,133,244,.6)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">AI: The project requires...</text>
+        <rect x="40" y="142" width="200" height="24" rx="6" fill="rgba(66,133,244,.22)" stroke="rgba(66,133,244,.4)" stroke-width="1"/>
+        <text x="140" y="157" fill="rgba(66,133,244,.8)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">User: Can you summarize...</text>
+        <rect x="40" y="172" width="180" height="24" rx="6" fill="rgba(66,133,244,.3)" stroke="rgba(66,133,244,.6)" stroke-width="1"/>
+        <text x="130" y="187" fill="#202124" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">AI: Here is the summary...</text>
+        <!-- Fade arrow at top -->
+        <text x="150" y="19" fill="rgba(234,67,53,.7)" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">↑ FORGETTING</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17: 忘記和記 -->
+<div class="slide" data-s="2" data-notes="This Cantonese song captures the AI experience exactly. Every conversation, the AI cycles through what to forget and what to remember — bounded by its context window. Hold this image — it's the emotional shorthand for everything we just covered about memory." style="padding:0;">
+  <!-- Black canvas so letterbox areas look clean -->
+  <div style="position:absolute;inset:0;background:#0a0a0a;"></div>
+  <!-- Full image — never cropped, object-fit contain preserves all subjects -->
+  <img src="https://img.vocus.cc/sqzFz8bc5eIZoBq0fehhCNLOa-e19HEy6bHDGp_WbbU/w:740/f:webp/plain/https://images.vocus.cc/9146378e-5fb9-4dda-8f76-7789c7f0b5f5.jpg"
+       style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;">
+  <!-- Gradient only over bottom 40% for text legibility -->
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.5) 30%,transparent 60%);"></div>
+  <!-- Slide top color bar — override white bg -->
+  <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#1a73e8;z-index:2;"></div>
+  <!-- Text overlay — bottom aligned -->
+  <div style="position:absolute;bottom:8vh;left:6vw;right:6vw;z-index:2;">
+    <div style="font-size:clamp(9px,1vw,11px);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.8rem;font-family:Roboto,sans-serif;font-weight:500;">AI Ecosystem — Memory</div>
+    <div style="font-family:'Poppins',sans-serif;font-size:clamp(40px,6vw,88px);font-weight:700;color:#fff;line-height:1.05;letter-spacing:-.02em;">《忘記和記》</div>
+    <div style="font-family:'Poppins',sans-serif;font-size:clamp(14px,1.8vw,24px);font-weight:400;color:rgba(255,255,255,.75);margin-top:.6rem;font-style:italic;">"Forget and Remember"</div>
+    <div style="margin-top:1.2rem;font-size:clamp(12px,1.3vw,17px);color:rgba(255,255,255,.6);font-family:Roboto,sans-serif;max-width:55ch;line-height:1.55;">Your AI lives this loop every conversation — bounded by its context window.</div>
+  </div>
+</div>
+
+<!-- SLIDE 18: AI Model Memory Comparison -->
+<div class="slide" data-s="2" data-notes="LLaMA at 10M tokens is the open-source outlier. Gemini Pro's 1M context is why it wins for long-document tasks. Claude at 200K is still large enough for most enterprise documents. Context window size almost always comes with a cost premium.">
+  <div class="label">AI Ecosystem — Model Comparison</div>
+  <h2>AI Model <span class="accent">Memory Comparison</span></h2>
+  <table class="dt" style="margin-top:2.5vh;">
+    <thead><tr><th>Model</th><th>Context Window</th><th>Best Use Case</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Gemini Pro</strong></td><td style="color:var(--c2);">1,000,000 tokens</td><td>Multimodal tasks, long-context coding</td></tr>
+      <tr><td><strong>LLaMA</strong></td><td style="color:var(--c3);">10,000,000 tokens</td><td>Open-source applications, efficient processing</td></tr>
+      <tr><td><strong>GPT-5</strong></td><td style="color:var(--c1);">400,000 tokens</td><td>General purpose, multimodal processing</td></tr>
+      <tr><td><strong>Claude Sonnet/Opus</strong></td><td style="color:var(--c4);">200,000 tokens</td><td>Document analysis, research, complex reasoning</td></tr>
+      <tr><td><strong>DeepSeek</strong></td><td style="color:var(--muted);">128,000 tokens</td><td>Code generation, reasoning, large-context understanding</td></tr>
+    </tbody>
+  </table>
+  <p class="fn">Larger context = more working memory per session, but usually higher cost per API call.</p>
+</div>
+
+<!-- SLIDE 19: Section 3 Divider — How to Collaborate -->
+<div class="slide div-slide kb3" data-s="3" data-notes="Section 3: How to Collaborate. Now that you know which AI to pick, how do you actually work with it? The core mental model is the MIT Graduate Intern.">
+  <span class="dbar" style="--accent:var(--c3)"></span>
+  <div class="div-tag">Section 3<br><span style="color:var(--c3)">How to Collaborate</span></div>
+  <p class="div-sub">Talking to AI effectively — the mindset shift</p>
+  <!-- Human + robot handshake — dominant right-half illustration -->
+  <svg style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:48%;max-width:680px;pointer-events:none;" viewBox="0 0 340 260" preserveAspectRatio="xMidYMid meet">
+    <!-- === HUMAN ARM (left, warm skin tones) === -->
+    <!-- Sleeve / forearm -->
+    <rect x="10" y="108" width="88" height="44" rx="10" fill="#5c8ee6" opacity=".9"/>
+    <!-- Cuff -->
+    <rect x="88" y="104" width="18" height="52" rx="6" fill="#fff" opacity=".95"/>
+    <!-- Palm -->
+    <rect x="100" y="110" width="52" height="40" rx="10" fill="#f5c5a3"/>
+    <!-- Thumb -->
+    <ellipse cx="116" cy="108" rx="10" ry="8" fill="#f5c5a3"/>
+    <!-- Fingers curled into handshake -->
+    <rect x="145" y="112" width="36" height="10" rx="5" fill="#f0b48a"/>
+    <rect x="145" y="126" width="36" height="10" rx="5" fill="#f0b48a"/>
+    <rect x="145" y="140" width="32" height="10" rx="5" fill="#f0b48a"/>
+    <!-- Knuckle shading -->
+    <ellipse cx="148" cy="117" rx="3" ry="2" fill="#e8a07a" opacity=".5"/>
+    <ellipse cx="148" cy="131" rx="3" ry="2" fill="#e8a07a" opacity=".5"/>
+
+    <!-- === ROBOT ARM (right, metallic cool gray) === -->
+    <!-- Robot forearm tube -->
+    <rect x="242" y="108" width="88" height="44" rx="10" fill="#bdc1c6" opacity=".9"/>
+    <!-- Circuit detail on arm -->
+    <line x1="260" y1="120" x2="310" y2="120" stroke="#9aa0a6" stroke-width="1.5"/>
+    <line x1="275" y1="120" x2="275" y2="130" stroke="#9aa0a6" stroke-width="1.5"/>
+    <line x1="295" y1="120" x2="295" y2="128" stroke="#9aa0a6" stroke-width="1.5"/>
+    <circle cx="275" cy="133" r="3" fill="#4285f4" opacity=".8"/>
+    <circle cx="295" cy="131" r="3" fill="#34a853" opacity=".8"/>
+    <!-- Robot wrist joint -->
+    <rect x="232" y="104" width="18" height="52" rx="6" fill="#9aa0a6"/>
+    <line x1="238" y1="115" x2="244" y2="115" stroke="#bdc1c6" stroke-width="1.5"/>
+    <line x1="238" y1="125" x2="244" y2="125" stroke="#bdc1c6" stroke-width="1.5"/>
+    <line x1="238" y1="135" x2="244" y2="135" stroke="#bdc1c6" stroke-width="1.5"/>
+    <line x1="238" y1="145" x2="244" y2="145" stroke="#bdc1c6" stroke-width="1.5"/>
+    <!-- Robot palm -->
+    <rect x="188" y="110" width="52" height="40" rx="8" fill="#e8eaed"/>
+    <!-- Robot panel lines -->
+    <line x1="196" y1="122" x2="232" y2="122" stroke="#bdc1c6" stroke-width="1"/>
+    <line x1="196" y1="134" x2="232" y2="134" stroke="#bdc1c6" stroke-width="1"/>
+    <!-- Robot finger segments -->
+    <rect x="159" y="112" width="36" height="10" rx="4" fill="#e8eaed" stroke="#bdc1c6" stroke-width=".5"/>
+    <rect x="159" y="126" width="36" height="10" rx="4" fill="#e8eaed" stroke="#bdc1c6" stroke-width=".5"/>
+    <rect x="163" y="140" width="32" height="10" rx="4" fill="#e8eaed" stroke="#bdc1c6" stroke-width=".5"/>
+    <!-- Robot knuckle dots -->
+    <circle cx="192" cy="117" r="2" fill="#4285f4" opacity=".7"/>
+    <circle cx="192" cy="131" r="2" fill="#4285f4" opacity=".7"/>
+    <!-- Robot thumb -->
+    <ellipse cx="218" cy="108" rx="10" ry="8" fill="#e8eaed" stroke="#bdc1c6" stroke-width=".5"/>
+
+    <!-- CLASP zone — overlap / grip highlight -->
+    <ellipse cx="170" cy="130" rx="20" ry="22" fill="rgba(66,133,244,.08)" stroke="rgba(66,133,244,.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+    <!-- Glow dot at handshake point -->
+    <circle cx="170" cy="130" r="5" fill="#4285f4" opacity=".7"/>
+    <circle cx="170" cy="130" r="9" fill="none" stroke="#4285f4" stroke-width="1" opacity=".4"/>
+    <circle cx="170" cy="130" r="14" fill="none" stroke="#4285f4" stroke-width=".5" opacity=".25"/>
+
+    <!-- Labels -->
+    <text x="56" y="175" fill="rgba(255,255,255,.65)" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">Human</text>
+    <text x="284" y="175" fill="rgba(255,255,255,.65)" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="500">AI</text>
+  </svg>
+</div>
+
+<!-- SLIDE 20: AI as Your MIT Graduate Intern -->
+<div class="slide" data-s="3" data-notes="This is the single most useful mental model in the whole deck. Every other 'how to talk to AI' tip flows from this metaphor. Brilliant, but brand new. Knows everything from books; hasn't done the job. Give it clear directions, examples, and feedback.">
+  <div class="hero">
+    <div style="font-size:clamp(14px,1.5vw,18px);letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;">How to Collaborate</div>
+    <h1 style="text-align:center;line-height:1.15;">Think of AI as your<br><span class="accent">MIT Graduate Intern</span></h1>
+    <p style="font-family:var(--fd);font-size:clamp(20px,2.5vw,36px);color:#5f6368;font-style:italic;margin-top:1rem;">Brilliant — but new on the job.</p>
+    <div style="display:flex;gap:3rem;margin-top:2.5rem;text-align:left;">
+      <div style="display:flex;gap:.8rem;align-items:flex-start;">
+        <span style="color:var(--c3);font-size:1.2rem;">→</span>
+        <span style="font-size:clamp(14px,1.4vw,18px);color:#3c4043;">Needs clear direction</span>
+      </div>
+      <div style="display:flex;gap:.8rem;align-items:flex-start;">
+        <span style="color:var(--c3);font-size:1.2rem;">→</span>
+        <span style="font-size:clamp(14px,1.4vw,18px);color:#3c4043;">Learns fast from examples and feedback</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 21: Working with Your AI Intern -->
+<div class="slide" data-s="3" data-notes="Four principles. Smarter model = less supervision needed. Set appropriate expectations — AI has real blind spots. Specific instructions with examples beat vague requests. Build systematic workflows where you review, not just receive.">
+  <div class="label">How to Collaborate</div>
+  <h2>Working with Your <span class="accent">AI Intern</span></h2>
+  <div class="card-grid grid2" style="margin-top:2.5vh;">
+    <div class="card"><span class="icon">🧠</span><h4>Smarter model, more capable intern</h4><p>Advanced models handle complex tasks with less supervision. Upgrade your model when you need more reliability.</p></div>
+    <div class="card"><span class="icon">⚖️</span><h4>Set appropriate expectations</h4><p>Understand strengths and limitations. AI excels at drafting, analysis, and synthesis — but verify anything critical.</p></div>
+    <div class="card"><span class="icon">💬</span><h4>Clear, specific instructions</h4><p>Examples yield far better results than vague descriptions. The more specific you are, the less revision you'll need.</p></div>
+    <div class="card"><span class="icon">🏗️</span><h4>Build productive workflows</h4><p>Systematic processes that leverage AI strengths while keeping humans in the review and decision loop.</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 22: The Temporary Worker & Context Windows -->
+<div class="slide" data-s="3" data-notes="Five practical habits. Clear goals upfront, defined scope, and always ask for a handover summary before ending a complex session. The AI will forget everything when the window closes. Treat it like a brilliant temp who starts fresh tomorrow.">
+  <div class="label">How to Collaborate</div>
+  <h2>The Temporary Worker <span class="accent">Model</span></h2>
+  <div class="card-grid grid3" style="margin-top:2.5vh;">
+    <div class="card"><span class="icon">👤</span><h4>AI chats are like a temp worker</h4><p>Limited memory, starts fresh each session, can only see the current conversation</p></div>
+    <div class="card"><span class="icon">🎯</span><h4>Provide clear goals upfront</h4><p>Well-defined objectives help AI understand purpose from the very start</p></div>
+    <div class="card"><span class="icon">📋</span><h4>Define a clear job scope</h4><p>Setting boundaries helps AI stay relevant and avoid scope creep</p></div>
+  </div>
+  <div class="card-grid grid2" style="margin-top:1.2vw;">
+    <div class="card"><span class="icon">📜</span><h4>Ask for a handover document</h4><p>Request summaries to preserve important information before starting a new session</p></div>
+    <div class="card"><span class="icon">🔄</span><h4>The context window determines memory</h4><p>Everything the AI can reference is what you've put in this conversation window</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 23: Prompting 101 Sub-divider -->
+<div class="slide div-slide" data-s="3" style="background:linear-gradient(135deg,#34a853 0%,#1e8e3e 100%);justify-content:center;align-items:center;" data-notes="Sub-section: Prompting 101. The CAST framework gives you a reliable four-part prompt structure.">
+  <div style="text-align:center;">
+    <div style="font-family:var(--fd);font-size:clamp(48px,7vw,96px);font-weight:700;color:#fff;letter-spacing:-.02em;">PROMPTING</div>
+    <div style="font-family:var(--fd);font-size:clamp(24px,4vw,56px);font-weight:300;color:rgba(255,255,255,.75);font-style:italic;margin-top:.5rem;">101</div>
+    <div style="width:60px;height:3px;background:rgba(255,255,255,.5);margin:1.5rem auto 0;border-radius:1px;"></div>
+  </div>
+</div>
+
+<!-- SLIDE 24: CAST Framework -->
+<div class="slide" data-s="3" data-notes="CAST is the prompt framework that works across every AI model. Character/target audience, Aim/goal, Specific context, Template/format. Using this structure puts you in the top 20% of AI users immediately.">
+  <div class="label">Prompting 101</div>
+  <h2><span class="accent">CAST</span>: The Prompt Framework</h2>
+  <div class="card-grid grid2" style="margin-top:2.5vh;">
+    <div class="card cast-c"><h4>C — Character or Target Audience</h4><p>Define who the AI should be, or who the output is for.<br><em style="color:var(--c2);">"Act as an experienced data scientist..."</em></p></div>
+    <div class="card cast-a"><h4>A — Aim or Goal</h4><p>Clearly state what you want to accomplish.<br><em style="color:var(--c3);">"Create a marketing plan for..."</em></p></div>
+    <div class="card cast-s"><h4>S — Specific Detail or Context</h4><p>Provide industry context, constraints, and background — the more the better.</p></div>
+    <div class="card cast-t"><h4>T — Template or Format</h4><p>Specify how you want the answer presented.<br><em style="color:var(--c5);">"As a bulleted list," "In a table," "Under 200 words"</em></p></div>
+  </div>
+  <p class="fn">Using this structured approach helps your AI "intern" deliver exactly what you need — first time.</p>
+</div>
+
+<!-- SLIDE 25: Learning Prompting from AI -->
+<div class="slide" data-s="3" data-notes="The meta-move: ask the AI to improve your prompt. 'Here's my draft prompt. How would you rewrite it to get better results?' This is especially powerful for image generation — those AIs have very specific prompt formats.">
+  <div class="label">Prompting 101</div>
+  <h2>Learning Prompting <span class="accent">from AI</span></h2>
+  <div class="card-grid grid2" style="margin-top:2.5vh;">
+    <div class="card"><span class="icon">💡</span><h4>Let AI teach you</h4><p>Ask AI to analyze your prompts and suggest specific improvements to structure and clarity</p></div>
+    <div class="card"><span class="icon">✍️</span><h4>Ask AI to write a prompt for you</h4><p>For complex requests, ask AI to formulate the optimal prompt structure before you run it</p></div>
+    <div class="card"><span class="icon">🖼️</span><h4>Especially useful for image AI</h4><p>Image models (Midjourney, DALL·E, Imagen) have very specific prompt templates — ask them first</p></div>
+    <div class="card"><span class="icon">✨</span><h4>Build a prompt library</h4><p>Identify patterns in successful prompts and save them as reusable templates in your workflow</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 26: Section 4 Divider — From LLM Chat to Agent -->
+<div class="slide div-slide kb4" data-s="4" data-notes="PIVOT POINT. Everything before this slide was AI you talk to. Everything after is AI that does. This is the transition from tool user to tool deployer.">
+  <span class="dbar" style="background:rgba(255,255,255,.5);"></span>
+  <div class="div-tag">Section 4<br><span style="color:rgba(255,255,255,.85)">From LLM Chat</span><br><span style="color:rgba(255,255,255,.85)">to Agent</span></div>
+  <p class="div-sub" style="margin-top:1.5rem;">Everything before: AI you <em>talk to</em>.<br>Everything after: AI that <em>does</em>.</p>
+
+  <!-- Chat vs Agent split illustration — right half -->
+  <svg style="position:absolute;right:4vw;top:50%;transform:translateY(-50%);pointer-events:none;" width="420" height="300" viewBox="0 0 420 300">
+
+    <!-- Dividing line -->
+    <line x1="210" y1="20" x2="210" y2="280" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <rect x="185" y="132" width="50" height="36" rx="8" fill="rgba(255,255,255,.12)"/>
+    <text x="210" y="147" fill="#fff" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="700">→</text>
+    <text x="210" y="159" fill="rgba(255,255,255,.6)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">pivot</text>
+
+    <!-- === LEFT: CHAT (person ↔ bubbles) === -->
+    <text x="105" y="18" fill="rgba(255,255,255,.5)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" letter-spacing=".1em">CHAT</text>
+    <!-- Person silhouette -->
+    <circle cx="60" cy="90" r="18" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+    <text x="60" y="95" font-size="18" text-anchor="middle" fill="rgba(255,255,255,.7)">👤</text>
+    <rect x="40" y="112" width="40" height="50" rx="8" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+    <!-- Phone in hand -->
+    <rect x="52" y="120" width="16" height="26" rx="3" fill="rgba(255,255,255,.25)" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+    <rect x="54" y="123" width="12" height="17" rx="1" fill="rgba(255,255,255,.15)"/>
+    <!-- Chat bubbles -->
+    <rect x="90" y="72" width="100" height="28" rx="8" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+    <polygon points="90,86 80,90 90,94" fill="rgba(255,255,255,.18)"/>
+    <text x="140" y="91" fill="#fff" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">What's 3+3?</text>
+    <rect x="90" y="112" width="80" height="28" rx="8" fill="rgba(124,58,237,.5)" stroke="rgba(167,139,250,.5)" stroke-width="1"/>
+    <polygon points="90,126 80,130 90,134" fill="rgba(124,58,237,.5)"/>
+    <text x="130" y="131" fill="#fff" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">The answer is 6.</text>
+    <!-- "You act" label -->
+    <rect x="76" y="155" width="118" height="22" rx="5" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.2)" stroke-width=".5"/>
+    <text x="135" y="170" fill="rgba(255,255,255,.55)" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">You ask · AI answers · You act</text>
+
+    <!-- === RIGHT: AGENT (person relaxing, AI working) === -->
+    <text x="315" y="18" fill="rgba(255,255,255,.5)" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" letter-spacing=".1em">AGENT</text>
+    <!-- Person leaning back relaxed -->
+    <circle cx="260" cy="85" r="18" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+    <text x="260" y="90" font-size="18" text-anchor="middle" fill="rgba(255,255,255,.7)">🧑‍💼</text>
+    <rect x="240" y="107" width="40" height="50" rx="8" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+    <!-- Goal bubble from person -->
+    <line x1="295" y1="92" x2="320" y2="100" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="318" y="78" width="88" height="22" rx="6" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+    <text x="362" y="93" fill="rgba(255,255,255,.85)" font-family="Roboto,sans-serif" font-size="8" text-anchor="middle">Goal: Draft report</text>
+    <!-- AI agent hub -->
+    <circle cx="355" cy="155" r="22" fill="rgba(124,58,237,.4)" stroke="rgba(167,139,250,.7)" stroke-width="1.5"/>
+    <text x="355" y="151" fill="#fff" font-family="Roboto,sans-serif" font-size="8" text-anchor="middle" font-weight="600">AI</text>
+    <text x="355" y="162" fill="rgba(255,255,255,.7)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">Agent</text>
+    <!-- Tool spokes -->
+    <line x1="340" y1="138" x2="318" y2="118" stroke="rgba(167,139,250,.5)" stroke-width="1"/>
+    <rect x="295" y="105" width="24" height="16" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+    <text x="307" y="116" fill="rgba(255,255,255,.7)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">🔍 web</text>
+    <line x1="377" y1="140" x2="395" y2="120" stroke="rgba(167,139,250,.5)" stroke-width="1"/>
+    <rect x="390" y="107" width="24" height="16" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+    <text x="402" y="118" fill="rgba(255,255,255,.7)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">📄 file</text>
+    <line x1="355" y1="177" x2="355" y2="198" stroke="rgba(167,139,250,.5)" stroke-width="1"/>
+    <rect x="336" y="196" width="38" height="16" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+    <text x="355" y="207" fill="rgba(255,255,255,.7)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">📧 email</text>
+    <line x1="333" y1="165" x2="308" y2="172" stroke="rgba(167,139,250,.5)" stroke-width="1"/>
+    <rect x="280" y="164" width="28" height="16" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+    <text x="294" y="175" fill="rgba(255,255,255,.7)" font-family="Roboto,sans-serif" font-size="7" text-anchor="middle">⚙ code</text>
+    <!-- "You review" label -->
+    <rect x="228" y="230" width="170" height="22" rx="5" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.2)" stroke-width=".5"/>
+    <text x="313" y="245" fill="rgba(255,255,255,.55)" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">You set goal · AI acts · You review</text>
+  </svg>
+</div>
+
+<!-- SLIDE 27: Chat vs Agent -->
+<div class="slide" data-s="4" data-notes="The clearest possible summary: Chat = you ask, AI answers, you act. Agent = you set a goal, AI plans, uses tools, acts, you review. The shift from 'answer' to 'action' is the entire story of this section.">
+  <div class="label">From LLM Chat to Agent</div>
+  <h2>Chat <span class="accent">→</span> Agent</h2>
+  <div class="card-grid grid2" style="margin-top:3vh;">
+    <div class="feat-card" style="border-top:3px solid var(--c2);">
+      <h3 style="color:var(--c2);">💬 Chat</h3>
+      <div style="font-size:clamp(14px,1.5vw,20px);margin:1.2rem 0;line-height:1.6;">You ask. AI answers. <strong>You act.</strong></div>
+      <ul class="blist" style="--accent:var(--c2)">
+        <li>Single turn: one question, one answer</li>
+        <li>You copy-paste the result manually</li>
+        <li>You close the loop yourself</li>
+      </ul>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c4);">
+      <h3 style="color:var(--c4);">🤖 Agent</h3>
+      <div style="font-size:clamp(14px,1.5vw,20px);margin:1.2rem 0;line-height:1.6;">You set a goal. AI plans, uses tools, acts. <strong>You review.</strong></div>
+      <ul class="blist" style="--accent:var(--c4)">
+        <li>Multi-step: AI loops until done</li>
+        <li>AI takes real actions (web, files, email)</li>
+        <li>You review outputs, not every step</li>
+      </ul>
+    </div>
+  </div>
+  <p class="fn"><strong>An agent = LLM + tools + a loop, working toward a goal.</strong></p>
+</div>
+
+<!-- SLIDE 28: The Agent Recipe -->
+<div class="slide" data-s="4" data-notes="Three ingredients, every agent. The LLM decides what to do next. The tools let it act in the world. The loop keeps it going until the goal is reached or it hits a wall. Remove any one ingredient and it's not an agent — it's just a chatbot or a script.">
+  <div class="label">From LLM Chat to Agent</div>
+  <h2>The <span class="accent">Agent Recipe</span></h2>
+  <div class="card-grid grid3" style="margin-top:3vh;">
+    <div class="card" style="border-top:3px solid var(--c4);text-align:center;padding:2.5vw 2vw;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🧠</div>
+      <h4 style="font-size:clamp(18px,2vw,28px);margin-bottom:.8rem;">LLM</h4>
+      <p>The brain — decides what to do next at each step</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--c5);text-align:center;padding:2.5vw 2vw;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🛠️</div>
+      <h4 style="font-size:clamp(18px,2vw,28px);margin-bottom:.8rem;">Tools</h4>
+      <p>The hands — web, files, code, APIs, databases</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--c6);text-align:center;padding:2.5vw 2vw;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🔄</div>
+      <h4 style="font-size:clamp(18px,2vw,28px);margin-bottom:.8rem;">Loop</h4>
+      <p>The persistence — plan → act → observe → repeat</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2.5vh;">
+    <div style="display:inline-flex;gap:1.5rem;align-items:center;font-size:clamp(14px,1.4vw,18px);color:var(--muted);">
+      <span style="color:var(--c4);">Plan</span> → <span style="color:var(--c5);">Act</span> → <span style="color:var(--c6);">Observe</span> → <span style="color:var(--c4);">Plan</span> → ...
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 29: Agent Tools — Gemini Enterprise Connectors -->
+<div class="slide" data-s="4" data-notes="Tools are what give agents their reach. Gemini Enterprise ships with ~13 enterprise connectors out of the box. These 6 cover the jobs most enterprise teams actually need: communicate, store, track, document, and send. The tools are the rails your agent runs on.">
+  <div class="label">From LLM Chat to Agent</div>
+  <h2>Agent Tools — <span class="accent">Connectors</span></h2>
+  <p class="subtitle">Give AI the tools they need to do your job — Gemini Enterprise (April 2026)</p>
+  <div class="card-grid grid3" style="margin-top:2vh;">
+    <div class="card"><h4>💬 Microsoft Teams</h4><p>Chat and notify across enterprise channels</p></div>
+    <div class="card"><h4>📁 Google Drive</h4><p>Read, create, and organize documents in the cloud</p></div>
+    <div class="card"><h4>🎫 Jira Cloud</h4><p>File, update, and comment on tickets</p></div>
+    <div class="card"><h4>📄 Confluence Cloud</h4><p>Create and edit wiki pages and documentation</p></div>
+    <div class="card"><h4>🧠 Notion</h4><p>Manage databases, pages, and team knowledge bases</p></div>
+    <div class="card"><h4>📧 Microsoft Outlook</h4><p>Send email and schedule meetings on your behalf</p></div>
+  </div>
+  <p class="fn">These 6 are among the most-used Gemini Enterprise connectors. They connect agents to where your work actually lives.</p>
+</div>
+
+<!-- SLIDE 30: Consumer Agents in 2026 -->
+<div class="slide" data-s="4" data-notes="Four consumer agents you can use today. Cursor — coding agent in your editor. Claude Desktop — Anthropic's desktop agent for chat plus tools. Manus — research and multi-step tasks. Perplexity Computer — a browser-based agent that actually surfs the web and takes actions.">
+  <div class="label">From LLM Chat to Agent</div>
+  <h2>Consumer Agents <span class="accent">in 2026</span></h2>
+  <div class="card-grid grid2" style="margin-top:3vh;">
+
+    <!-- Cursor -->
+    <div class="feat-card" style="border-left:3px solid #0d0d0d;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:.9rem;">
+        <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0;border-radius:8px;">
+          <rect width="36" height="36" rx="8" fill="#0d0d0d"/>
+          <!-- cursor arrow -->
+          <path d="M10 7 L10 26 L15 21 L18.5 28.5 L21.5 27 L18 19.5 L24 19.5 Z" fill="white"/>
+        </svg>
+        <h3 style="margin:0;color:#0d0d0d;">Cursor</h3>
+      </div>
+      <p>Coding agent built into your editor. Writes, reviews, and refactors code with full codebase context.</p>
+    </div>
+
+    <!-- Claude Desktop -->
+    <div class="feat-card" style="border-left:3px solid #c96442;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:.9rem;">
+        <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0;border-radius:8px;">
+          <rect width="36" height="36" rx="8" fill="#c96442"/>
+          <!-- Claude arc-loop logo approximation -->
+          <path d="M18 7 C25 7 29 12 29 18 C29 23 25 28 18 29" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <path d="M18 7 C11 7 7 12 7 18 C7 23 11 28 18 29" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="3" fill="white"/>
+        </svg>
+        <h3 style="margin:0;color:#c96442;">Claude Desktop</h3>
+      </div>
+      <p>Anthropic's desktop agent for chat + tools. Can access files, run code, use MCP connectors.</p>
+    </div>
+
+    <!-- Manus -->
+    <div class="feat-card" style="border-left:3px solid #1a56db;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:.9rem;">
+        <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0;border-radius:8px;">
+          <rect width="36" height="36" rx="8" fill="#1a56db"/>
+          <!-- Stylised M -->
+          <path d="M7 27 L7 10 L18 21 L29 10 L29 27" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 style="margin:0;color:#1a56db;">Manus Desktop</h3>
+      </div>
+      <p>Research and multi-step agent. Browses the web, synthesizes findings, produces documents.</p>
+    </div>
+
+    <!-- Perplexity -->
+    <div class="feat-card" style="border-left:3px solid #1a1a2e;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:.9rem;">
+        <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0;border-radius:8px;">
+          <rect width="36" height="36" rx="8" fill="#1a1a2e"/>
+          <!-- Perplexity asterisk burst -->
+          <line x1="18" y1="7"  x2="18" y2="29" stroke="#20c8c8" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="7"  y1="18" x2="29" y2="18" stroke="#20c8c8" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="10" y1="10" x2="26" y2="26" stroke="#20c8c8" stroke-width="2" stroke-linecap="round"/>
+          <line x1="26" y1="10" x2="10" y2="26" stroke="#20c8c8" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="3" fill="#20c8c8"/>
+        </svg>
+        <h3 style="margin:0;color:#1a1a2e;">Perplexity Computer</h3>
+      </div>
+      <p>Browser-based agent that surfs and acts. Fills forms, extracts data, completes web-based tasks.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- SLIDE 31: Enterprise Agents -->
+<div class="slide" data-s="4" data-notes="Consumer agents are great for individuals. Enterprise agents add governance: SSO, data isolation, audit logs, admin controls. If you're rolling agents out to a 500-person company, the enterprise tier isn't optional — it's where compliance and accountability live.">
+  <div class="label">From LLM Chat to Agent</div>
+  <h2>Enterprise Agents — <span class="accent">Governance, Compliance, Scale</span></h2>
+  <div class="card-grid grid4" style="margin-top:2.5vh;">
+    <div class="card"><h4 style="color:var(--c2);">NotebookLM Enterprise</h4><p>Secure document agents over your company's knowledge corpus</p><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="font-size:10px;color:var(--muted);">🛡 secure</span><span style="font-size:10px;color:var(--muted);">📋 audit</span></div></div>
+    <div class="card"><h4 style="color:var(--c3);">Gemini Enterprise</h4><p>Google's agent platform with admin controls and full audit logging</p><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="font-size:10px;color:var(--muted);">🛡 secure</span><span style="font-size:10px;color:var(--muted);">🔒 compliant</span></div></div>
+    <div class="card"><h4 style="color:var(--c4);">Claude for Enterprise</h4><p>Anthropic's enterprise tier with SSO, data isolation, and usage controls</p><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="font-size:10px;color:var(--muted);">🔒 isolated</span><span style="font-size:10px;color:var(--muted);">📋 audit</span></div></div>
+    <div class="card"><h4 style="color:var(--c1);">Microsoft Copilot Studio</h4><p>Build, govern, and deploy custom agents across the Microsoft 365 stack</p><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="font-size:10px;color:var(--muted);">🛡 M365</span><span style="font-size:10px;color:var(--muted);">⚙ custom</span></div></div>
+  </div>
+  <p class="fn">Same agent capabilities — plus governance, compliance, identity management, and audit trails.</p>
+</div>
+
+<!-- SLIDE 32: Advanced Framework — 5 Levels of AI Mastery -->
+<div class="slide" data-s="4" data-notes="I held this map back until now on purpose. Until you'd met an agent, the higher levels would've been abstract. Now they have something to land on. You are currently at Level 3 — you understand agents. We're about to go to Level 4.">
+  <div class="label">Advanced Framework</div>
+  <h2>Your AI Mastery Journey — <span class="accent">5 Levels</span></h2>
+  <p class="subtitle" style="margin-bottom:2vh;">Now that you've met agents, here's how far this goes</p>
+
+  <!-- Staircase SVG -->
+  <svg width="100%" viewBox="0 0 700 240" style="max-height:42vh;">
+    <!-- Steps ascending right -->
+    <!-- Level 1 -->
+    <rect x="20" y="196" width="110" height="44" rx="6" fill="rgba(66,133,244,.18)" stroke="rgba(66,133,244,.45)" stroke-width="1.5"/>
+    <text x="75" y="213" fill="#4285f4" font-family="Poppins,sans-serif" font-size="14" text-anchor="middle" font-weight="600">Level 1</text>
+    <text x="75" y="230" fill="#4285f4" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Chat</text>
+    <text x="75" y="248" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">✓ you've done this</text>
+    <!-- Level 2 -->
+    <rect x="148" y="154" width="110" height="44" rx="6" fill="rgba(26,115,232,.18)" stroke="rgba(26,115,232,.45)" stroke-width="1.5"/>
+    <text x="203" y="171" fill="#1a73e8" font-family="Poppins,sans-serif" font-size="14" text-anchor="middle" font-weight="600">Level 2</text>
+    <text x="203" y="188" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Tools + Add-ons</text>
+    <text x="203" y="206" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">✓ you do this daily</text>
+    <!-- Level 3 — YOU ARE HERE -->
+    <rect x="276" y="110" width="110" height="44" rx="6" fill="rgba(132,48,206,.28)" stroke="rgba(132,48,206,.7)" stroke-width="2"/>
+    <text x="331" y="127" fill="#1a73e8" font-family="Poppins,sans-serif" font-size="14" text-anchor="middle" font-weight="600">Level 3</text>
+    <text x="331" y="144" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Agent</text>
+    <text x="331" y="162" fill="#8430ce" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle" font-weight="600">← You are here</text>
+    <!-- Level 4 -->
+    <rect x="404" y="64" width="120" height="44" rx="6" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.4)" stroke-width="1.5"/>
+    <text x="464" y="81" fill="#f9ab00" font-family="Poppins,sans-serif" font-size="14" text-anchor="middle" font-weight="600">Level 4</text>
+    <text x="464" y="98" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Agent Team</text>
+    <text x="464" y="116" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">coming next ↑</text>
+    <!-- Level 5 -->
+    <rect x="542" y="14" width="130" height="44" rx="6" fill="rgba(234,67,53,.15)" stroke="rgba(234,67,53,.4)" stroke-width="1.5"/>
+    <text x="607" y="31" fill="#ea4335" font-family="Poppins,sans-serif" font-size="14" text-anchor="middle" font-weight="600">Level 5</text>
+    <text x="607" y="48" fill="#ea4335" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle">Agent Corp</text>
+    <text x="607" y="66" fill="#5f6368" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">the frontier ↑</text>
+    <!-- Stair risers -->
+    <line x1="130" y1="196" x2="148" y2="196" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="148" y1="154" x2="148" y2="196" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="258" y1="154" x2="276" y2="154" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="276" y1="110" x2="276" y2="154" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="386" y1="110" x2="404" y2="110" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="404" y1="64" x2="404" y2="110" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="524" y1="64" x2="542" y2="64" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    <line x1="542" y1="14" x2="542" y2="64" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+  </svg>
+  <p class="fn">I held this map back until now — until you'd met an agent, the higher levels would have been abstract.</p>
+</div>
+
+<!-- SLIDE 33: AI Engineering Evolution -->
+<div class="slide" data-s="4" data-notes="If you're still just polishing prompts in 2026, you're four years behind the frontier. Harness Engineering is about building the environment, tools, skills, and guardrails that agents live inside. It's infrastructure work, not prompt work.">
+  <div class="label">Advanced Framework</div>
+  <h2>How We Engineer with AI — <span class="accent">4 Years, 4 Eras</span></h2>
+  <div style="position:relative;margin-top:3vh;">
+    <div class="tl-row" style="--accent:var(--c1)">
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--c1);background:var(--bg)"></div>
+        <div class="tl-year">2022</div>
+        <div class="tl-name">Prompt<br>Engineering</div>
+        <div class="tl-desc">Get good at asking — craft the perfect question</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--c3);background:var(--bg)"></div>
+        <div class="tl-year" style="color:var(--c3)">2024</div>
+        <div class="tl-name">Vibe<br>Coding</div>
+        <div class="tl-desc">Describe what you want and let AI build it</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--c5);background:var(--bg)"></div>
+        <div class="tl-year" style="color:var(--c5)">2025</div>
+        <div class="tl-name">Context<br>Engineering</div>
+        <div class="tl-desc">Curate what the AI sees — manage its memory and inputs</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--c6);background:var(--bg)"></div>
+        <div class="tl-year" style="color:var(--c6)">2026</div>
+        <div class="tl-name">Harness<br>Engineering</div>
+        <div class="tl-desc">Build the rails, tools, skills, and guardrails agents run on</div>
+      </div>
+    </div>
+  </div>
+  <p class="fn">Each year, the lever moves higher up the stack. The frontier today is Harness — building agent infrastructure.</p>
+</div>
+
+<!-- SLIDE 34: Section 5 Divider — Agent Team -->
+<div class="slide div-slide kb5" data-s="5" data-notes="Level 4: Agent Team. The F1 pit crew is the perfect metaphor. Everyone has a defined role and specific tool. They work in parallel. A single orchestrator (the race engineer) coordinates the whole effort.">
+  <span class="dbar" style="--accent:var(--c5)"></span>
+  <div class="div-tag">Level 4<br><span style="color:var(--c5)">Agent Team</span></div>
+  <p class="div-sub">Orchestrated AI workforce — specialization + parallel execution</p>
+  <!-- F1 pit visual suggestion -->
+  <svg style="position:absolute;right:4vw;top:50%;transform:translateY(-50%);opacity:.16;pointer-events:none;" width="280" height="200" viewBox="0 0 280 200">
+    <rect x="80" y="70" width="120" height="60" rx="6" fill="#f9ab00" opacity=".8"/>
+    <circle cx="100" cy="145" r="18" fill="none" stroke="#f9ab00" stroke-width="3"/>
+    <circle cx="180" cy="145" r="18" fill="none" stroke="#f9ab00" stroke-width="3"/>
+    <rect x="20" y="85" width="50" height="30" rx="4" fill="rgba(249,171,0,.4)"/>
+    <rect x="210" y="85" width="50" height="30" rx="4" fill="rgba(249,171,0,.4)"/>
+    <rect x="40" y="50" width="200" height="20" rx="4" fill="rgba(249,171,0,.2)" stroke="#f9ab00" stroke-width="1"/>
+  </svg>
+</div>
+
+<!-- SLIDE 35: Solo Agent → Agent Team -->
+<div class="slide" data-s="5" data-notes="A solo agent doing everything is like hiring one person to be your entire company. Context overload, slow, generalist quality. An agent team is like a proper startup: orchestrator delegates to specialists, they run in parallel. Same job — dramatically better output.">
+  <div class="label">Level 4 — Agent Team</div>
+  <h2>Solo Agent <span class="accent">→</span> Agent Team</h2>
+  <div class="card-grid grid2" style="margin-top:3vh;">
+    <div class="feat-card" style="border-top:3px solid var(--muted);">
+      <h3 style="color:var(--muted);">Solo Agent 😓</h3>
+      <p style="margin-top:.8rem;font-size:clamp(13px,1.3vw,17px);">One brain doing everything — slow, context-overloaded, generalist output</p>
+      <!-- Mini diagram -->
+      <div style="text-align:center;margin-top:1.2rem;">
+        <div style="display:inline-block;border:1px solid rgba(110,122,150,.4);border-radius:8px;padding:8px 16px;font-size:12px;color:var(--muted);">🤖 One Agent<br><small style="opacity:.6;">research + write + review + publish</small></div>
+      </div>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c5);">
+      <h3 style="color:var(--c5);">Agent Team 🚀</h3>
+      <p style="margin-top:.8rem;font-size:clamp(13px,1.3vw,17px);">One orchestrator + many specialists — parallel, focused, production quality</p>
+      <!-- Mini diagram -->
+      <div style="margin-top:1.2rem;text-align:center;">
+        <div style="display:inline-block;border:1px solid rgba(249,171,0,.4);border-radius:8px;padding:6px 14px;font-size:11px;color:var(--c5);margin-bottom:8px;">🎯 Orchestrator</div>
+        <div style="display:flex;gap:8px;justify-content:center;">
+          <div style="border:1px solid rgba(249,171,0,.25);border-radius:6px;padding:4px 8px;font-size:10px;color:var(--muted);">🔍 Research</div>
+          <div style="border:1px solid rgba(249,171,0,.25);border-radius:6px;padding:4px 8px;font-size:10px;color:var(--muted);">✍️ Write</div>
+          <div style="border:1px solid rgba(249,171,0,.25);border-radius:6px;padding:4px 8px;font-size:10px;color:var(--muted);">👁 Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="fn">Same job, divided across roles — like turning a freelancer into a startup.</p>
+</div>
+
+<!-- SLIDE 36: Skills — SOPs for Your AI -->
+<div class="slide" data-s="5" data-notes="A Skill is a reusable instruction pack — like a Standard Operating Procedure for an agent. Anthropic's Skill Creator lets you test, benchmark, and refine them. Two flavors: capability uplift (make a weak skill stronger) and encoded preference (lock in your workflow, your way).">
+  <div class="label">Level 4 — Agent Team</div>
+  <h2>Skills — <span class="accent">SOPs for Your AI</span></h2>
+  <div style="font-family:var(--fd);font-size:clamp(16px,1.8vw,24px);color:#5f6368;font-style:italic;margin:1.5vh 0;">One worker, many SOPs. One agent, many Skills.</div>
+  <div class="card-grid grid2" style="margin-top:1.5vh;">
+    <div class="feat-card" style="border-top:3px solid var(--c5);">
+      <div style="font-size:2rem;margin-bottom:.8rem;">🛠️</div>
+      <h3>Capability Uplift</h3>
+      <p>Give the agent a skill it's currently weak at. Example: a Skill that makes any agent follow your company's frontend design system precisely.</p>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c4);">
+      <div style="font-size:2rem;margin-bottom:.8rem;">📋</div>
+      <h3>Encoded Preference</h3>
+      <p>Lock in your workflow your way. Example: a Skill that ensures every report follows your exact structure, tone, and approval chain.</p>
+    </div>
+  </div>
+  <div style="margin-top:2vh;text-align:center;font-size:clamp(14px,1.4vw,18px);color:var(--c5);font-weight:500;">Agent autonomy is now powered by Skills.</div>
+</div>
+
+<!-- SLIDE 37: Claude Agent-Team — Orchestration Built In -->
+<div class="slide" data-s="5" data-notes="Claude's agent-team architecture has three key capabilities: an orchestrator that delegates to specialists, each specialist can have its own Skills attached, and the system can spawn adhoc agents on the fly when a task requires it. You don't define the team upfront — it forms for the job.">
+  <div class="label">Level 4 — Agent Team</div>
+  <h2>Claude Agent-Team — <span class="accent">Orchestration Built In</span></h2>
+  <div style="margin-top:2.5vh;display:grid;grid-template-columns:1fr 1fr;gap:2vw;">
+    <div>
+      <div class="card" style="margin-bottom:1.4vw;border-left:3px solid var(--c5);">
+        <h4>🎯 Orchestrator + Sub-agents</h4>
+        <p>Main agent delegates tasks to specialist sub-agents, then synthesizes their outputs</p>
+      </div>
+      <div class="card" style="margin-bottom:1.4vw;border-left:3px solid var(--c4);">
+        <h4>🔧 Skills attached per role</h4>
+        <p>Each sub-agent gets the right SOPs — the researcher gets a web-search skill, the writer gets your brand voice</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--c6);">
+        <h4>✨ Adhoc agent creation</h4>
+        <p>Spawn new specialists on the fly when the task requires an unexpected capability</p>
+      </div>
+    </div>
+    <!-- Org chart -->
+    <svg width="100%" viewBox="0 0 280 220">
+      <rect x="90" y="10" width="100" height="34" rx="7" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="140" y="28" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle" font-weight="600">Orchestrator</text>
+      <line x1="50" y1="118" x2="50" y2="44" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="50" y1="44" x2="230" y2="44" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="140" y1="44" x2="140" y2="118" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="230" y1="44" x2="230" y2="118" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <rect x="10" y="118" width="80" height="30" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.35)" stroke-width="1"/>
+      <text x="50" y="136" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Researcher</text>
+      <rect x="100" y="118" width="80" height="30" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.35)" stroke-width="1"/>
+      <text x="140" y="136" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Writer</text>
+      <rect x="190" y="118" width="80" height="30" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.35)" stroke-width="1"/>
+      <text x="230" y="136" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Reviewer</text>
+      <!-- Adhoc dotted -->
+      <line x1="140" y1="44" x2="140" y2="175" stroke="rgba(234,67,53,.4)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="95" y="175" width="90" height="28" rx="6" fill="rgba(234,67,53,.1)" stroke="rgba(234,67,53,.4)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="140" y="190" fill="#ea4335" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">+ Adhoc Agent</text>
+      <text x="140" y="215" fill="#5f6368" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">spawned on demand</text>
+    </svg>
+  </div>
+  <p class="fn">Don't define teams up front — let them form for the task at hand.</p>
+</div>
+
+<!-- SLIDE 38: Metaskills — Skills That Build Skills -->
+<div class="slide" data-s="5" data-notes="Metaskills are the emerging frontier of agent capability. A skill that creates skills — or assembles agents. The Skill Builder generates new skills from your description. The Team Composer analyzes a job and spawns the team needed to do it. Self-extending systems.">
+  <div class="label">Level 4 — Agent Team</div>
+  <h2><span class="accent">Metaskills</span> — Skills That Build Skills</h2>
+  <div style="font-family:var(--fd);font-size:clamp(16px,1.8vw,24px);color:#5f6368;font-style:italic;margin:1.5vh 0;">The agent doesn't just use your SOPs — it can write new ones.</div>
+  <div class="card-grid grid2" style="margin-top:2vh;">
+    <div class="feat-card" style="border-top:3px solid var(--c5);">
+      <div style="font-size:2rem;margin-bottom:.8rem;">🏗️</div>
+      <h3>Skill Builder</h3>
+      <p>A metaskill that generates a new Skill from your plain-language description. You describe the SOP; the agent writes and tests it.</p>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c6);">
+      <div style="font-size:2rem;margin-bottom:.8rem;">🎭</div>
+      <h3>Team Composer</h3>
+      <p>Analyzes a job you describe and spawns the optimal agent team with the right Skills already attached to each role.</p>
+    </div>
+  </div>
+  <!-- Recursive loop visual -->
+  <div style="text-align:center;margin-top:2vh;">
+    <span style="display:inline-flex;align-items:center;gap:.6rem;font-size:clamp(13px,1.3vw,16px);color:var(--muted);">
+      <span style="color:var(--c5)">Skill</span> → creates → <span style="color:var(--c6)">Skill</span> → creates → <span style="color:var(--c5)">Skill</span> → ...
+    </span>
+  </div>
+</div>
+
+<!-- SLIDE 39: Paperclip AI — Level 4 in Production -->
+<div class="slide" data-s="5" data-notes="Paperclip AI is a real-world agent team built on Claude. One product, multiple specialist agents running under an orchestrator. When a request doesn't match any existing agent's capability, the orchestrator spawns an adhoc agent to handle it. This is Level 4 in production today.">
+  <div class="label">Level 4 — Agent Team</div>
+  <h2>Paperclip AI — <span class="accent">Level 4 in Production</span></h2>
+  <div style="margin-top:2.5vh;display:grid;grid-template-columns:1fr 1fr;gap:2vw;align-items:start;">
+    <div>
+      <ul class="blist" style="--accent:var(--c5)">
+        <li>One product, multiple specialist agents (research / draft / publish)</li>
+        <li>Orchestrator routes each user request to the right sub-agent team</li>
+        <li>Adhoc agents spawned for unfamiliar or complex tasks on the fly</li>
+      </ul>
+      <div style="margin-top:2vh;padding:16px;background:rgba(249,171,0,.08);border:1px solid rgba(249,171,0,.25);border-radius:8px;">
+        <div style="font-size:12px;color:var(--c5);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Built on Claude agent-team</div>
+        <div style="font-size:13px;color:var(--muted);">Live in production today. This is what Level 4 looks like running in the wild.</div>
+      </div>
+    </div>
+    <!-- Architecture schematic -->
+    <svg width="100%" viewBox="0 0 280 200">
+      <rect x="90" y="8" width="100" height="32" rx="6" fill="rgba(249,171,0,.2)" stroke="rgba(249,171,0,.5)" stroke-width="1.5"/>
+      <text x="140" y="27" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="11" text-anchor="middle" font-weight="600">Orchestrator</text>
+      <line x1="140" y1="40" x2="50" y2="100" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="140" y1="40" x2="140" y2="100" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="140" y1="40" x2="230" y2="100" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <rect x="10" y="100" width="80" height="28" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <text x="50" y="117" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Research</text>
+      <rect x="100" y="100" width="80" height="28" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <text x="140" y="117" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Draft</text>
+      <rect x="190" y="100" width="80" height="28" rx="6" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.3)" stroke-width="1"/>
+      <text x="230" y="117" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Publish</text>
+      <line x1="140" y1="40" x2="140" y2="155" stroke="rgba(234,67,53,.4)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="95" y="155" width="90" height="28" rx="6" fill="rgba(234,67,53,.1)" stroke="rgba(234,67,53,.35)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="140" y="172" fill="#ea4335" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle">+ Adhoc Agent</text>
+    </svg>
+  </div>
+</div>
+
+<!-- SLIDE 40: Section 6 Divider — Agent Corp -->
+<div class="slide div-slide kb6" data-s="6" data-notes="Level 5: Agent Corp. This is the frontier. Not a team of agents — a whole organization of agents. Multiple orchestrators. Multiple departments. A company made of AI, with humans at the steering wheel.">
+  <span class="dbar" style="--accent:var(--c6)"></span>
+  <div class="div-tag">Level 5<br><span style="color:var(--c6)">Agent Corp</span></div>
+  <p class="div-sub">AI as an organization — multiple teams, multiple orchestrators, one mission</p>
+  <!-- Building-at-night visual -->
+  <svg style="position:absolute;right:4vw;top:50%;transform:translateY(-50%);opacity:.15;pointer-events:none;" width="200" height="280" viewBox="0 0 200 280">
+    <rect x="30" y="20" width="140" height="250" rx="4" fill="none" stroke="#ea4335" stroke-width="1.5"/>
+    <!-- Windows lit -->
+    <rect x="50" y="40" width="20" height="14" rx="2" fill="#ea4335" opacity=".6"/>
+    <rect x="80" y="40" width="20" height="14" rx="2" fill="#ea4335" opacity=".4"/>
+    <rect x="110" y="40" width="20" height="14" rx="2" fill="#ea4335" opacity=".7"/>
+    <rect x="50" y="70" width="20" height="14" rx="2" fill="#ea4335" opacity=".3"/>
+    <rect x="80" y="70" width="20" height="14" rx="2" fill="#ea4335" opacity=".7"/>
+    <rect x="110" y="70" width="20" height="14" rx="2" fill="#ea4335" opacity=".5"/>
+    <rect x="50" y="100" width="20" height="14" rx="2" fill="#ea4335" opacity=".7"/>
+    <rect x="80" y="100" width="20" height="14" rx="2" fill="#ea4335" opacity=".4"/>
+    <rect x="110" y="100" width="20" height="14" rx="2" fill="#ea4335" opacity=".6"/>
+    <rect x="50" y="130" width="20" height="14" rx="2" fill="#ea4335" opacity=".5"/>
+    <rect x="80" y="130" width="20" height="14" rx="2" fill="#ea4335" opacity=".7"/>
+    <rect x="110" y="130" width="20" height="14" rx="2" fill="#ea4335" opacity=".3"/>
+    <rect x="50" y="160" width="20" height="14" rx="2" fill="#ea4335" opacity=".6"/>
+    <rect x="80" y="160" width="20" height="14" rx="2" fill="#ea4335" opacity=".4"/>
+    <rect x="110" y="160" width="20" height="14" rx="2" fill="#ea4335" opacity=".7"/>
+  </svg>
+</div>
+
+<!-- SLIDE 41: From Team to Organization -->
+<div class="slide" data-s="6" data-notes="The jump from Level 4 to Level 5 is structural. Level 4 = one orchestrator with specialist sub-agents. Level 5 = many orchestrators (department heads), each leading their own team, all coordinated. The agents form a company.">
+  <div class="label">Level 5 — Agent Corp</div>
+  <h2>From <span class="accent">Team</span> to <span class="accent">Organization</span></h2>
+  <div class="card-grid grid2" style="margin-top:2.5vh;">
+    <div class="feat-card" style="border-top:3px solid var(--c5);">
+      <h3 style="color:var(--c5);">Agent Team (Level 4)</h3>
+      <p style="margin-top:.8rem;">One orchestrator, many sub-agents, one mission. Like a startup with a CEO and functional staff.</p>
+    </div>
+    <div class="feat-card" style="border-top:3px solid var(--c6);">
+      <h3 style="color:var(--c6);">Agent Corp (Level 5)</h3>
+      <p style="margin-top:.8rem;">Many orchestrators, many teams, running an entire organization. Each team is a department.</p>
+    </div>
+  </div>
+  <!-- Org pyramid SVG -->
+  <svg width="100%" viewBox="0 0 600 160" style="margin-top:2vh;max-height:25vh;">
+    <!-- CEO -->
+    <rect x="240" y="10" width="120" height="30" rx="6" fill="rgba(234,67,53,.22)" stroke="rgba(234,67,53,.55)" stroke-width="1.5"/>
+    <text x="300" y="29" fill="#ea4335" font-family="Roboto,sans-serif" font-size="12" text-anchor="middle" font-weight="600">CEO Agent</text>
+    <!-- Dept lines -->
+    <line x1="300" y1="40" x2="80" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+    <line x1="300" y1="40" x2="185" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+    <line x1="300" y1="40" x2="300" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+    <line x1="300" y1="40" x2="415" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+    <line x1="300" y1="40" x2="520" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+    <!-- Dept boxes -->
+    <rect x="36" y="90" width="88" height="28" rx="5" fill="rgba(249,171,0,.15)" stroke="rgba(249,171,0,.35)" stroke-width="1"/>
+    <text x="80" y="107" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Sales Orch.</text>
+    <rect x="141" y="90" width="88" height="28" rx="5" fill="rgba(26,115,232,.15)" stroke="rgba(26,115,232,.35)" stroke-width="1"/>
+    <text x="185" y="107" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Eng. Orch.</text>
+    <rect x="256" y="90" width="88" height="28" rx="5" fill="rgba(52,168,83,.15)" stroke="rgba(52,168,83,.35)" stroke-width="1"/>
+    <text x="300" y="107" fill="#34a853" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Mktg Orch.</text>
+    <rect x="371" y="90" width="88" height="28" rx="5" fill="rgba(132,48,206,.15)" stroke="rgba(132,48,206,.35)" stroke-width="1"/>
+    <text x="415" y="107" fill="#8430ce" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Ops Orch.</text>
+    <rect x="476" y="90" width="88" height="28" rx="5" fill="rgba(66,133,244,.15)" stroke="rgba(66,133,244,.35)" stroke-width="1"/>
+    <text x="520" y="107" fill="#4285f4" font-family="Roboto,sans-serif" font-size="10" text-anchor="middle">Finance Orch.</text>
+    <!-- Sub-agent dots -->
+    <circle cx="60" cy="148" r="5" fill="rgba(249,171,0,.4)"/>
+    <circle cx="80" cy="148" r="5" fill="rgba(249,171,0,.4)"/>
+    <circle cx="100" cy="148" r="5" fill="rgba(249,171,0,.4)"/>
+    <circle cx="165" cy="148" r="5" fill="rgba(26,115,232,.4)"/>
+    <circle cx="185" cy="148" r="5" fill="rgba(26,115,232,.4)"/>
+    <circle cx="205" cy="148" r="5" fill="rgba(26,115,232,.4)"/>
+    <circle cx="280" cy="148" r="5" fill="rgba(52,168,83,.4)"/>
+    <circle cx="300" cy="148" r="5" fill="rgba(52,168,83,.4)"/>
+    <circle cx="320" cy="148" r="5" fill="rgba(52,168,83,.4)"/>
+    <circle cx="395" cy="148" r="5" fill="rgba(132,48,206,.4)"/>
+    <circle cx="415" cy="148" r="5" fill="rgba(132,48,206,.4)"/>
+    <circle cx="435" cy="148" r="5" fill="rgba(132,48,206,.4)"/>
+    <circle cx="500" cy="148" r="5" fill="rgba(66,133,244,.4)"/>
+    <circle cx="520" cy="148" r="5" fill="rgba(66,133,244,.4)"/>
+    <circle cx="540" cy="148" r="5" fill="rgba(66,133,244,.4)"/>
+  </svg>
+  <p class="fn">Each "team" is a department. Together they form a company.</p>
+</div>
+
+<!-- SLIDE 42: ZorCorp — An AI-First Operating Model -->
+<div class="slide" data-s="6" data-notes="ZorCorp is the mental model for an AI-first org. Humans don't do the work — they set goals and review outputs. Agents run the functions. Orchestrators coordinate across teams. This isn't science fiction — it's where the most advanced teams are heading in 2026.">
+  <div class="label">Level 5 — Agent Corp</div>
+  <h2>ZorCorp — <span class="accent">AI-First Operating Model</span></h2>
+  <!-- Swim lane diagram -->
+  <div style="margin-top:2.5vh;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+    <!-- Humans lane -->
+    <div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border);">
+      <div style="background:rgba(255,255,255,.05);padding:10px 16px;min-width:100px;display:flex;align-items:center;border-right:1px solid var(--border);">
+        <span style="font-size:12px;color:var(--muted);font-weight:500;writing-mode:horizontal-tb;">👤 Humans</span>
+      </div>
+      <div style="display:flex;gap:12px;padding:10px 16px;align-items:center;flex:1;">
+        <div style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;">Set goals</div>
+        <span style="color:var(--muted);font-size:18px;">→</span>
+        <div style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;">Review outputs</div>
+        <span style="color:var(--muted);font-size:18px;">→</span>
+        <div style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;">Intervene at decisions</div>
+        <span style="color:var(--muted);font-size:18px;">→</span>
+        <div style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;">Approve &amp; ship</div>
+      </div>
+    </div>
+    <!-- Agent lanes -->
+    <div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border);">
+      <div style="background:rgba(249,171,0,.06);padding:10px 16px;min-width:100px;display:flex;align-items:center;border-right:1px solid var(--border);">
+        <span style="font-size:11px;color:var(--c5);">Marketing</span>
+      </div>
+      <div style="display:flex;gap:8px;padding:10px 16px;align-items:center;flex:1;flex-wrap:wrap;">
+        <div style="background:rgba(249,171,0,.1);border:1px solid rgba(249,171,0,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c5);">Research Agent</div>
+        <div style="background:rgba(249,171,0,.1);border:1px solid rgba(249,171,0,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c5);">Content Agent</div>
+        <div style="background:rgba(249,171,0,.1);border:1px solid rgba(249,171,0,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c5);">Analytics Agent</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border);">
+      <div style="background:rgba(26,115,232,.06);padding:10px 16px;min-width:100px;display:flex;align-items:center;border-right:1px solid var(--border);">
+        <span style="font-size:11px;color:var(--c2);">Engineering</span>
+      </div>
+      <div style="display:flex;gap:8px;padding:10px 16px;align-items:center;flex:1;flex-wrap:wrap;">
+        <div style="background:rgba(26,115,232,.08);border:1px solid rgba(26,115,232,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c2);">Code Agent</div>
+        <div style="background:rgba(26,115,232,.08);border:1px solid rgba(26,115,232,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c2);">Test Agent</div>
+        <div style="background:rgba(26,115,232,.08);border:1px solid rgba(26,115,232,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c2);">Deploy Agent</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border);">
+      <div style="background:rgba(52,168,83,.06);padding:10px 16px;min-width:100px;display:flex;align-items:center;border-right:1px solid var(--border);">
+        <span style="font-size:11px;color:var(--c3);">Operations</span>
+      </div>
+      <div style="display:flex;gap:8px;padding:10px 16px;align-items:center;flex:1;flex-wrap:wrap;">
+        <div style="background:rgba(52,168,83,.08);border:1px solid rgba(52,168,83,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c3);">Ops Monitor</div>
+        <div style="background:rgba(52,168,83,.08);border:1px solid rgba(52,168,83,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c3);">Report Agent</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:stretch;">
+      <div style="background:rgba(132,48,206,.06);padding:10px 16px;min-width:100px;display:flex;align-items:center;border-right:1px solid var(--border);">
+        <span style="font-size:11px;color:var(--c4);">Research</span>
+      </div>
+      <div style="display:flex;gap:8px;padding:10px 16px;align-items:center;flex:1;flex-wrap:wrap;">
+        <div style="background:rgba(132,48,206,.08);border:1px solid rgba(132,48,206,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c4);">Scout Agent</div>
+        <div style="background:rgba(132,48,206,.08);border:1px solid rgba(132,48,206,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c4);">Synthesis Agent</div>
+        <div style="background:rgba(132,48,206,.08);border:1px solid rgba(132,48,206,.3);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--c4);">Insight Agent</div>
+      </div>
+    </div>
+  </div>
+  <p class="fn">The "company" runs on agents. Humans steer.</p>
+</div>
+
+<!-- SLIDE 43: Closing — You Just Climbed 5 Levels -->
+<div class="slide" data-s="6" data-notes="The question isn't whether AI will change your work. It's whether you'll be building toward Level 4 or 5, or watching from Level 1. Every company needs people who understand this stack. You now understand this stack.">
+  <div class="label">Summary</div>
+  <h2>You Just Climbed <span class="accent">5 Levels</span> in 60 Minutes</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5vw;margin-top:2.5vh;align-items:start;">
+    <ul class="chklist">
+      <li><strong>Chat</strong> — you talked to AI</li>
+      <li><strong>Tools</strong> — you saw the ecosystem &amp; how to pay</li>
+      <li><strong>Agent</strong> — you understand autonomy</li>
+      <li><strong>Agent Team</strong> — you saw orchestration &amp; Skills</li>
+      <li><strong>Agent Corp</strong> — you see the destination</li>
+    </ul>
+    <!-- Lit staircase -->
+    <svg width="100%" viewBox="0 0 300 200">
+      <!-- All 5 steps lit -->
+      <rect x="8" y="168" width="50" height="32" rx="5" fill="rgba(66,133,244,.35)" stroke="#4285f4" stroke-width="1.5"/>
+      <text x="33" y="183" fill="#4285f4" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Chat</text>
+      <rect x="66" y="130" width="50" height="32" rx="5" fill="rgba(26,115,232,.35)" stroke="#1a73e8" stroke-width="1.5"/>
+      <text x="91" y="145" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Tools</text>
+      <rect x="124" y="90" width="50" height="32" rx="5" fill="rgba(132,48,206,.35)" stroke="#8430ce" stroke-width="1.5"/>
+      <text x="149" y="105" fill="#1a73e8" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Agent</text>
+      <rect x="182" y="50" width="50" height="32" rx="5" fill="rgba(249,171,0,.35)" stroke="#f9ab00" stroke-width="1.5"/>
+      <text x="207" y="65" fill="#f9ab00" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Team</text>
+      <rect x="242" y="10" width="50" height="32" rx="5" fill="rgba(234,67,53,.35)" stroke="#ea4335" stroke-width="1.5"/>
+      <text x="267" y="25" fill="#ea4335" font-family="Roboto,sans-serif" font-size="9" text-anchor="middle" font-weight="600">Corp</text>
+      <!-- Star/glow at top -->
+      <text x="267" y="8" fill="#ea4335" font-family="Roboto,sans-serif" font-size="14" text-anchor="middle">✦</text>
+      <!-- Stair risers -->
+      <line x1="58" y1="168" x2="66" y2="168" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="66" y1="130" x2="66" y2="168" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="116" y1="130" x2="124" y2="130" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="124" y1="90" x2="124" y2="130" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="174" y1="90" x2="182" y2="90" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="182" y1="50" x2="182" y2="90" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="232" y1="50" x2="242" y2="50" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+      <line x1="242" y1="10" x2="242" y2="50" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+    </svg>
+  </div>
+  <div style="margin-top:2.5vh;padding:16px 24px;background:linear-gradient(135deg,rgba(234,67,53,.1),rgba(249,171,0,.08));border:1px solid rgba(234,67,53,.25);border-radius:10px;">
+    <div style="font-family:var(--fd);font-size:clamp(16px,1.8vw,24px);font-style:italic;color:var(--text);">
+      The question isn't "Will AI take my job?"<br>
+      It's <span class="accent">"Which level am I building toward?"</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SEEKBAR ===== -->
+<div id="seekbar-wrap">
+  <input id="seekbar" type="range" min="1" max="43" value="1" oninput="seekTo(this.value)">
+</div>
+
+<!-- ===== NAV ===== -->
+<div id="nav">
+  <button class="nb" id="btnPrev" onclick="prevSlide()" title="← Previous">‹</button>
+  <div class="ctr-wrap" style="display:flex;align-items:center;gap:4px;font-size:12px;color:#5f6368;font-family:Roboto,sans-serif;">
+    <input id="ctr-input" type="number" min="1" max="43" value="1"
+      onkeydown="if(event.key==='Enter')jumpTo(this.value)"
+      onblur="jumpTo(this.value)"
+      title="Type a slide number and press Enter">
+    <span id="ctr-total" style="color:#9aa0a6;">/ 43</span>
+  </div>
+  <button class="nb" id="btnNext" onclick="nextSlide()" title="→ Next">›</button>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let cur = 0;
+const sectionColors = {'1':'#4285f4','2':'#1a73e8','3':'#34a853','4':'#1a73e8','5':'#f9ab00','6':'#ea4335','0':'#4285f4'};
+
+// Update seekbar max to actual slide count
+document.getElementById('seekbar').max = total;
+document.getElementById('ctr-input').max = total;
+document.getElementById('ctr-total').textContent = '/ ' + total;
+
+function goto(idx) {
+  if (idx < 0 || idx >= total) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit');
+  cur = idx;
+  slides[cur].classList.add('active');
+  setTimeout(() => {
+    document.querySelectorAll('.slide.exit').forEach(s => s.classList.remove('exit'));
+  }, 360);
+  updateUI();
+}
+
+function nextSlide() { goto(cur + 1); }
+function prevSlide() { goto(cur - 1); }
+
+// Seekbar drag → jump instantly (no transition flicker)
+function seekTo(val) {
+  const idx = parseInt(val) - 1;
+  if (idx === cur) return;
+  slides[cur].classList.remove('active');
+  document.querySelectorAll('.slide.exit').forEach(s => s.classList.remove('exit'));
+  cur = Math.max(0, Math.min(idx, total - 1));
+  slides[cur].classList.add('active');
+  updateUI();
+}
+
+// Editable page input
+function jumpTo(val) {
+  const n = parseInt(val);
+  if (!isNaN(n)) goto(Math.max(1, Math.min(n, total)) - 1);
+  document.getElementById('ctr-input').value = cur + 1;
+}
+
+function updateUI() {
+  const n = cur + 1;
+  const pct = (n / total * 100).toFixed(2);
+  const section = slides[cur].getAttribute('data-s') || '1';
+  const color = sectionColors[section] || '#4285f4';
+
+  // Seekbar fill
+  const sb = document.getElementById('seekbar');
+  sb.value = n;
+  sb.style.setProperty('--seek-fill', color);
+  sb.style.setProperty('--seek-pct', pct + '%');
+
+  // Editable counter (don't overwrite while user is focused)
+  const inp = document.getElementById('ctr-input');
+  if (document.activeElement !== inp) inp.value = n;
+
+  // Notes
+  document.getElementById('notesSN').textContent = n;
+}
+
+function toggleNotes() {
+  const ov = document.getElementById('notesOv');
+  document.getElementById('notesTxt').textContent = slides[cur].getAttribute('data-notes') || 'No notes for this slide.';
+  document.getElementById('notesSN').textContent = cur + 1;
+  ov.classList.toggle('vis');
+}
+
+// Keyboard nav — skip when typing in the input
+document.addEventListener('keydown', e => {
+  if (document.getElementById('notesOv').classList.contains('vis')) {
+    if (e.key === 'Escape' || e.key === 's' || e.key === 'S') toggleNotes();
+    return;
+  }
+  if (document.activeElement === document.getElementById('ctr-input')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); prevSlide(); }
+  if (e.key === 's' || e.key === 'S') toggleNotes();
+  if (e.key === 'Home') goto(0);
+  if (e.key === 'End')  goto(total - 1);
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) dx < 0 ? nextSlide() : prevSlide();
+}, {passive:true});
+
+updateUI();
+</script>
+</body>
+</html>
