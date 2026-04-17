@@ -1,7 +1,7 @@
-![[GE-K12-HK-Banner.webp]]
+![banner](/images/GE-K12-HK-Banner.webp)
 
 # Gemini Enterprise for Education
-## AI 工具 · 香港中學教師版
+## AI 工具 · 香港中小學教師版
 **Google Workspace for Education | 2026**
 
 ---
@@ -16,8 +16,6 @@
 > 「學生資料分散在不同系統，難以整合分析。」
 
 **我們提供兩項配套：訂閱平台 + 專業培訓，幫你的學校真正用起來。**
-
----
 
 ---
 
