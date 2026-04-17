@@ -235,5 +235,5 @@ date: 2026-04-17
 
 ---
 
-*Gemini Enterprise for Education | 香港中學版 | 2026*
+*Gemini Enterprise for Education | 香港中小學版 | 2026*
 *HK K12 教師 AI 培訓計劃（ZOC-14）*
