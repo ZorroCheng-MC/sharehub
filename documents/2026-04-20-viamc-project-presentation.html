@@ -1,0 +1,1116 @@
+---
+title: "VIAMC Project Brief"
+date: 2026-04-20
+layout: null
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIAMC Project Brief</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <style>
+    :root {
+      --accent: #0B5ED7;
+      --accent-dark: #084298;
+      --ink: #1a1a2e;
+      --muted: #5a6b7a;
+      --bg-soft: #f5f7fb;
+      --border: #dde3ec;
+      --mc: #0B5ED7;
+      --viamc: #d97706;
+      --high: #16a34a;
+      --med: #d97706;
+      --low: #dc2626;
+    }
+
+    .reveal {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      --r-main-font-size: 30px;
+      font-size: 30px;
+    }
+
+    .reveal .slides section {
+      text-align: left;
+      padding: 0 1.5rem;
+      box-sizing: border-box;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: inherit;
+      color: var(--ink);
+      text-transform: none;
+      letter-spacing: -0.01em;
+      font-weight: 700;
+      margin-top: 0;
+    }
+
+    .reveal h1 { font-size: 2.4em; }
+    .reveal h2 { font-size: 1.45em; margin-bottom: 0.5em; }
+    .reveal h3 { font-size: 1.1em; color: var(--accent-dark); margin-top: 0.6em; }
+
+    .reveal p, .reveal li { font-size: 0.72em; line-height: 1.45; margin: 0.2em 0; }
+
+    .reveal .title-slide {
+      text-align: center;
+      padding-top: 3%;
+    }
+
+    .reveal .title-slide h1 {
+      color: var(--accent-dark);
+      border: none;
+      margin-bottom: 0.2em;
+    }
+
+    .reveal .title-slide .subtitle {
+      color: var(--muted);
+      font-size: 0.95em;
+      margin-bottom: 1.5em;
+    }
+
+    .reveal .title-slide .meta {
+      color: var(--muted);
+      font-size: 0.6em;
+      margin-top: 2em;
+    }
+
+    .reveal .badge {
+      display: inline-block;
+      padding: 0.12em 0.6em;
+      border-radius: 999px;
+      font-size: 0.55em;
+      font-weight: 600;
+      margin-left: 0.3em;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .reveal .badge-mc { background: rgba(11, 94, 215, 0.12); color: var(--mc); }
+    .reveal .badge-viamc { background: rgba(217, 119, 6, 0.14); color: var(--viamc); }
+    .reveal .badge-high { background: rgba(22, 163, 74, 0.15); color: var(--high); }
+    .reveal .badge-med { background: rgba(217, 119, 6, 0.15); color: var(--med); }
+    .reveal .badge-low { background: rgba(220, 38, 38, 0.15); color: var(--low); }
+
+    .reveal table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.65em;
+      margin: 0.4em 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .reveal table th {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      padding: 0.45em 0.75em;
+      text-align: left;
+      border: none;
+      font-size: 1em;
+    }
+
+    .reveal table td {
+      padding: 0.4em 0.75em;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 1em;
+    }
+
+    .reveal table tr:last-child td { border-bottom: none; }
+    .reveal table tr:nth-child(even) td { background: var(--bg-soft); }
+
+    .reveal .callout {
+      background: var(--bg-soft);
+      border-left: 3px solid var(--accent);
+      padding: 0.55em 0.9em;
+      border-radius: 0 6px 6px 0;
+      margin: 0.5em 0;
+      font-size: 0.72em;
+      line-height: 1.4;
+    }
+
+    .reveal .callout strong { color: var(--accent-dark); }
+
+    .reveal .callout-warn {
+      background: #fff7ed;
+      border-left-color: var(--viamc);
+    }
+
+    .reveal .callout-warn strong { color: var(--viamc); }
+
+    .reveal .callout-ok {
+      background: #f0fdf4;
+      border-left-color: var(--high);
+    }
+
+    .reveal .callout-ok strong { color: var(--high); }
+
+    .reveal ul { list-style: none; padding-left: 0; margin: 0.3em 0; }
+    .reveal ul li {
+      padding: 0.15em 0 0.15em 1.2em;
+      position: relative;
+    }
+    .reveal ul li::before {
+      content: "›";
+      position: absolute;
+      left: 0.3em;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .reveal .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8em;
+      margin-top: 0.5em;
+    }
+
+    .reveal .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.7em;
+      margin-top: 0.5em;
+    }
+
+    .reveal .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .reveal .card h4 {
+      margin-top: 0;
+      color: var(--accent-dark);
+      font-size: 0.9em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3em;
+      margin-bottom: 0.4em;
+    }
+
+    .reveal .card p { font-size: 0.7em; margin: 0.25em 0; }
+    .reveal .card ul li { font-size: 0.7em; }
+
+    .reveal .card.highlight {
+      border-top: 3px solid var(--accent);
+    }
+
+    .reveal .tool-chip {
+      display: inline-block;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      padding: 0.25em 0.7em;
+      border-radius: 999px;
+      margin: 0.15em;
+      font-size: 0.6em;
+      color: var(--ink);
+    }
+
+    .reveal .slide-label {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 0.5em;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .reveal code {
+      background: var(--bg-soft);
+      color: var(--accent-dark);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .reveal .fit-bar {
+      display: inline-block;
+      width: 60px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border);
+      overflow: hidden;
+      vertical-align: middle;
+      margin-right: 0.4em;
+    }
+    .reveal .fit-bar-fill {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .reveal .lede {
+      font-size: 0.78em;
+      color: var(--muted);
+      margin-bottom: 0.5em;
+      margin-top: 0;
+    }
+
+    .reveal .flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.5em;
+      margin: 0.6em 0;
+    }
+
+    .reveal .flow-step {
+      flex: 1;
+      background: white;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      position: relative;
+      min-height: 90px;
+    }
+
+    .reveal .flow-num {
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      background: var(--accent);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7em;
+      font-weight: 700;
+    }
+
+    .reveal .flow-title {
+      font-size: 0.85em;
+      font-weight: 700;
+      color: var(--accent-dark);
+      margin-bottom: 0.3em;
+      margin-top: 0.2em;
+    }
+
+    .reveal .flow-desc {
+      font-size: 0.7em;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .reveal .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1.4em;
+      font-weight: 300;
+      flex-shrink: 0;
+    }
+
+    .reveal .mono-sample {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4em 0.6em;
+      font-size: 0.7em;
+      margin: 0.3em 0;
+    }
+    .reveal .mono-sample .arrow { color: var(--accent); margin: 0 0.4em; }
+    .reveal .mono-sample .orig { color: var(--low); }
+    .reveal .mono-sample .redacted { color: var(--high); }
+
+    .reveal .footer-note {
+      position: absolute;
+      bottom: 0.8rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.5em;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .reveal a { color: var(--accent); }
+
+    /* --- Decorative background accent on all content slides --- */
+    .reveal .slides section { overflow: hidden; }
+    .reveal .slides section::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(11, 94, 215, 0.08), rgba(11, 94, 215, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .reveal .slides section > * { position: relative; z-index: 1; }
+    .reveal .title-slide::before { display: none; }
+
+    /* --- Icon system --- */
+    .reveal .icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-bottom: 0.5em;
+      box-shadow: 0 4px 10px rgba(11, 94, 215, 0.25);
+    }
+
+    .reveal .icon-circle.tone-amber {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25);
+    }
+    .reveal .icon-circle.tone-green {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+    }
+    .reveal .icon-circle.tone-neutral {
+      background: linear-gradient(135deg, #64748b, #475569);
+      box-shadow: 0 4px 10px rgba(71, 85, 105, 0.2);
+    }
+
+    .reveal .icon-circle svg {
+      width: 26px;
+      height: 26px;
+      stroke: white;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .reveal .icon-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(11, 94, 215, 0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .reveal .icon-sm svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* --- Enhanced flow step --- */
+    .reveal .flow-step {
+      text-align: center;
+      padding: 1em 0.8em 0.9em;
+    }
+    .reveal .flow-step .flow-title { text-align: center; font-size: 0.95em; }
+    .reveal .flow-step .flow-desc { text-align: center; }
+
+    /* --- Stat / Metric block --- */
+    .reveal .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      padding: 0.6em 0.9em;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .reveal .stat-num {
+      font-size: 1.6em;
+      font-weight: 800;
+      color: var(--accent-dark);
+      line-height: 1;
+    }
+    .reveal .stat-label {
+      font-size: 0.7em;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* --- Tool tile grid for UC3 --- */
+    .reveal .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5em;
+      margin: 0.5em 0;
+    }
+    .reveal .tool-tile {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5em 0.3em;
+      text-align: center;
+      font-size: 0.65em;
+      font-weight: 600;
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: transform 0.2s;
+    }
+    .reveal .tool-tile::before {
+      content: "";
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin: 0 auto 0.3em;
+      border-radius: 5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      opacity: 0.85;
+    }
+
+    /* --- Architecture diagram for UC3 --- */
+    .reveal .arch-diagram {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 0.6em;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1em 0.8em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .reveal .arch-col { text-align: center; }
+    .reveal .arch-col .arch-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 0.4em;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reveal .arch-col .arch-icon svg { width: 28px; height: 28px; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .reveal .arch-col h5 { font-size: 0.78em; margin: 0.2em 0; color: var(--ink); }
+    .reveal .arch-col p { font-size: 0.62em; color: var(--muted); margin: 0; line-height: 1.3; }
+    .reveal .arch-arrow {
+      color: var(--accent);
+      font-size: 1.3em;
+      font-weight: 300;
+    }
+
+    .reveal .pill {
+      display: inline-block;
+      padding: 0.25em 0.7em;
+      border-radius: 999px;
+      font-size: 0.65em;
+      font-weight: 600;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--ink);
+    }
+    .reveal .pill.pill-accent { background: rgba(11, 94, 215, 0.1); border-color: rgba(11, 94, 215, 0.2); color: var(--accent-dark); }
+    .reveal .pill.pill-warn { background: rgba(217, 119, 6, 0.1); border-color: rgba(217, 119, 6, 0.25); color: var(--viamc); }
+    .reveal .pill.pill-ok { background: rgba(22, 163, 74, 0.1); border-color: rgba(22, 163, 74, 0.25); color: var(--high); }
+
+    /* --- Before/after Excel grid visual --- */
+    .reveal .excel-sample {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.6em;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0.4em 0;
+    }
+    .reveal .excel-sample .cell {
+      padding: 0.4em 0.5em;
+      background: white;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .reveal .excel-sample .cell:nth-child(3n) { border-right: none; }
+    .reveal .excel-sample .cell.header {
+      background: var(--bg-soft);
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.85em;
+    }
+    .reveal .excel-sample .cell.sensitive { color: var(--low); }
+    .reveal .excel-sample .cell.safe { color: var(--high); }
+
+    /* --- Journey path for summary --- */
+    .reveal .journey {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.3em;
+      margin: 0.6em 0;
+    }
+    .reveal .journey-node {
+      flex: 1;
+      text-align: center;
+      padding: 0.7em 0.4em;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+    .reveal .journey-node.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      border: none;
+      box-shadow: 0 4px 10px rgba(11, 94, 215, 0.25);
+    }
+    .reveal .journey-line {
+      flex-shrink: 0;
+      width: 24px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    /* Title slide improvement */
+    .reveal .title-slide {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4fb 100%);
+      position: relative;
+    }
+    .reveal .title-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(11, 94, 215, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(217, 119, 6, 0.06), transparent 40%);
+      pointer-events: none;
+    }
+    .reveal .title-slide h1 { font-size: 3.2em; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    .reveal .section-eyebrow {
+      display: inline-block;
+      font-size: 0.55em;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3em;
+    }
+</style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE -->
+      <section class="title-slide">
+        <h1>VIAMC</h1>
+        <div class="subtitle">Project Brief &amp; Opportunity Assessment</div>
+        <div style="margin-top: 2em; display: flex; justify-content: center; gap: 1em; flex-wrap: wrap;">
+          <span class="tool-chip"><strong>UC1</strong> · Loan Background Check</span>
+          <span class="tool-chip"><strong>UC2</strong> · Fund Accounting</span>
+          <span class="tool-chip"><strong>UC3</strong> · AI Tool Centralization</span>
+        </div>
+        <div class="meta">
+          Prepared by MC Team · 20 April 2026
+        </div>
+      </section>
+
+      <!-- OVERVIEW -->
+      <section>
+        <div class="slide-label">Overview</div>
+        <h2>Three Use Cases at a Glance</h2>
+        <table>
+          <thead>
+            <tr><th style="width: 8%">#</th><th>Use Case</th><th>Cloud Suitability</th><th>HKMA Fit</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>UC1</strong></td>
+              <td>Loan Background Check<br><span style="color: var(--muted); font-size: 0.85em;">AI-enriched client research reports</span></td>
+              <td><span class="badge badge-high">Cloud-ready</span></td>
+              <td><span class="badge badge-med">Medium</span></td>
+            </tr>
+            <tr>
+              <td><strong>UC2</strong></td>
+              <td>Fund Accounting<br><span style="color: var(--muted); font-size: 0.85em;">Excel split, automate, audit export + redaction</span></td>
+              <td><span class="badge badge-med">Compliance review</span></td>
+              <td><span class="badge badge-low">Low–Med</span></td>
+            </tr>
+            <tr>
+              <td><strong>UC3</strong></td>
+              <td>AI Tool Centralization<br><span style="color: var(--muted); font-size: 0.85em;">CASB / DLP over 12 GenAI tools</span></td>
+              <td><span class="badge badge-med">Sensitive</span></td>
+              <td><span class="badge badge-high">High</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout" style="margin-top: 1.2em;">
+          <strong>Cross-cutting opportunity:</strong> HKMA GenA.I. Sandbox++ programme may sponsor UC3 (strongest fit) and UC1 as secondary.
+        </div>
+      </section>
+
+      <!-- UC1 -->
+      <section>
+        <div class="slide-label">Use Case 1</div>
+        <h2>Loan Background Check</h2>
+        <p class="lede">Produce richer client / project due-diligence reports for management using cloud AI research tools.</p>
+
+        <div class="flow">
+          <div class="flow-step">
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+            </div>
+            <div class="flow-title">Input</div>
+            <div class="flow-desc">Existing portfolio report from VIAMC</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="icon-circle tone-amber">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11h6M11 8v6" stroke-width="1.5"/></svg>
+            </div>
+            <div class="flow-title">AI Research</div>
+            <div class="flow-desc">Perplexity &amp; other AI tools research the target client</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="icon-circle tone-green">
+              <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>
+            </div>
+            <div class="flow-title">Output</div>
+            <div class="flow-desc">Enriched report for management</div>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top: 0.8em;">
+          <div class="stat">
+            <div class="icon-sm"><svg viewBox="0 0 24 24"><path d="M17.5 19a7 7 0 1 0-11 0"/><path d="M12 2v4M6.7 5.3l2.8 2.8M2 12h4M17.2 8.1l2.8-2.8M22 12h-4"/></svg></div>
+            <div><div class="stat-label">Cloud Suitability</div><div style="color: var(--high); font-weight: 700; font-size: 0.85em;">Cloud-ready</div></div>
+          </div>
+          <div class="stat">
+            <div class="icon-sm"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div><div class="stat-label">Primary Value</div><div style="font-weight: 700; font-size: 0.8em;">Faster, deeper research</div></div>
+          </div>
+          <div class="stat">
+            <div class="icon-sm"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div><div class="stat-label">Audience</div><div style="font-weight: 700; font-size: 0.8em;">Mgmt / credit committee</div></div>
+          </div>
+        </div>
+
+        <div class="callout callout-ok" style="margin-top: 0.7em;">
+          <strong>Status:</strong> Ready to scope once VIAMC shares an existing portfolio report template and confirms approved data sources.
+        </div>
+      </section>
+
+      <!-- UC1 Follow-ups -->
+      <section>
+        <div class="slide-label">UC1 · Follow-ups</div>
+        <h2>Follow-up Items · UC1</h2>
+        <table>
+          <thead>
+            <tr><th>Item</th><th style="width: 120px">Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Share existing portfolio report template</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Confirm preferred output format (PDF / Word / dashboard)</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Confirm approved external data sources for research</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Identify report recipients and approval chain</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- UC2 Overview -->
+      <section>
+        <div class="slide-label">Use Case 2</div>
+        <h2>Fund Accounting</h2>
+        <p class="lede">Today: one large Excel file. Goal: split, automate, and produce clean auditor exports.</p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Split</h4>
+            <p style="font-size: 0.85em;">Break the master file into smaller files by year.</p>
+          </div>
+          <div class="card">
+            <h4>Automate</h4>
+            <p style="font-size: 0.85em;">Remove manual steps in the splitting/processing workflow.</p>
+          </div>
+          <div class="card">
+            <h4>Audit Export</h4>
+            <p style="font-size: 0.85em;">Output in audit format template for external/internal auditors.</p>
+          </div>
+        </div>
+        <div class="callout callout-warn" style="margin-top: 1.2em;">
+          <strong>Cloud suitability:</strong> compliance consideration — file may contain sensitive data, on-prem default.
+        </div>
+      </section>
+
+      <!-- UC2 Offers -->
+      <section>
+        <div class="slide-label">UC2 · Engagement Model</div>
+        <h2>Two Delivery Options</h2>
+        <div class="grid-2">
+          <div class="card highlight">
+            <h4>Offer A · Build it (Managed Project)</h4>
+            <p style="font-size: 0.85em;">MC team builds the Python automation + redaction script as a delivered solution for VIAMC.</p>
+            <ul>
+              <li>Faster time to result</li>
+              <li>Full ownership by MC during build</li>
+              <li>Ongoing maintenance dependency</li>
+            </ul>
+          </div>
+          <div class="card highlight">
+            <h4>Offer B · Workshop (On-Premise)</h4>
+            <p style="font-size: 0.85em;">MC runs an on-prem workshop with VIAMC staff — co-discover the solution together, teach them to handle it.</p>
+            <ul>
+              <li>Lower MC effort &amp; VIAMC cost</li>
+              <li>High knowledge transfer</li>
+              <li>VIAMC self-sufficient afterwards</li>
+            </ul>
+          </div>
+        </div>
+        <table style="margin-top: 1em;">
+          <thead>
+            <tr><th></th><th>Offer A · Build</th><th>Offer B · Workshop</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MC Effort</strong></td><td>Higher (full build)</td><td>Lower (facilitation)</td></tr>
+            <tr><td><strong>Cost to VIAMC</strong></td><td>Higher</td><td>Lower</td></tr>
+            <tr><td><strong>Ongoing dependency</strong></td><td>Yes (maintenance)</td><td>No</td></tr>
+            <tr><td><strong>Knowledge transfer</strong></td><td>Low</td><td>High</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- UC2 Redaction -->
+      <section>
+        <div class="slide-label">UC2 · Redaction Sub-project</div>
+        <h2>Data Redaction Script</h2>
+        <p class="lede">Use the big Excel safely for research / AI without leaking sensitive data.</p>
+
+        <div class="flow">
+          <div class="flow-step">
+            <div class="icon-circle tone-neutral">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            </div>
+            <div class="flow-title">Master Excel</div>
+            <div class="flow-desc">Original — untouched, on-prem</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="icon-circle tone-amber">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="flow-title">Python Redactor</div>
+            <div class="flow-desc"><code>openpyxl</code> · streaming · config-driven</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="icon-circle tone-green">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div class="flow-title">Sanitized Replica</div>
+            <div class="flow-desc">Safe for research &amp; AI tool use</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 0.6em;">
+          <div class="card">
+            <h4>Strategy A · Masking</h4>
+            <p style="font-size: 0.65em; margin: 0.2em 0; color: var(--muted);">Fixed placeholder. Simple, irreversible.</p>
+            <div class="excel-sample">
+              <div class="cell header">Client</div><div class="cell header">HKID</div><div class="cell header">Amount</div>
+              <div class="cell sensitive">Chan Tai Man</div><div class="cell sensitive">A123456(7)</div><div class="cell sensitive">$1.2M</div>
+              <div class="cell safe">REDACTED</div><div class="cell safe">***</div><div class="cell safe">REDACTED</div>
+            </div>
+          </div>
+          <div class="card highlight">
+            <h4>Strategy B · Pseudonymisation</h4>
+            <p style="font-size: 0.65em; margin: 0.2em 0; color: var(--muted);">Consistent tokens — preserves relationships.</p>
+            <div class="excel-sample">
+              <div class="cell header">Client</div><div class="cell header">HKID</div><div class="cell header">Amount</div>
+              <div class="cell sensitive">Chan Tai Man</div><div class="cell sensitive">A123456(7)</div><div class="cell sensitive">$1.2M</div>
+              <div class="cell safe">CLIENT_001</div><div class="cell safe">ID_001</div><div class="cell safe">AMT_A</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UC2 Follow-ups -->
+      <section>
+        <div class="slide-label">UC2 · Follow-ups</div>
+        <h2>Follow-up Items · UC2</h2>
+        <div class="grid-2">
+          <div>
+            <h3 style="font-size: 0.9em; margin-bottom: 0.3em;">General</h3>
+            <table>
+              <thead><tr><th>Item</th><th style="width: 90px">Owner</th></tr></thead>
+              <tbody>
+                <tr><td>Share current Excel file / sample</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Share existing audit format template</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Confirm process frequency (annual / quarterly)</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Confirm auditor type (internal / external)</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Gauge VIAMC preference: Offer A or B?</td><td><span class="badge badge-mc">MC</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3 style="font-size: 0.9em; margin-bottom: 0.3em;">Redaction Sub-project</h3>
+            <table>
+              <thead><tr><th>Item</th><th style="width: 90px">Owner</th></tr></thead>
+              <tbody>
+                <tr><td>List sensitive columns / fields</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Confirm strategy: masking vs. pseudonymisation</td><td><span class="badge badge-mc">MC</span></td></tr>
+                <tr><td>Confirm storage location for sanitized replica</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+                <tr><td>Confirm scope: all sheets or specific tabs</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- UC3 Overview -->
+      <section>
+        <div class="slide-label">Use Case 3</div>
+        <h2>AI Tool Centralization</h2>
+        <p class="lede">Staff are spread across 12 GenAI tools with no central control. Goal: centralize governance &amp; audit what data leaves the org.</p>
+        <div style="text-align: center; margin: 0.8em 0;">
+          <span class="tool-chip">Gemini / Bard</span>
+          <span class="tool-chip">GROK</span>
+          <span class="tool-chip">ChatGPT</span>
+          <span class="tool-chip">Perplexity</span>
+          <span class="tool-chip">NotebookLM</span>
+          <span class="tool-chip">Canva</span>
+          <span class="tool-chip">ElevenLabs</span>
+          <span class="tool-chip">Adobe Express</span>
+          <span class="tool-chip">CapCut</span>
+          <span class="tool-chip">Hailuo</span>
+          <span class="tool-chip">Wrtn</span>
+          <span class="tool-chip">Deepl</span>
+        </div>
+        <div class="callout">
+          <strong>Reframe:</strong> this is a <strong>CASB (Cloud Access Security Broker)</strong> problem — a well-understood enterprise security pattern.
+        </div>
+      </section>
+
+      <!-- UC3 Options -->
+      <section>
+        <div class="slide-label">UC3 · Solution Options</div>
+        <h2>Three Approaches</h2>
+        <div class="grid-3">
+          <div class="card highlight">
+            <div style="display: flex; align-items: center; gap: 0.6em; margin-bottom: 0.3em;">
+              <div class="icon-sm" style="background: rgba(11, 94, 215, 0.15);"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><path d="M9 13l2 2 4-4"/></svg></div>
+              <h4 style="margin:0;">A · CASB</h4>
+            </div>
+            <p style="font-size: 0.62em; color: var(--muted); margin: 0 0 0.4em;">Netskope · Zscaler · MS Defender</p>
+            <p style="font-size: 0.68em; margin: 0.2em 0;"><strong style="color: var(--high);">Pros</strong></p>
+            <ul>
+              <li>Shadow-IT discovery</li>
+              <li>DLP + redaction built-in</li>
+              <li>Audit log out of box</li>
+            </ul>
+            <p style="font-size: 0.68em; margin: 0.3em 0 0.2em;"><strong style="color: var(--low);">Cons</strong></p>
+            <ul>
+              <li>High licence cost</li>
+            </ul>
+            <div style="margin-top: 0.4em;"><span class="pill pill-accent">Recommended</span></div>
+          </div>
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.6em; margin-bottom: 0.3em;">
+              <div class="icon-sm"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><line x1="6" y1="7" x2="6.01" y2="7"/><line x1="6" y1="17" x2="6.01" y2="17"/></svg></div>
+              <h4 style="margin:0;">B · Proxy + DLP</h4>
+            </div>
+            <p style="font-size: 0.62em; color: var(--muted); margin: 0 0 0.4em;">Squid + custom DLP rules</p>
+            <p style="font-size: 0.68em; margin: 0.2em 0;"><strong style="color: var(--high);">Pros</strong></p>
+            <ul>
+              <li>Cheaper than CASB</li>
+              <li>Flexible rule-set</li>
+            </ul>
+            <p style="font-size: 0.68em; margin: 0.3em 0 0.2em;"><strong style="color: var(--low);">Cons</strong></p>
+            <ul>
+              <li>More setup &amp; maintenance</li>
+              <li>No shadow-IT discovery</li>
+            </ul>
+            <div style="margin-top: 0.4em;"><span class="pill pill-warn">Budget-friendly</span></div>
+          </div>
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.6em; margin-bottom: 0.3em;">
+              <div class="icon-sm"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <h4 style="margin:0;">C · Browser Agent</h4>
+            </div>
+            <p style="font-size: 0.62em; color: var(--muted); margin: 0 0 0.4em;">Managed browser extension</p>
+            <p style="font-size: 0.68em; margin: 0.2em 0;"><strong style="color: var(--high);">Pros</strong></p>
+            <ul>
+              <li>Low infra lift</li>
+              <li>Fast to deploy</li>
+            </ul>
+            <p style="font-size: 0.68em; margin: 0.3em 0 0.2em;"><strong style="color: var(--low);">Cons</strong></p>
+            <ul>
+              <li>Easy to bypass</li>
+              <li>Misses API calls</li>
+            </ul>
+            <div style="margin-top: 0.4em;"><span class="pill">Light-touch</span></div>
+          </div>
+        </div>
+        <div class="callout callout-ok" style="margin-top: 0.6em;">
+          <strong>Recommendation:</strong> <strong>CASB (A)</strong> if budget allows; <strong>Proxy + allowlist (B)</strong> as pragmatic middle ground.
+        </div>
+      </section>
+
+      <!-- UC3 Follow-ups -->
+      <section>
+        <div class="slide-label">UC3 · Follow-ups</div>
+        <h2>Follow-up Items · UC3</h2>
+        <table>
+          <thead>
+            <tr><th>Item</th><th style="width: 120px">Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Browser-only or API usage too?</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Priority: redaction or audit logging first?</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Budget range (CASB vs. proxy)?</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Number of users affected</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>SSO / identity management in place?</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Shortlist CASB vendors for demo</td><td><span class="badge badge-mc">MC</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- HKMA -->
+      <section>
+        <div class="slide-label">HKMA Funding</div>
+        <h2>GenA.I. Sandbox++ Programme</h2>
+        <p class="lede">Launched 2026-03-05 by HKMA + SFC + IA + MPFA.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h4>Focus Areas</h4>
+            <ul>
+              <li>Risk management</li>
+              <li>Anti-fraud measures</li>
+              <li>Customer experience enhancement</li>
+              <li><strong>"A.I. vs A.I."</strong> — using AI to manage risks arising from AI adoption</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Support Provided</h4>
+            <ul>
+              <li>Supervisory guidance + technical assistance</li>
+              <li>Free GPU compute at Cyberport AI Supercomputing Centre</li>
+              <li>Development &amp; piloting environment</li>
+              <li><em>No stated funding amounts or deadlines</em></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-note">
+          Source: hkma.gov.hk/eng/news-and-media/press-releases/2026/03/20260305-3/
+        </div>
+      </section>
+
+      <!-- HKMA Assessment -->
+      <section>
+        <div class="slide-label">HKMA · Early Assessment</div>
+        <h2>Qualification Fit</h2>
+        <table>
+          <thead>
+            <tr><th style="width: 30%">Use Case</th><th style="width: 15%">Fit</th><th>Rationale</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>UC1</strong> — Loan Background Check</td>
+              <td><span class="badge badge-med">Medium</span></td>
+              <td>Maps to risk management + suitability assessment compliance. AI-driven client research fits the GenAI angle.</td>
+            </tr>
+            <tr>
+              <td><strong>UC2</strong> — Fund Accounting + Redaction</td>
+              <td><span class="badge badge-low">Low–Med</span></td>
+              <td>Pure Excel automation is weak. Qualifies only if reframed around AI-driven compliance/risk.</td>
+            </tr>
+            <tr>
+              <td><strong>UC3</strong> — AI Tool Centralization</td>
+              <td><span class="badge badge-high">High</span></td>
+              <td>Best fit. "A.I. vs A.I." maps directly to CASB/DLP controlling staff AI tool usage.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout-ok" style="margin-top: 1em;">
+          <strong>Recommendation:</strong> Lead HKMA application with <strong>UC3</strong>, support with <strong>UC1</strong>. Include UC2 only if reframed around AI-driven compliance.
+        </div>
+      </section>
+
+      <!-- HKMA Follow-ups -->
+      <section>
+        <div class="slide-label">HKMA · Follow-ups</div>
+        <h2>Follow-up Items · HKMA</h2>
+        <table>
+          <thead>
+            <tr><th>Item</th><th style="width: 120px">Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Contact HKMA for application process and deadlines</td><td><span class="badge badge-mc">MC</span></td></tr>
+            <tr><td>Confirm VIAMC's regulated sector eligibility</td><td><span class="badge badge-viamc">VIAMC</span></td></tr>
+            <tr><td>Draft UC3 application narrative around "A.I. vs A.I."</td><td><span class="badge badge-mc">MC</span></td></tr>
+            <tr><td>Reframe UC2 as AI-driven compliance if submitting</td><td><span class="badge badge-mc">MC</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Summary -->
+      <section>
+        <div class="slide-label">Summary</div>
+        <h2>Where We Go Next</h2>
+        <div class="grid-2">
+          <div class="card highlight">
+            <h4>Near-Term Priorities (MC)</h4>
+            <ul>
+              <li>Shortlist CASB vendors for UC3 demo</li>
+              <li>Contact HKMA on GenA.I. Sandbox++ process</li>
+              <li>Draft UC3 narrative around "A.I. vs A.I."</li>
+              <li>Confirm UC2 engagement model (Offer A vs B)</li>
+            </ul>
+          </div>
+          <div class="card highlight">
+            <h4>Inputs Needed from VIAMC</h4>
+            <ul>
+              <li>Portfolio report template (UC1)</li>
+              <li>Fund accounting Excel sample + audit template (UC2)</li>
+              <li>Sensitive field list (UC2 redaction)</li>
+              <li>AI tool usage mode + user count + SSO status (UC3)</li>
+              <li>Regulated sector confirmation (HKMA)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout" style="margin-top: 1.2em; text-align: center;">
+          <strong>Strongest combined play:</strong> UC3 as HKMA-funded flagship · UC1 as secondary · UC2 as VIAMC-funded workshop or managed build.
+        </div>
+      </section>
+
+      <!-- Thanks -->
+      <section class="title-slide">
+        <h1 style="color: var(--accent-dark);">Thank you</h1>
+        <div class="subtitle">Questions &amp; Discussion</div>
+        <div class="meta" style="margin-top: 4em;">
+          MC Team · VIAMC Engagement · 20 April 2026
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      controls: true,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      plugins: [RevealHighlight]
+    });
+  </script>
+</body>
+</html>
