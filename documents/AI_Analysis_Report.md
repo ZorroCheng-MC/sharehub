@@ -1,3 +1,7 @@
+---
+title: "AI Analysis of a Low-Dose Lung CT (LDCT) Screening Study"
+date: 2026-04-21
+---
 # AI Analysis of a Low-Dose Lung CT (LDCT) Screening Study
 
 *A transparent demonstration of what a general-purpose multimodal LLM (ChatGPT / Claude) can and cannot do with a real DICOM imaging dataset.*
