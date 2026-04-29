@@ -1,3 +1,7 @@
+---
+title: "GE MCP OAuth Proxy — Developer Guide"
+date: 2026-04-29
+---
 # GE MCP OAuth Proxy — Developer Guide
 
 **Project:** Gemini Enterprise × Third-Party MCP Server Integration  
