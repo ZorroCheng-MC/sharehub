@@ -5,13 +5,13 @@ type: article
 status: draft
 tags: [article, investing, ai-tools, mcp]
 summary: "A detailed research-backed comparison of Alpaca and Interactive Brokers across fees, asset availability, market data quality, order types, and AI integration landscape — to inform a migration decision for a multi-strategy AI trading platform run from Hong Kong."
-hero: images/alpaca-vs-ibkr-migration-hero.jpg
+hero: images/alpaca-vs-ibkr-migration-analysis-hero.jpg
 created: 2026-05-03
 ---
 
 # Alpaca vs IBKR — Migration Analysis for AI Trading Platform
 
-![](/images/alpaca-vs-ibkr-migration-hero.jpg)
+![](/images/alpaca-vs-ibkr-migration-analysis-hero.jpg)
 
 ## Context
 
