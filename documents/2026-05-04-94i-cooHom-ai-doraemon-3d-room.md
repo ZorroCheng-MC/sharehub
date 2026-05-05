@@ -3,7 +3,7 @@ title: "我用 CooHom AI 打造「現實版」哆啦A夢場景"
 tags: [video, AI, image-generation, design, tools, automation, inbox, tutorial, inspiration]
 url: https://www.youtube.com/watch?v=Vpr5PX-rxy0
 cover: https://i.ytimg.com/vi/Vpr5PX-rxy0/maxresdefault.jpg
-date: 2026-05-04
+date: 2026-05-05
 type: video
 status: inbox
 read: false
