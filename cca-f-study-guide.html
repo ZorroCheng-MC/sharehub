@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCA-F Study Guide</title>
+  <meta name="description" content="Claude Certified Architect – Foundations: study guide with per-topic links into the exam guide PDF.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.40.0/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --color-text-primary: #1f1e1d;
+      --color-text-secondary: #6b6864;
+      --color-text-tertiary: #a8a29e;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f5f3ee;
+      --color-border-secondary: #d6d3d1;
+      --color-border-tertiary: #e7e5e4;
+      --border-radius-md: 6px;
+      --border-radius-lg: 10px;
+    }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #faf9f5;
+      color: var(--color-text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    button { font-family: inherit; }
+    .loading {
+      max-width: 760px; margin: 0 auto; padding: 2rem 1rem;
+      color: var(--color-text-tertiary); font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"><div class="loading">Loading study guide&hellip;</div></div>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel" data-presets="react">
+const { useState } = React;
+
+const PDF_URL = "https://sharehub.zorro.hk/attachments/pdfs/cca-f-exam-guide.pdf";
+
+const pdfPage = (page) => `${PDF_URL}#page=${page}`;
+
+const domains = [
+  {
+    id: "agentic",
+    label: "Agentic Architecture & Orchestration",
+    weight: "27%",
+    color: "#5340b8",
+    bgLight: "#EEEDFE",
+    icon: "ti-topology-star-3",
+    pdfPages: { start: 5, end: 9, label: "pp. 5–9" },
+    topics: [
+      {
+        title: "Agentic loop control flow",
+        pdfPage: 5,
+        summary: "Check stop_reason after every Claude response. 'tool_use' → run the tool and loop. 'end_turn' → you're done.",
+        detail: [
+          { label: "stop_reason = 'tool_use'", note: "Execute the requested tool, append the result to conversation history, then call Claude again." },
+          { label: "stop_reason = 'end_turn'", note: "Claude has finished. Return the final response to the user." },
+          { label: "Anti-patterns to avoid", note: "Don't parse natural language signals to detect completion. Don't use arbitrary iteration caps as the primary stop mechanism. Don't check for assistant text content as a completion indicator." },
+          { label: "Tool results in history", note: "Always append tool results to conversation history before the next API call so Claude can reason about them." },
+        ],
+      },
+      {
+        title: "Multi-agent coordinator / subagent patterns",
+        pdfPage: 6,
+        summary: "Hub-and-spoke: coordinator manages all routing, error handling, and aggregation. Subagents have isolated context.",
+        detail: [
+          { label: "Task tool", note: "The mechanism for spawning subagents. allowedTools must include 'Task' for the coordinator to invoke subagents." },
+          { label: "Context isolation", note: "Subagents do NOT inherit the coordinator's history. Pass findings explicitly in the prompt." },
+          { label: "Parallel execution", note: "Emit multiple Task tool calls in a single coordinator response to spawn subagents in parallel." },
+          { label: "Coordinator's job", note: "Task decomposition, dynamic subagent selection, result aggregation, iterative refinement when gaps exist." },
+          { label: "Narrow decomposition risk", note: "Over-narrow subtopics cause incomplete coverage. Coordinator must ensure full domain coverage before delegating." },
+        ],
+      },
+      {
+        title: "Hooks for deterministic enforcement",
+        pdfPage: 8,
+        summary: "PostToolUse hooks intercept and transform tool results. Call interception hooks block policy-violating actions. Use hooks when you need guaranteed compliance, not prompt instructions.",
+        detail: [
+          { label: "PostToolUse", note: "Intercepts tool results after execution. Use for normalizing heterogeneous data formats (Unix timestamps, ISO 8601, numeric codes) before the model processes them." },
+          { label: "Call interception", note: "Intercepts outgoing tool calls. Use to block actions that violate policy (e.g., refunds above $500) and redirect to alternative workflows." },
+          { label: "Hooks vs prompts", note: "Prompt instructions have a non-zero failure rate. Hooks provide deterministic, guaranteed compliance for critical business rules." },
+        ],
+      },
+      {
+        title: "Session management",
+        pdfPage: 9,
+        summary: "Use --resume for named sessions. Use fork_session to explore divergent approaches from a shared baseline.",
+        detail: [
+          { label: "--resume <session-name>", note: "Continues a specific prior named session." },
+          { label: "fork_session", note: "Creates independent branches from a shared analysis baseline for parallel exploration." },
+          { label: "When to resume vs restart", note: "Resume when prior context is mostly valid. Start fresh with an injected summary when prior tool results are stale." },
+          { label: "After code changes", note: "Always inform a resumed session about file changes for targeted re-analysis — don't expect full re-exploration." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "tool",
+    label: "Tool Design & MCP Integration",
+    weight: "18%",
+    color: "#0F6E56",
+    bgLight: "#E1F5EE",
+    icon: "ti-plug-connected",
+    pdfPages: { start: 10, end: 12, label: "pp. 10–12" },
+    topics: [
+      {
+        title: "Writing effective tool descriptions",
+        pdfPage: 10,
+        summary: "Tool descriptions are the primary mechanism Claude uses for tool selection. Minimal descriptions cause unreliable routing.",
+        detail: [
+          { label: "What to include", note: "Input formats, example queries, edge cases, boundary explanations, and when to use this tool vs similar ones." },
+          { label: "Overlap is dangerous", note: "Similar descriptions (e.g., analyze_content vs analyze_document) cause systematic misrouting." },
+          { label: "Fix: rename + differentiate", note: "Rename tools and rewrite descriptions to eliminate functional overlap. Split generic tools into purpose-specific ones." },
+          { label: "System prompt interference", note: "Keyword-sensitive system prompt instructions can override well-written descriptions. Review both together." },
+        ],
+      },
+      {
+        title: "Structured error responses",
+        pdfPage: 10,
+        summary: "Return structured error metadata so Claude can make intelligent recovery decisions — not generic 'Operation failed' messages.",
+        detail: [
+          { label: "Required fields", note: "errorCategory (transient / validation / permission / business), isRetryable boolean, human-readable description." },
+          { label: "Transient errors", note: "Timeouts, service unavailability. Mark isRetryable: true. Subagent should attempt local recovery first." },
+          { label: "Business/permission errors", note: "Policy violations, auth failures. Mark isRetryable: false with a customer-friendly explanation." },
+          { label: "Empty vs error", note: "Distinguish access failures (timeout → retry decision needed) from valid empty results (successful query, no matches)." },
+        ],
+      },
+      {
+        title: "Tool distribution & tool_choice",
+        pdfPage: 11,
+        summary: "Give each agent only the tools it needs. Too many tools (18 instead of 4–5) degrades selection reliability.",
+        detail: [
+          { label: "Scoped access", note: "Restrict each subagent's tool set to its role. A synthesis agent shouldn't have web search tools." },
+          { label: "tool_choice: 'auto'", note: "Model may call a tool or return text. Default behavior." },
+          { label: "tool_choice: 'any'", note: "Model must call a tool (any tool). Guarantees structured output when you don't care which tool." },
+          { label: "tool_choice: forced", note: "{ type: 'tool', name: 'extract_metadata' } forces a specific tool call first." },
+        ],
+      },
+      {
+        title: "MCP server configuration",
+        pdfPage: 12,
+        summary: ".mcp.json for project-shared servers (version-controlled). ~/.claude.json for personal/experimental servers.",
+        detail: [
+          { label: "Project scope (.mcp.json)", note: "Committed to the repo. All team members get these tools when they clone." },
+          { label: "User scope (~/.claude.json)", note: "Personal only. Not shared. Good for experimental or sensitive servers." },
+          { label: "Credential management", note: "Use environment variable expansion: ${GITHUB_TOKEN}. Never commit secrets." },
+          { label: "MCP resources", note: "Expose content catalogs (issue summaries, DB schemas) as resources to reduce exploratory tool calls." },
+        ],
+      },
+      {
+        title: "Built-in tools: Grep, Glob, Read, Write, Edit",
+        pdfPage: 12,
+        summary: "Know when to use each. Grep searches file contents. Glob matches file paths. Edit fails on non-unique text — fall back to Read + Write.",
+        detail: [
+          { label: "Grep", note: "Searching file contents for patterns — function names, error messages, import statements." },
+          { label: "Glob", note: "Finding files by name/extension pattern (e.g., **/*.test.tsx)." },
+          { label: "Edit", note: "Targeted modifications using unique text matching. Fails when anchor text isn't unique." },
+          { label: "Read + Write fallback", note: "When Edit can't find a unique match, Read the full file then Write the modified version." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "claudecode",
+    label: "Claude Code Configuration & Workflows",
+    weight: "20%",
+    color: "#185FA5",
+    bgLight: "#E6F1FB",
+    icon: "ti-terminal-2",
+    pdfPages: { start: 13, end: 16, label: "pp. 13–16" },
+    topics: [
+      {
+        title: "CLAUDE.md configuration hierarchy",
+        pdfPage: 13,
+        summary: "Three levels: user (~/.claude/CLAUDE.md), project (.claude/CLAUDE.md or root), and directory (subdirectory CLAUDE.md files).",
+        detail: [
+          { label: "User-level", note: "~/.claude/CLAUDE.md — applies to that user only. NOT version-controlled. New team members won't see it." },
+          { label: "Project-level", note: ".claude/CLAUDE.md or root CLAUDE.md — shared via version control. Use for universal team standards." },
+          { label: "@import syntax", note: "Reference external files to keep CLAUDE.md modular. Each package can import only its relevant standards." },
+          { label: ".claude/rules/ directory", note: "Alternative to a monolithic CLAUDE.md. Organize topic-specific rules as separate files (testing.md, api-conventions.md)." },
+          { label: "/memory command", note: "Verify which memory files are currently loaded and diagnose inconsistent behavior." },
+        ],
+      },
+      {
+        title: "Path-specific rules with glob patterns",
+        pdfPage: 15,
+        summary: ".claude/rules/ files with YAML frontmatter paths: [...] apply conventions only when editing matching files.",
+        detail: [
+          { label: "How it works", note: "Add YAML frontmatter with paths: ['terraform/**/*'] — rules only load when editing matching files." },
+          { label: "Advantage over directory CLAUDE.md", note: "Glob patterns apply conventions to files spread across the codebase by type, not location. Essential for test files." },
+          { label: "Example patterns", note: "paths: ['**/*.test.tsx'] matches all test files regardless of directory. paths: ['src/api/**/*'] for API-only rules." },
+        ],
+      },
+      {
+        title: "Custom slash commands & skills",
+        pdfPage: 14,
+        summary: ".claude/commands/ for project-shared commands. .claude/skills/ for on-demand task workflows with frontmatter options.",
+        detail: [
+          { label: "Project commands", note: ".claude/commands/ — version-controlled, available to all team members on clone/pull." },
+          { label: "Personal commands", note: "~/.claude/commands/ — personal only, not shared." },
+          { label: "context: fork", note: "Runs the skill in an isolated sub-agent. Verbose output (codebase analysis, brainstorming) won't pollute the main session." },
+          { label: "allowed-tools", note: "Restrict which tools a skill can use during execution (e.g., limit to file writes only)." },
+          { label: "argument-hint", note: "Prompts the developer for required parameters when the skill is invoked without arguments." },
+        ],
+      },
+      {
+        title: "Plan mode vs direct execution",
+        pdfPage: 15,
+        summary: "Plan mode for complex/architectural tasks. Direct execution for well-scoped, single-file changes.",
+        detail: [
+          { label: "Use plan mode when", note: "Large-scale changes, multiple valid approaches, architectural decisions, multi-file modifications, monolith-to-microservices restructuring." },
+          { label: "Use direct execution when", note: "Well-understood changes with clear scope — single-file bug fix with a stack trace, adding a date validation conditional." },
+          { label: "Explore subagent", note: "Isolates verbose discovery output so the main conversation context isn't exhausted during multi-phase tasks." },
+          { label: "Combine both", note: "Plan mode for investigation → direct execution for implementation (e.g., plan the library migration, then execute it)." },
+        ],
+      },
+      {
+        title: "Claude Code in CI/CD pipelines",
+        pdfPage: 16,
+        summary: "Use -p flag for non-interactive mode. Use --output-format json with --json-schema for structured CI output.",
+        detail: [
+          { label: "-p / --print flag", note: "Runs Claude Code non-interactively. Processes prompt, outputs to stdout, exits. Required in CI or the job hangs." },
+          { label: "--output-format json + --json-schema", note: "Produces machine-parseable structured findings for automated posting as inline PR comments." },
+          { label: "Independent review instances", note: "The same session that generated code is less effective at reviewing its own changes. Use a separate instance." },
+          { label: "Incremental reviews", note: "Include prior findings when re-running after new commits. Instruct Claude to report only new or still-unaddressed issues." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "prompt",
+    label: "Prompt Engineering & Structured Output",
+    weight: "20%",
+    color: "#993C1D",
+    bgLight: "#FAECE7",
+    icon: "ti-message-bolt",
+    pdfPages: { start: 17, end: 21, label: "pp. 17–21" },
+    topics: [
+      {
+        title: "Structured output via tool_use + JSON schemas",
+        pdfPage: 19,
+        summary: "tool_use with a JSON schema is the most reliable approach — eliminates JSON syntax errors. But doesn't prevent semantic errors.",
+        detail: [
+          { label: "Why tool_use", note: "Forces schema-compliant output. Eliminates JSON syntax errors entirely. More reliable than asking Claude to 'respond in JSON'." },
+          { label: "Nullable/optional fields", note: "Mark fields as nullable when source documents may not contain the info. Prevents the model from fabricating values to satisfy required fields." },
+          { label: "enum + 'other' pattern", note: "Add an 'other' value + detail string field for extensible categorization of unexpected cases." },
+          { label: "Semantic errors still possible", note: "tool_use eliminates syntax errors but NOT semantic errors (e.g., line items that don't sum to total). Validate separately." },
+        ],
+      },
+      {
+        title: "Few-shot prompting",
+        pdfPage: 18,
+        summary: "2–4 targeted examples for ambiguous scenarios outperform detailed instructions alone. Show reasoning, not just answers.",
+        detail: [
+          { label: "When to use", note: "When detailed instructions produce inconsistent results. When output format, tone, or judgment calls are ambiguous." },
+          { label: "What to include", note: "Show reasoning for why one action was chosen over plausible alternatives. Demonstrate desired format exactly." },
+          { label: "For false positive reduction", note: "Include examples distinguishing acceptable patterns from genuine issues — enables generalization to novel cases." },
+          { label: "For extraction tasks", note: "Demonstrate correct handling of varied document structures (inline citations vs bibliographies, narrative vs structured)." },
+        ],
+      },
+      {
+        title: "Explicit criteria over vague instructions",
+        pdfPage: 17,
+        summary: "Specific categorical criteria outperform 'be conservative' or 'only report high-confidence findings'.",
+        detail: [
+          { label: "Vague (bad)", note: "'Check that comments are accurate' or 'only report high-confidence findings' — produces inconsistent results." },
+          { label: "Explicit (good)", note: "'Flag comments only when claimed behavior contradicts actual code behavior' — precise, testable, consistent." },
+          { label: "False positive trust erosion", note: "High false positive rates in any one category undermine developer trust in all categories. Disable and fix the bad category first." },
+        ],
+      },
+      {
+        title: "Validation-retry loops",
+        pdfPage: 20,
+        summary: "On validation failure, send a follow-up with the original document, the failed extraction, and specific errors. Not all failures are fixable by retry.",
+        detail: [
+          { label: "Retry-with-error-feedback", note: "Append specific validation errors to the prompt on retry. 'The total field doesn't match the sum of line items' is actionable." },
+          { label: "When retry works", note: "Format mismatches, structural output errors, incorrect field placement." },
+          { label: "When retry fails", note: "When the required information is simply absent from the source document. Don't retry — route to human review." },
+        ],
+      },
+      {
+        title: "Message Batches API",
+        pdfPage: 20,
+        summary: "50% cost savings, up to 24-hour processing. Only for non-blocking, latency-tolerant workloads.",
+        detail: [
+          { label: "Use batch for", note: "Overnight reports, weekly audits, nightly test generation — anything that can wait up to 24 hours." },
+          { label: "Don't use batch for", note: "Blocking pre-merge checks, anything developers are waiting on." },
+          { label: "custom_id", note: "Correlate batch request/response pairs. Resubmit only failed documents (by custom_id) with modifications." },
+          { label: "No multi-turn tool calling", note: "Batch API cannot execute tools mid-request and return results. Single-turn only." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "context",
+    label: "Context Management & Reliability",
+    weight: "15%",
+    color: "#854F0B",
+    bgLight: "#FAEEDA",
+    icon: "ti-layers-difference",
+    pdfPages: { start: 21, end: 25, label: "pp. 21–25" },
+    topics: [
+      {
+        title: "Preserving critical information across long sessions",
+        pdfPage: 21,
+        summary: "Extract transactional facts into a persistent 'case facts' block. Trim verbose tool outputs before they accumulate.",
+        detail: [
+          { label: "Case facts block", note: "Extract amounts, dates, order numbers, statuses into a structured block included in every prompt — outside summarized history." },
+          { label: "Lost in the middle", note: "Models reliably process info at the beginning and end of long inputs. Place key findings summaries at the top." },
+          { label: "Tool output trimming", note: "An order lookup returning 40+ fields when only 5 are relevant wastes tokens. Strip before appending to context." },
+          { label: "Scratchpad files", note: "Have agents maintain scratchpad files recording key findings. Reference them across context boundaries to counter degradation." },
+        ],
+      },
+      {
+        title: "Escalation decision-making",
+        pdfPage: 22,
+        summary: "Escalate when: customer explicitly requests it, policy is ambiguous/silent, or no meaningful progress can be made.",
+        detail: [
+          { label: "Always escalate immediately", note: "When a customer explicitly demands a human. Don't attempt investigation first." },
+          { label: "Escalate for policy gaps", note: "When the customer's request isn't covered by existing policy (e.g., competitor price matching when policy only covers own-site)." },
+          { label: "Unreliable escalation signals", note: "Sentiment-based escalation and self-reported confidence scores are poor proxies for actual case complexity." },
+          { label: "Multiple customer matches", note: "Ask for additional identifiers — don't heuristically select one record." },
+        ],
+      },
+      {
+        title: "Error propagation in multi-agent systems",
+        pdfPage: 23,
+        summary: "Structured error context enables intelligent coordinator recovery. Generic statuses hide the info needed for recovery decisions.",
+        detail: [
+          { label: "What to include", note: "Failure type, what was attempted, partial results, potential alternative approaches." },
+          { label: "Anti-pattern: silent suppression", note: "Returning empty results as success hides failures and produces incomplete outputs without any recovery path." },
+          { label: "Anti-pattern: total termination", note: "Terminating the entire workflow on a single subagent failure is almost never correct. Proceed with partial results." },
+          { label: "Coverage annotations", note: "Synthesis output should note which topic areas have gaps due to unavailable sources." },
+        ],
+      },
+      {
+        title: "Human review workflows & confidence calibration",
+        pdfPage: 24,
+        summary: "Aggregate accuracy (97% overall) can mask poor performance on specific document types. Segment before automating.",
+        detail: [
+          { label: "Stratified random sampling", note: "Sample high-confidence extractions to measure ongoing error rates and detect novel failure patterns." },
+          { label: "Segment before reducing review", note: "Analyze accuracy by document type and field before reducing human review. Consistent across all segments?" },
+          { label: "Field-level confidence scores", note: "Have models output per-field confidence. Calibrate review thresholds against labeled validation sets." },
+          { label: "Routing", note: "Low model confidence + ambiguous/contradictory source → human review. Prioritize limited reviewer capacity." },
+        ],
+      },
+    ],
+  },
+];
+
+const examInfo = [
+  { label: "Format", value: "Multiple choice, one correct answer per question" },
+  { label: "Passing score", value: "720 / 1,000 (scaled)" },
+  { label: "Scenarios", value: "4 of 6 drawn at random" },
+  { label: "Cost", value: "$99 (promo codes available)" },
+  { label: "Attempts", value: "One attempt only" },
+  { label: "Proctored", value: "Yes — via ProctorFree" },
+  { label: "Practice exam target", value: ">900 / 1,000 before sitting the real exam" },
+];
+
+function StudyGuide() {
+  const [activeDomain, setActiveDomain] = useState(domains[0].id);
+  const [openTopic, setOpenTopic] = useState(null);
+  const [showExamInfo, setShowExamInfo] = useState(false);
+
+  const domain = domains.find(d => d.id === activeDomain);
+
+  return (
+    <div style={{ fontFamily: "var(--font-sans)", maxWidth: 760, margin: "0 auto", padding: "1.5rem 1rem" }}>
+      <h2 className="sr-only">CCA-F Certification Study Guide</h2>
+
+      <div style={{ marginBottom: "1.5rem" }}>
+        <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "0 0 4px" }}>Claude Certified Architect – Foundations</p>
+        <h1 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 12px", color: "var(--color-text-primary)" }}>CCA-F Study Guide</h1>
+
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <button
+            onClick={() => setShowExamInfo(v => !v)}
+            style={{ fontSize: 13, padding: "5px 14px", cursor: "pointer", borderRadius: "var(--border-radius-md)", border: "0.5px solid var(--color-border-secondary)", background: showExamInfo ? "var(--color-background-secondary)" : "transparent", color: "var(--color-text-primary)" }}
+          >
+            <i className="ti ti-info-circle" style={{ fontSize: 14, verticalAlign: -2, marginRight: 5 }} aria-hidden="true" />
+            Exam logistics
+            <i className={`ti ti-chevron-${showExamInfo ? "up" : "down"}`} style={{ fontSize: 14, verticalAlign: -2, marginLeft: 5 }} aria-hidden="true" />
+          </button>
+          <a
+            href={PDF_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 13, padding: "5px 14px", borderRadius: "var(--border-radius-md)", border: "0.5px solid var(--color-border-secondary)", color: "var(--color-text-primary)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 5 }}
+          >
+            <i className="ti ti-file-type-pdf" style={{ fontSize: 14 }} aria-hidden="true" />
+            Exam Guide PDF
+            <i className="ti ti-external-link" style={{ fontSize: 13, opacity: 0.6 }} aria-hidden="true" />
+          </a>
+        </div>
+
+        {showExamInfo && (
+          <div style={{ marginTop: 12, background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-lg)", border: "0.5px solid var(--color-border-tertiary)", padding: "1rem 1.25rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "8px 24px" }}>
+            {examInfo.map(({ label, value }) => (
+              <div key={label} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <span style={{ fontSize: 11, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
+                <span style={{ fontSize: 14, color: "var(--color-text-primary)", fontWeight: 500 }}>{value}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1.5rem" }}>
+        {domains.map(d => (
+          <button
+            key={d.id}
+            onClick={() => { setActiveDomain(d.id); setOpenTopic(null); }}
+            style={{
+              cursor: "pointer",
+              padding: "6px 14px",
+              borderRadius: "var(--border-radius-md)",
+              border: activeDomain === d.id ? `1.5px solid ${d.color}` : "0.5px solid var(--color-border-tertiary)",
+              background: activeDomain === d.id ? d.bgLight : "transparent",
+              color: activeDomain === d.id ? d.color : "var(--color-text-secondary)",
+              fontSize: 13,
+              fontWeight: activeDomain === d.id ? 500 : 400,
+              transition: "all 0.15s",
+              textAlign: "left",
+            }}
+          >
+            <span style={{ fontSize: 11, marginRight: 6, opacity: 0.7 }}>{d.weight}</span>
+            {d.label.split(" & ")[0].split(" ")[0] + " " + (d.label.split(" & ")[0].split(" ").slice(1).join(" "))}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <i className={`ti ${domain.icon}`} style={{ fontSize: 20, color: domain.color }} aria-hidden="true" />
+          <div style={{ flex: 1 }}>
+            <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "var(--color-text-primary)" }}>{domain.label}</p>
+            <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-secondary)" }}>{domain.weight} of exam content · {domain.topics.length} topics</p>
+          </div>
+          <a
+            href={pdfPage(domain.pdfPages.start)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 12, padding: "4px 10px", borderRadius: "var(--border-radius-md)", border: `0.5px solid ${domain.color}50`, color: domain.color, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}
+          >
+            <i className="ti ti-book-2" style={{ fontSize: 13 }} aria-hidden="true" />
+            {domain.pdfPages.label}
+          </a>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {domain.topics.map((topic, i) => {
+            const isOpen = openTopic === i;
+            return (
+              <div
+                key={i}
+                style={{
+                  border: isOpen ? `1px solid ${domain.color}40` : "0.5px solid var(--color-border-tertiary)",
+                  borderRadius: "var(--border-radius-lg)",
+                  background: "var(--color-background-primary)",
+                  overflow: "hidden",
+                  transition: "border 0.15s",
+                }}
+              >
+                <button
+                  onClick={() => setOpenTopic(isOpen ? null : i)}
+                  style={{
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "14px 16px",
+                    cursor: "pointer",
+                    background: "transparent",
+                    border: "none",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 12,
+                  }}
+                >
+                  <span style={{
+                    minWidth: 22, height: 22, borderRadius: "50%",
+                    background: isOpen ? domain.color : "var(--color-background-secondary)",
+                    color: isOpen ? "#fff" : "var(--color-text-secondary)",
+                    fontSize: 11, fontWeight: 500,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginTop: 1, flexShrink: 0,
+                  }}>{i + 1}</span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 500, color: "var(--color-text-primary)" }}>{topic.title}</p>
+                    <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-secondary)", lineHeight: 1.5 }}>{topic.summary}</p>
+                  </div>
+                  <i className={`ti ti-chevron-${isOpen ? "up" : "down"}`} style={{ fontSize: 16, color: "var(--color-text-tertiary)", marginTop: 3, flexShrink: 0 }} aria-hidden="true" />
+                </button>
+
+                {isOpen && (
+                  <div style={{ borderTop: `0.5px solid ${domain.color}30`, padding: "0 16px 16px" }}>
+                    <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10, marginBottom: 4 }}>
+                      <a
+                        href={pdfPage(topic.pdfPage)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 12, color: domain.color, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, opacity: 0.85 }}
+                      >
+                        <i className="ti ti-file-description" style={{ fontSize: 13 }} aria-hidden="true" />
+                        View in exam guide (p.{topic.pdfPage})
+                        <i className="ti ti-external-link" style={{ fontSize: 12 }} aria-hidden="true" />
+                      </a>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 6 }}>
+                      {topic.detail.map((item, j) => (
+                        <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                          <span style={{
+                            background: `${domain.color}12`,
+                            color: domain.color,
+                            fontSize: 12,
+                            fontWeight: 500,
+                            padding: "3px 10px",
+                            borderRadius: "var(--border-radius-md)",
+                            whiteSpace: "nowrap",
+                            flexShrink: 0,
+                            marginTop: 1,
+                            border: "0.5px solid transparent",
+                          }}>{item.label}</span>
+                          <p style={{ margin: 0, fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.6 }}>{item.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={{ marginTop: "2rem", padding: "1rem 1.25rem", background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-lg)", border: "0.5px solid var(--color-border-tertiary)" }}>
+        <p style={{ margin: "0 0 10px", fontSize: 13, fontWeight: 500, color: "var(--color-text-primary)" }}>
+          <i className="ti ti-checklist" style={{ fontSize: 15, verticalAlign: -2, marginRight: 6 }} aria-hidden="true" />
+          Preparation checklist
+        </p>
+        {[
+          "Complete all 200-level Anthropic Academy courses",
+          "Build an agent with the Claude Agent SDK (agentic loop, tool calling, session management)",
+          "Configure Claude Code for a real project (CLAUDE.md hierarchy, .claude/rules/, skills with frontmatter)",
+          "Design and test MCP tools with structured error responses",
+          "Build a structured data extraction pipeline using tool_use + JSON schemas + validation-retry loop",
+          "Practice few-shot prompting and explicit review criteria design",
+          "Study context management: fact extraction, output trimming, scratchpad files",
+          "Take the practice exam and score >900/1000 before sitting the real exam",
+        ].map((item, i) => (
+          <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}>
+            <i className="ti ti-circle-check" style={{ fontSize: 15, color: "var(--color-text-tertiary)", marginTop: 2, flexShrink: 0 }} aria-hidden="true" />
+            <span style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.5 }}>{item}</span>
+          </div>
+        ))}
+
+        <div style={{ borderTop: "0.5px solid var(--color-border-tertiary)", marginTop: 12, paddingTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 12, color: "var(--color-text-secondary)", alignSelf: "center" }}>Exam guide sections:</span>
+          {[
+            { label: "Sample questions", page: 26 },
+            { label: "Preparation exercises", page: 33 },
+            { label: "Tech & concepts appendix", page: 37 },
+            { label: "In-scope topics", page: 38 },
+            { label: "Out-of-scope topics", page: 39 },
+          ].map(({ label, page }) => (
+            <a
+              key={page}
+              href={pdfPage(page)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 12, padding: "4px 10px", borderRadius: "var(--border-radius-md)", border: "0.5px solid var(--color-border-secondary)", color: "var(--color-text-primary)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+            >
+              <i className="ti ti-file-description" style={{ fontSize: 12 }} aria-hidden="true" />
+              {label}
+              <span style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}>p.{page}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<StudyGuide />);
+  </script>
+</body>
+</html>
