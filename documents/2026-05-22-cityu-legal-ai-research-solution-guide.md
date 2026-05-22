@@ -1,4 +1,5 @@
 ---
+date: 2026-05-22
 read: true
 ---
 # AI-Assisted Legal Research — Solution Guide for CityU Legal Department
