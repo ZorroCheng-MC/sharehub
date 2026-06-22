@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>巴里島 4N5D 修復能量之旅 | Zorro & Gloria</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #2d3748; }
+
+  .hero {
+    background: linear-gradient(135deg, #1a365d 0%, #2d6a4f 100%);
+    color: white; padding: 48px 32px; text-align: center;
+  }
+  .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+  .hero .subtitle { font-size: 1rem; opacity: 0.85; margin-bottom: 16px; }
+  .hero .flights {
+    display: inline-flex; gap: 24px; background: rgba(255,255,255,0.15);
+    border-radius: 12px; padding: 12px 24px; font-size: 0.9rem;
+  }
+  .hero .flights span { display: flex; align-items: center; gap: 6px; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 16px; }
+
+  /* Legend */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    background: white; border-radius: 12px; padding: 16px 20px;
+    margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .legend-title { font-weight: 600; width: 100%; color: #4a5568; font-size: 0.85rem; }
+  .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+  .badge.bambu { background: #e6f3ff; color: #1a56db; }
+  .badge.book { background: #fff3e0; color: #e65100; }
+  .badge.ticket { background: #fce4ec; color: #c62828; }
+  .badge.free { background: #e8f5e9; color: #2e7d32; }
+
+  /* Day cards */
+  .day-card {
+    background: white; border-radius: 16px; margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: hidden;
+  }
+  .day-header {
+    padding: 16px 24px; display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .day-number {
+    background: #1a365d; color: white; width: 44px; height: 44px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.1rem; flex-shrink: 0;
+  }
+  .day-title { font-size: 1.1rem; font-weight: 700; color: #1a365d; }
+  .day-date { font-size: 0.85rem; color: #718096; }
+  .day-tag {
+    margin-left: auto; padding: 4px 14px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 600;
+  }
+  .day-tag.wedding { background: #fce4ec; color: #c62828; }
+  .day-tag.arrive { background: #e3f2fd; color: #1565c0; }
+  .day-tag.depart { background: #f3e5f5; color: #6a1b9a; }
+  .day-tag.free { background: #e8f5e9; color: #2e7d32; }
+
+  /* Schedule table */
+  .schedule { width: 100%; border-collapse: collapse; }
+  .schedule th {
+    background: #f7fafc; padding: 10px 16px; text-align: left;
+    font-size: 0.8rem; font-weight: 600; color: #718096; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .schedule th.you-col { color: #1a56db; }
+  .schedule th.gloria-col { color: #d63384; }
+  .schedule td { padding: 10px 16px; border-top: 1px solid #f0f4f8; vertical-align: top; font-size: 0.9rem; }
+  .schedule td.time { color: #718096; font-weight: 600; white-space: nowrap; width: 80px; }
+  .schedule tr:hover td { background: #fafbfc; }
+
+  .activity { display: flex; align-items: flex-start; gap: 8px; }
+  .activity .tag { flex-shrink: 0; margin-top: 1px; }
+  .activity .name { line-height: 1.4; }
+  .activity .note { font-size: 0.78rem; color: #a0aec0; display: block; margin-top: 2px; }
+  .shared { color: #718096; font-style: italic; }
+
+  /* Booking checklist */
+  .booking-section {
+    background: white; border-radius: 16px; padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 24px;
+  }
+  .booking-section h2 { font-size: 1.1rem; font-weight: 700; color: #1a365d; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .booking-table { width: 100%; border-collapse: collapse; }
+  .booking-table th { background: #f7fafc; padding: 10px 14px; text-align: left; font-size: 0.8rem; color: #718096; font-weight: 600; text-transform: uppercase; }
+  .booking-table td { padding: 10px 14px; border-top: 1px solid #f0f4f8; font-size: 0.88rem; }
+  .booking-table tr:hover td { background: #fafbfc; }
+  .priority { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
+  .priority.urgent { background: #fce4ec; color: #c62828; }
+  .priority.high { background: #fff3e0; color: #e65100; }
+  .priority.normal { background: #e8f5e9; color: #2e7d32; }
+  .check { font-size: 1.1rem; cursor: pointer; }
+
+  /* Budget */
+  .budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .budget-item { background: #f7fafc; border-radius: 10px; padding: 14px 16px; }
+  .budget-item .label { font-size: 0.8rem; color: #718096; margin-bottom: 4px; }
+  .budget-item .amount { font-size: 1.2rem; font-weight: 700; color: #1a365d; }
+  .budget-item .sub { font-size: 0.78rem; color: #a0aec0; }
+  .budget-total { background: #1a365d; color: white; border-radius: 10px; padding: 14px 16px; }
+  .budget-total .label { font-size: 0.8rem; opacity: 0.8; margin-bottom: 4px; }
+  .budget-total .amount { font-size: 1.4rem; font-weight: 700; }
+
+  /* Flights strip */
+  .flights-strip {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    background: white; border-radius: 16px; padding: 20px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 24px;
+  }
+  .flight-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+  .flight-card .direction { font-size: 0.75rem; color: #718096; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
+  .flight-card .route { font-size: 1.1rem; font-weight: 700; color: #1a365d; }
+  .flight-card .detail { font-size: 0.82rem; color: #4a5568; margin-top: 4px; }
+  .flight-card .price { font-size: 0.82rem; font-weight: 700; color: #2d6a4f; margin-top: 6px; }
+
+  section-title { display: block; font-size: 1.1rem; font-weight: 700; color: #1a365d; margin: 28px 0 14px; }
+
+  .tip-box { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 0.85rem; color: #92400e; }
+  .tip-box strong { display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🌴 巴里島 4N5D 修復能量之旅</h1>
+  <div class="subtitle">Zorro & Gloria &nbsp;|&nbsp; Bingin, Uluwatu &nbsp;|&nbsp; Aug 31 – Sep 4, 2026</div>
+  <div class="flights">
+    <span>✈️ CX785 &nbsp; HKG 10:00 → DPS 15:00 &nbsp; Aug 31</span>
+    <span>✈️ CX784 &nbsp; DPS 16:15 → HKG 21:25 &nbsp; Sep 4</span>
+    <span>💰 Total HKD 4,720</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Flights -->
+  <div class="flights-strip">
+    <div class="flight-card">
+      <div class="direction">🛫 Outbound</div>
+      <div class="route">HKG → DPS</div>
+      <div class="detail">CX785 &nbsp;|&nbsp; 31 Aug 2026 &nbsp;|&nbsp; 10:00 → 15:00 (5h 0m)</div>
+      <div class="detail">Boeing 777-300 &nbsp;|&nbsp; Economy Light &nbsp;|&nbsp; Class Q</div>
+    </div>
+    <div class="flight-card">
+      <div class="direction">🛬 Return</div>
+      <div class="route">DPS → HKG</div>
+      <div class="detail">CX784 &nbsp;|&nbsp; 4 Sep 2026 &nbsp;|&nbsp; 16:15 → 21:25 (5h 10m)</div>
+      <div class="detail">Boeing 777-300 &nbsp;|&nbsp; Economy Light &nbsp;|&nbsp; Class N</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-title">圖例</div>
+    <span class="badge bambu">🏋️ Bambu 已含（Suite 住客免費）</span>
+    <span class="badge book">🔖 需另外預訂</span>
+    <span class="badge ticket">🎟️ 需買票</span>
+    <span class="badge free">🌿 免費戶外</span>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-number">1</div>
+      <div>
+        <div class="day-title">抵達與啟動</div>
+        <div class="day-date">Aug 31, 2026 (Mon)</div>
+      </div>
+      <div class="day-tag arrive">✈️ 抵達日</div>
+    </div>
+    <table class="schedule">
+      <thead><tr>
+        <th>時間</th>
+        <th class="you-col">🔵 Zorro</th>
+        <th class="gloria-col">🌸 Gloria</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="time">15:00</td>
+          <td colspan="2"><span class="shared">✈️ DPS 落機 → Transfer to Bingin（~40 分鐘）</span></td>
+        </tr>
+        <tr>
+          <td class="time">17:00</td>
+          <td colspan="2"><span class="shared">🏨 Check-in Bambu Suites</span></td>
+        </tr>
+        <tr>
+          <td class="time">17:30</td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Open Gym — Calisthenics<span class="note">引體位、雙槓、自重熟悉器材</span></div></div></td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Oasis<span class="note">桑拿 + 冰浴初體驗</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">19:30</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Ulu Cliff House 晚餐<span class="note">崖邊海景，輕鬆到埗</span></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-number">2</div>
+      <div>
+        <div class="day-title">晨間瑜伽 + 婚禮</div>
+        <div class="day-date">Sep 1, 2026 (Tue)</div>
+      </div>
+      <div class="day-tag wedding">💍 婚禮日</div>
+    </div>
+    <table class="schedule">
+      <thead><tr>
+        <th>時間</th>
+        <th class="you-col">🔵 Zorro</th>
+        <th class="gloria-col">🌸 Gloria</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="time">07:30</td>
+          <td colspan="2"><div class="activity"><span class="badge book tag">🔖</span><div class="name">Banana Lounge 崖邊晨間瑜伽（一起）<span class="note">步行5分鐘 | 提前在 Instagram 預訂 | ~$15 USD/人</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">09:00</td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Pilates 課<span class="note">Suite 住客免費</span></div></div></td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Reformer Pilates<span class="note">Suite 住客免費</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">10:30</td>
+          <td colspan="2"><span class="shared">🪄 各自梳洗、準備婚禮</span></td>
+        </tr>
+        <tr>
+          <td class="time">下午/晚</td>
+          <td colspan="2"><span class="shared">🎊 出席婚禮 &nbsp;|&nbsp; 正式服裝</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-number">3</div>
+      <div>
+        <div class="day-title">修復 + 海浪</div>
+        <div class="day-date">Sep 2, 2026 (Wed)</div>
+      </div>
+      <div class="day-tag free">🌊 修復探索</div>
+    </div>
+    <table class="schedule">
+      <thead><tr>
+        <th>時間</th>
+        <th class="you-col">🔵 Zorro</th>
+        <th class="gloria-col">🌸 Gloria</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="time">07:00</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Bingin 崖邊冥想 + 伸展（一起）<span class="note">印度洋日出 | 免費 | 輕鬆</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">08:30</td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Mobility 課<span class="note">關節靈活 + 伸展</span></div></div></td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Reformer Pilates<span class="note">第二堂，進階</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">11:00</td>
+          <td colspan="2"><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Oasis 雙人修復（一起）<span class="note">冰浴 + 桑拿 + 休閒泳池 | Suite 住客免費</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">13:00</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Padang Padang Beach 午休（一起）<span class="note">步行5分鐘 | Bali 最美小海灘之一</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">15:30</td>
+          <td colspan="2"><div class="activity"><span class="badge book tag">🔖</span><div class="name">衝浪初學課（可選，一起）<span class="note">Bingin Beach 現場找教練 | ~$35–50 USD/人 | 教練全程陪同，不太累</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">18:00</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Bingin 海灘日落</div></div></td>
+        </tr>
+        <tr>
+          <td class="time">19:30</td>
+          <td colspan="2"><div class="activity"><span class="badge book tag">🔖</span><div class="name">Single Fin Bar 晚餐<span class="note">Uluwatu 崖邊 | 需提前訂位 | 熱門日落餐廳</span></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-number">4</div>
+      <div>
+        <div class="day-title">文化 + Spa 日</div>
+        <div class="day-date">Sep 3, 2026 (Thu)</div>
+      </div>
+      <div class="day-tag free">🏛️ 文化探索</div>
+    </div>
+    <table class="schedule">
+      <thead><tr>
+        <th>時間</th>
+        <th class="you-col">🔵 Zorro</th>
+        <th class="gloria-col">🌸 Gloria</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="time">07:30</td>
+          <td colspan="2"><div class="activity"><span class="badge book tag">🔖</span><div class="name">Banana Lounge 晨間瑜伽 第2次（一起）<span class="note">提前預訂 | ~$15 USD/人</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">09:30</td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Calisthenics 自重訓練<span class="note">Open Gym | 引體 + 雙槓 + Handstand 練習</span></div></div></td>
+          <td><div class="activity"><span class="badge book tag">🔖</span><div class="name">Alila Villas Uluwatu — Spa<span class="note">峇里島草藥按摩 90 分鐘 | ~$80–120 USD | 需提前預訂日訪客名額</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">12:00</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Finn's Beach Club 午餐 + 泳池（一起）<span class="note">Uluwatu 最著名海灘會所</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">15:30</td>
+          <td colspan="2"><div class="activity"><span class="badge free tag">🌿</span><div class="name">Uluwatu Coastal Path 崖邊步行（一起）<span class="note">平坦易行，印度洋全景</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">17:00</td>
+          <td colspan="2"><div class="activity"><span class="badge ticket tag">🎟️</span><div class="name">Uluwatu Temple + Kecak 火舞（一起）<span class="note">必看日落儀式 | Klook 或現場 | ~$9 USD/人</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">19:30</td>
+          <td colspan="2"><div class="activity"><span class="badge book tag">🔖</span><div class="name">Jimbaran 沙灘海鮮晚餐（一起）<span class="note">沙灘燒烤排排椅 | 可現場到，或提前訂</span></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-card">
+    <div class="day-header">
+      <div class="day-number">5</div>
+      <div>
+        <div class="day-title">最後修復 + 回程</div>
+        <div class="day-date">Sep 4, 2026 (Fri)</div>
+      </div>
+      <div class="day-tag depart">✈️ 回程日</div>
+    </div>
+    <table class="schedule">
+      <thead><tr>
+        <th>時間</th>
+        <th class="you-col">🔵 Zorro</th>
+        <th class="gloria-col">🌸 Gloria</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="time">08:00</td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">最後 Pilates / Mobility<span class="note">Suite 住客免費</span></div></div></td>
+          <td><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">最後 Reformer Pilates<span class="note">Suite 住客免費</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">09:30</td>
+          <td colspan="2"><div class="activity"><span class="badge bambu tag">🏋️</span><div class="name">Bambu Oasis 最後放鬆（一起）<span class="note">桑拿 + 冰浴</span></div></div></td>
+        </tr>
+        <tr>
+          <td class="time">11:00</td>
+          <td colspan="2"><span class="shared">☕ Bambu Café 早午餐（Suite 早餐已含）</span></td>
+        </tr>
+        <tr>
+          <td class="time">13:30</td>
+          <td colspan="2"><span class="shared">🧳 Check-out → Transfer to DPS（~40 分鐘）</span></td>
+        </tr>
+        <tr>
+          <td class="time">16:15</td>
+          <td colspan="2"><span class="shared">✈️ CX784 DPS → HKG 21:25 抵達</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Booking Checklist -->
+  <div class="booking-section">
+    <h2>🔖 外部預訂清單</h2>
+    <table class="booking-table">
+      <thead><tr>
+        <th>#</th>
+        <th>活動</th>
+        <th>誰</th>
+        <th>優先度</th>
+        <th>費用/人</th>
+        <th>預訂方式</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Bambu Suites 住宿</strong> (4晚)</td>
+          <td>兩人</td>
+          <td><span class="priority urgent">🔴 立即</span></td>
+          <td>~$150–200 USD/晚</td>
+          <td>suites@bambufitnessbali.com<br>WhatsApp: +62 812 4499 7721</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Banana Lounge 晨間瑜伽 ×2</td>
+          <td>兩人</td>
+          <td><span class="priority high">🟠 出發前</span></td>
+          <td>~$15 USD × 2堂</td>
+          <td>Instagram: @bananaloungebali</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Alila Villas Uluwatu Spa</td>
+          <td>Gloria</td>
+          <td><span class="priority high">🟠 出發前</span></td>
+          <td>~$80–120 USD</td>
+          <td>alilahotels.com/uluwatu</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Kecak 火舞門票</td>
+          <td>兩人</td>
+          <td><span class="priority normal">🟢 Klook 或現場</span></td>
+          <td>~$9 USD</td>
+          <td>Klook / 現場購票</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>衝浪初學課（可選）</td>
+          <td>兩人</td>
+          <td><span class="priority normal">🟢 到埗後</span></td>
+          <td>~$35–50 USD</td>
+          <td>Bingin Beach 現場教練</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Single Fin Bar 訂位</td>
+          <td>兩人</td>
+          <td><span class="priority normal">🟢 出發前</span></td>
+          <td>餐費另計</td>
+          <td>singlefinbali.com</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Jimbaran 海鮮晚餐</td>
+          <td>兩人</td>
+          <td><span class="priority normal">🟢 可現場</span></td>
+          <td>~$25–35 USD</td>
+          <td>現場或 Google Maps</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip-box">
+      <strong>⚠️ 重要：Bambu 非常繁忙</strong>
+      到埗後立即在 Bambu App 或 Instagram 預訂所有課程（Pilates 尤其搶手）。Suite 住客有優先權，但仍需提前預訂。
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="booking-section">
+    <h2>💰 預算估算（每人）</h2>
+    <div class="budget-grid">
+      <div class="budget-item">
+        <div class="label">✈️ 來回機票</div>
+        <div class="amount">HKD 4,720</div>
+        <div class="sub">CX785 + CX784 · Economy Light · 1×23kg 已含</div>
+      </div>
+      <div class="budget-item">
+        <div class="label">🏨 Bambu Suites (4晚)</div>
+        <div class="amount">~$600–800 USD</div>
+        <div class="sub">估算，需詢價確認 · 含早餐+Pilates+Oasis</div>
+      </div>
+      <div class="budget-item">
+        <div class="label">🍽️ 餐飲</div>
+        <div class="amount">~$150–200 USD</div>
+        <div class="sub">早餐已含 · 午晚餐自理</div>
+      </div>
+      <div class="budget-item">
+        <div class="label">🌊 戶外 + 活動</div>
+        <div class="amount">~$100–130 USD</div>
+        <div class="sub">瑜伽 ×2, 衝浪, Kecak 門票</div>
+      </div>
+      <div class="budget-item">
+        <div class="label">💆 Gloria Spa</div>
+        <div class="amount">~$100–120 USD</div>
+        <div class="sub">Alila Spa 1次 (Gloria 專屬)</div>
+      </div>
+      <div class="budget-total">
+        <div class="label">總計（每人）</div>
+        <div class="amount">~$1,050–1,350 USD</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center; color:#a0aec0; font-size:0.78rem; padding-bottom:24px;">
+    巴里島 4N5D 修復能量之旅 · Zorro & Gloria · Aug 31–Sep 4, 2026 · Generated by Claude Code
+  </p>
+
+</div>
+</body>
+</html>
