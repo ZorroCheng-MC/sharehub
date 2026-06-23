@@ -136,32 +136,24 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shar
 
 ---
 
-#### Anthropic Claude *(Under Investigation)*
+#### Anthropic Claude *(via CF Wholesale)*
 
-Two paths are available — choose based on what the admin has configured:
+Claude runs through the gateway's `/compat` endpoint using **Cloudflare wholesale billing** — **no Anthropic API key (BYOK) required**. Authenticate with your personal `cfut_...` gateway token, exactly like every other model here.
 
-**Option A — Direct Anthropic via Gateway** *(requires Anthropic BYOK key in gateway)*
-Provider Type: **Anthropic**
+Provider Type: **OpenAI Compatible**
 Base URL:
 ```
 https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/compat
 ```
 
-**Option B — Claude via GCP Vertex AI** *(requires Claude access approved in GCP)* ⚠️ Pending
-Provider Type: **Anthropic**
-Base URL:
-```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/google-vertex-ai/v1/projects/mcps-testing-cloudflare-ai/locations/us-east5/publishers/anthropic/models
-```
-
 | Model | Model ID | Input | Output |
 |---|---|---|---|
-| Claude Opus 4.6 | `anthropic/claude-opus-4-6` | $5.00 | $25.00 |
-| Claude Sonnet 4.6 | `anthropic/claude-sonnet-4-6` | $3.00 | $15.00 |
+| Claude Opus 4.8 | `anthropic/claude-opus-4.8` | see dashboard | see dashboard |
+| Claude Sonnet 4.6 | `anthropic/claude-sonnet-4.6` | $3.00 | $15.00 |
 
-*Prices per million tokens via GCP Vertex AI.*
+*Indicative list prices per million tokens (USD). Actual usage is drawn from CF wholesale credits — check the AI Gateway dashboard for the wholesale rate.*
 
-> **Heads-up (2026-06-23):** The `/compat` endpoint routes provider models (e.g. `anthropic/claude-sonnet-4-6`) through CF's wholesale billing. If you hit `402 Insufficient wholesale credits`, add credits on the AI Gateway Cloudflare dashboard before the compat path will serve Claude.
+> **Heads-up:** The `/compat` path bills through CF wholesale credits. If you hit `402 Insufficient wholesale credits`, top up credits on the AI Gateway Cloudflare dashboard before Claude will serve.
 
 ---
 
@@ -192,7 +184,7 @@ Cloudflare AI Gateway (demo-hkmci)
       ├── /google-ai-studio/...  → Google Gemini       [BYOK: AI Studio key]
       ├── /google-vertex-ai/...  → GCP Vertex AI MaaS  [BYOK: service account JSON] ✅
       ├── /workers-ai/v1         → CF Workers AI        [built-in, CF Neurons]
-      └── /anthropic             → Anthropic Claude     [BYOK: not configured]
+      └── /compat                → Anthropic Claude     [CF wholesale credits, no BYOK]
 ```
 
 Each user gets their own `cfut_...` token created from the gateway dashboard. No provider keys are ever exposed to users.
@@ -219,7 +211,7 @@ Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Pro
 | ---------------- | --------- | ---------------------------- | --------------------------------------------------- |
 | Google AI Studio | `default` | `aistudio.google.com/apikey` | ✅ Configured                                        |
 | Google Vertex AI | `default` | GCP service account JSON     | ✅ Configured (MaaS: MiniMax-M2, Kimi K2, GLM-5/4.7) |
-| Anthropic        | `default` | `console.anthropic.com`      | ⬜ Not configured                                    |
+| Anthropic        | —         | n/a — served via CF wholesale | ✅ Working via `/compat` (no BYOK key needed)        |
 
 > Always set alias to `default` so the gateway injects it automatically without requiring users to hold provider keys.
 
@@ -310,4 +302,4 @@ Billing is enabled. Service account key is stored in the gateway as the Google V
 ---
 
 **Captured**: 2026-04-01
-**Last Updated**: 2026-06-23 (gateway path renamed `demo-hkmci` → `agent-shared-gateway`; added GLM 5.2 on Workers AI; Anthropic endpoint moved to `/compat` with `anthropic/`-prefixed model IDs + wholesale-credits note)
+**Last Updated**: 2026-06-23 (gateway path renamed `demo-hkmci` → `agent-shared-gateway`; added GLM 5.2 on Workers AI; Claude now CF-wholesale-only via `/compat`, Provider Type OpenAI Compatible, no BYOK — dropped the GCP Vertex Claude option; Opus bumped to 4.8; model IDs use dot notation `claude-opus-4.8` / `claude-sonnet-4.6`)
