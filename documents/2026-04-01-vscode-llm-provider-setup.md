@@ -1,5 +1,4 @@
 ---
-date: 2026-04-09
 title: Setup LLM Provider in VS Code Extensions (Cline, Kilocode)
 tags:
   - idea
@@ -11,7 +10,8 @@ tags:
   - inbox
   - actionable
   - reference
-date: 2026-04-09
+  - ai-tools
+date: 2026-04-01
 type: idea
 status: inbox
 priority: high
@@ -81,7 +81,7 @@ After saving, open a new chat in the extension and send a short message (e.g. "s
 
 Base URL:
 ```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/google-ai-studio/v1beta/openai
+https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/google-ai-studio/v1beta/openai
 ```
 
 | Model | Model ID | Input | Output | Context | Notes |
@@ -100,15 +100,15 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci
 
 Base URL:
 ```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/google-vertex-ai/v1/projects/mcps-testing-cloudflare-ai/locations/global/endpoints/openapi
+https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/google-vertex-ai/v1/projects/mcps-testing-cloudflare-ai/locations/global/endpoints/openapi
 ```
 
-| Model | Model ID | Input | Output | Context | Notes |
-|---|---|---|---|---|---|
-| MiniMax-M2 | `minimaxai/minimax-m2-maas` | $0.30 | $1.20 | 1M | Coding & agentic; 10B active / 230B total MoE |
-| Kimi K2 Thinking | `moonshotai/kimi-k2-thinking-maas` | $0.60 | $2.50 | 256K | Thinking model; 32B active / 1T total MoE |
-| GLM-5 | `zai-org/glm-5-maas` | $1.00 | $3.20 | 128K | Latest GLM; 40B active / 744B total |
-| GLM-4.7 | `zai-org/glm-4.7-maas` | $0.60 | $2.20 | 128K | Stable; good multilingual |
+| Model            | Model ID                           | Input | Output | Context | Notes                                         |
+| ---------------- | ---------------------------------- | ----- | ------ | ------- | --------------------------------------------- |
+| MiniMax-M2       | `minimaxai/minimax-m2-maas`        | $0.30 | $1.20  | 1M      | Coding & agentic; 10B active / 230B total MoE |
+| Kimi K2 Thinking | `moonshotai/kimi-k2-thinking-maas` | $0.60 | $2.50  | 256K    | Thinking model; 32B active / 1T total MoE     |
+| GLM-5            | `zai-org/glm-5-maas`               | $1.00 | $3.20  | 128K    | Latest GLM; 40B active / 744B total           |
+| GLM-4.7          | `zai-org/glm-4.7-maas`             | $0.60 | $2.20  | 128K    | Stable; good multilingual                     |
 
 *Prices per million tokens (USD). Source: GCP Vertex AI partner model pricing.*
 
@@ -121,11 +121,12 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci
 
 Base URL:
 ```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/workers-ai/v1
+https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/workers-ai/v1
 ```
 
 | Model                  | Model ID                          | Cost       | Context | Notes                          |
 | ---------------------- | --------------------------------- | ---------- | ------- | ------------------------------ |
+| GLM 5.2                | `@cf/zai-org/glm-5.2`             | CF Neurons | 262K    | CF-hosted version of GLM 5.2   |
 | Nvidia Nemotron 3 120B | `@cf/nvidia/nemotron-3-120b-a12b` | CF Neurons | 128K    | 12B active MoE                 |
 | Moonshot Kimi K2.5     | `@cf/moonshotai/kimi-k2.5`        | CF Neurons | 256K    | CF-hosted version of Kimi K2.5 |
 | GLM 4.7 Flash          | `@cf/zai-org/glm-4.7-flash`       | CF Neurons | 131K    | Fast, multilingual             |
@@ -142,22 +143,24 @@ Two paths are available — choose based on what the admin has configured:
 Provider Type: **Anthropic**
 Base URL:
 ```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/anthropic
+https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/compat
 ```
 
 **Option B — Claude via GCP Vertex AI** *(requires Claude access approved in GCP)* ⚠️ Pending
 Provider Type: **Anthropic**
 Base URL:
 ```
-https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/demo-hkmci/google-vertex-ai/v1/projects/mcps-testing-cloudflare-ai/locations/us-east5/publishers/anthropic/models
+https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shared-gateway/google-vertex-ai/v1/projects/mcps-testing-cloudflare-ai/locations/us-east5/publishers/anthropic/models
 ```
 
 | Model | Model ID | Input | Output |
 |---|---|---|---|
-| Claude Opus 4.6 | `claude-opus-4-6` | $5.00 | $25.00 |
-| Claude Sonnet 4.6 | `claude-sonnet-4-6` | $3.00 | $15.00 |
+| Claude Opus 4.6 | `anthropic/claude-opus-4-6` | $5.00 | $25.00 |
+| Claude Sonnet 4.6 | `anthropic/claude-sonnet-4-6` | $3.00 | $15.00 |
 
 *Prices per million tokens via GCP Vertex AI.*
+
+> **Heads-up (2026-06-23):** The `/compat` endpoint routes provider models (e.g. `anthropic/claude-sonnet-4-6`) through CF's wholesale billing. If you hit `402 Insufficient wholesale credits`, add credits on the AI Gateway Cloudflare dashboard before the compat path will serve Claude.
 
 ---
 
@@ -211,11 +214,11 @@ Each user gets their own `cfut_...` token created from the gateway dashboard. No
 
 Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Provider Keys**
 
-| Provider | Alias | Key Source | Status |
-|---|---|---|---|
-| Google AI Studio | `default` | `aistudio.google.com/apikey` | ✅ Configured |
-| Google Vertex AI | `default` | GCP service account JSON | ✅ Configured (MaaS: MiniMax-M2, Kimi K2, GLM-5/4.7) |
-| Anthropic | `default` | `console.anthropic.com` | ⬜ Not configured |
+| Provider         | Alias     | Key Source                   | Status                                              |
+| ---------------- | --------- | ---------------------------- | --------------------------------------------------- |
+| Google AI Studio | `default` | `aistudio.google.com/apikey` | ✅ Configured                                        |
+| Google Vertex AI | `default` | GCP service account JSON     | ✅ Configured (MaaS: MiniMax-M2, Kimi K2, GLM-5/4.7) |
+| Anthropic        | `default` | `console.anthropic.com`      | ⬜ Not configured                                    |
 
 > Always set alias to `default` so the gateway injects it automatically without requiring users to hold provider keys.
 
@@ -306,4 +309,4 @@ Billing is enabled. Service account key is stored in the gateway as the Google V
 ---
 
 **Captured**: 2026-04-01
-**Last Updated**: 2026-04-09 (added Vertex AI MaaS pricing; added Worker proxy for per-customer key provisioning)
+**Last Updated**: 2026-06-23 (gateway path renamed `demo-hkmci` → `agent-shared-gateway`; added GLM 5.2 on Workers AI; Anthropic endpoint moved to `/compat` with `anthropic/`-prefixed model IDs + wholesale-credits note)
