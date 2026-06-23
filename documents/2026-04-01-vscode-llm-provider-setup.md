@@ -12,7 +12,7 @@ tags:
   - actionable
   - reference
   - ai-tools
-date: 2026-04-01
+date: 2026-06-23
 type: idea
 status: inbox
 priority: high
