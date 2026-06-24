@@ -1,5 +1,4 @@
 ---
-date: 2026-06-23
 title: Setup LLM Provider in VS Code Extensions (Cline, Kilocode)
 tags:
   - idea
@@ -12,7 +11,7 @@ tags:
   - actionable
   - reference
   - ai-tools
-date: 2026-06-23
+date: 2026-04-01
 type: idea
 status: inbox
 priority: high
@@ -20,7 +19,7 @@ priority: high
 
 # Setup LLM Provider in VS Code Extensions (Cline, Kilocode)
 
-> All models are accessed through **Cloudflare AI Gateway** (`demo-hkmci`). Users only need their personal gateway token (`cfut_...`) — no provider keys required.
+> All models are accessed through **Cloudflare AI Gateway** (`agent-shared-gateway`). Users only need their personal gateway token (`cfut_...`) — no provider keys required.
 
 ---
 
@@ -180,7 +179,7 @@ https://gateway.ai.cloudflare.com/v1/b326904912840c25f63808a1d1e479aa/agent-shar
 Cline / Kilocode
       │  cfut_... (per-user gateway token)
       ▼
-Cloudflare AI Gateway (demo-hkmci)
+Cloudflare AI Gateway (agent-shared-gateway)
       ├── /google-ai-studio/...  → Google Gemini       [BYOK: AI Studio key]
       ├── /google-vertex-ai/...  → GCP Vertex AI MaaS  [BYOK: service account JSON] ✅
       ├── /workers-ai/v1         → CF Workers AI        [built-in, CF Neurons]
@@ -197,7 +196,7 @@ Each user gets their own `cfut_...` token created from the gateway dashboard. No
 | -------------- | ------------------------------------------------------------- |
 | Account        | Master Concept Demo (mcmsp.dev)                               |
 | Account ID     | `b326904912840c25f63808a1d1e479aa`                            |
-| Gateway Name   | `demo-hkmci`                                                  |
+| Gateway Name   | `agent-shared-gateway`                                                  |
 | Authentication | Enabled                                                       |
 | Gateway Token  | created per user from dashboard; distributed as `cfut_...`    |
 
@@ -205,7 +204,7 @@ Each user gets their own `cfut_...` token created from the gateway dashboard. No
 
 ### Provider Keys (BYOK) Configuration
 
-Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Provider Keys**
+Navigate to: **Cloudflare Dashboard → AI → AI Gateway → agent-shared-gateway → Provider Keys**
 
 | Provider         | Alias     | Key Source                   | Status                                              |
 | ---------------- | --------- | ---------------------------- | --------------------------------------------------- |
@@ -221,7 +220,7 @@ Navigate to: **Cloudflare Dashboard → AI → AI Gateway → demo-hkmci → Pro
 
 #### Option A — Dashboard (manual)
 
-**AI Gateway → `demo-hkmci` → Settings → Authenticated Gateway → Create authentication token**
+**AI Gateway → `agent-shared-gateway` → Settings → Authenticated Gateway → Create authentication token**
 - **Name**: user's name (e.g. `alex`)
 - **Permission**: **Run**
 
@@ -241,7 +240,7 @@ Store it securely — this is the only dashboard step required.
 CF_API_TOKEN=<master-token> \
 CF_ACCOUNT_ID=b326904912840c25f63808a1d1e479aa \
 python3 /Users/zorro/Dev/cloudflare/create_ai_gateway_token.py \
-  --gateway-id demo-hkmci \
+  --gateway-id agent-shared-gateway \
   --token-name alex
 ```
 
@@ -264,7 +263,7 @@ https://sharehub.zorro.hk/documents/2026-04-01-vscode-llm-provider-setup.html
 
 #### Revoke a user
 
-**Dashboard:** AI Gateway → `demo-hkmci` → Settings → Authenticated Gateway → [find token] → Delete
+**Dashboard:** AI Gateway → `agent-shared-gateway` → Settings → Authenticated Gateway → [find token] → Delete
 
 **API:**
 ```bash
@@ -294,7 +293,7 @@ Billing is enabled. Service account key is stored in the gateway as the Google V
 ### Adding a New Provider
 
 1. Get the API key for the provider
-2. Go to **demo-hkmci → Provider Keys → find provider → click `+`**
+2. Go to **agent-shared-gateway → Provider Keys → find provider → click `+`**
 3. Paste the key, set alias to `default`, save
 4. Update the User Guide table above with the new Base URL and model IDs
 5. Republish this note: `/kf-cli:publish 2026-04-01-vscode-llm-provider-setup.md`
@@ -302,4 +301,4 @@ Billing is enabled. Service account key is stored in the gateway as the Google V
 ---
 
 **Captured**: 2026-04-01
-**Last Updated**: 2026-06-23 (gateway path renamed `demo-hkmci` → `agent-shared-gateway`; added GLM 5.2 on Workers AI; Claude now CF-wholesale-only via `/compat`, Provider Type OpenAI Compatible, no BYOK — dropped the GCP Vertex Claude option; Opus bumped to 4.8; model IDs use dot notation `claude-opus-4.8` / `claude-sonnet-4.6`)
+**Last Updated**: 2026-06-24 (gateway renamed `demo-hkmci` → `agent-shared-gateway` everywhere — URLs **and** Admin Guide now consistent; added GLM 5.2 on Workers AI; Claude now CF-wholesale-only via `/compat`, Provider Type OpenAI Compatible, no BYOK — dropped the GCP Vertex Claude option; Opus bumped to 4.8; model IDs use dot notation `claude-opus-4.8` / `claude-sonnet-4.6`)
